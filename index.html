@@ -110,15 +110,36 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .toggle-pill.active{background:var(--accent);color:white}
 
 /* Chart */
-.chart-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-canvas#glucoseChart{display:block;max-width:100%}
+.chart-wrap{width:100%;position:relative;-webkit-overflow-scrolling:touch}
+canvas#glucoseChart{display:block;width:100%}
 canvas#hba1cTrendChart{display:block;max-width:100%}
 .range-btns{display:flex;gap:6px;margin-bottom:12px}
 .range-btn{padding:5px 11px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
 .range-btn.active{background:var(--accent);border-color:var(--accent);color:white}
-.legend{display:flex;gap:14px;margin-top:10px}
+.legend{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
 .leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
 .leg-dot{width:8px;height:8px;border-radius:50%}
+/* Tooltip */
+.chart-tooltip{position:absolute;pointer-events:none;opacity:0;transition:opacity 0.15s;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:10px 12px;min-width:160px;z-index:10;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.chart-tooltip.visible{opacity:1}
+.tt-val{font-family:'DM Serif Display',serif;font-size:22px;line-height:1}
+.tt-unit{font-size:11px;color:var(--muted);margin-left:2px}
+.tt-row{font-size:11px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:5px}
+.tt-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.tt-divider{border:none;border-top:1px solid var(--border);margin:6px 0}
+/* Chart detail list */
+.chart-detail-list{margin-top:14px;border-top:1px solid var(--border);padding-top:12px}
+.chart-detail-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+.chart-detail-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(99,178,255,0.06)}
+.chart-detail-item:last-child{border-bottom:none}
+.cdi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cdi-info{flex:1;min-width:0}
+.cdi-top{display:flex;align-items:baseline;gap:6px}
+.cdi-val{font-family:'DM Serif Display',serif;font-size:16px;line-height:1}
+.cdi-unit{font-size:10px;color:var(--muted)}
+.cdi-meal{font-size:10px;background:var(--bg3);border-radius:5px;padding:1px 6px;color:var(--accent2);flex-shrink:0}
+.cdi-meta{font-size:10px;color:var(--muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chart-detail-more{text-align:center;font-size:12px;color:var(--accent);padding:8px 0;cursor:pointer}
 
 /* Log */
 .log-entry{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:10px}
@@ -269,12 +290,27 @@ select option{background:var(--bg2)}
           <button class="range-btn" onclick="setRange(30,this)">30D</button>
           <button class="range-btn" onclick="setRange(0,this)">All</button>
         </div>
-        <div class="chart-wrap"><canvas id="glucoseChart" height="180"></canvas></div>
+        <div class="chart-wrap" style="position:relative">
+          <canvas id="glucoseChart" height="200"></canvas>
+          <div class="chart-tooltip" id="chartTooltip">
+            <div style="display:flex;align-items:baseline;gap:4px">
+              <span class="tt-val" id="ttVal">—</span>
+              <span class="tt-unit" id="ttUnit">mg/dL</span>
+              <span id="ttStatus" style="font-size:11px;font-weight:600;margin-left:4px"></span>
+            </div>
+            <hr class="tt-divider">
+            <div class="tt-row"><span>🍽️</span><span id="ttMeal">—</span></div>
+            <div class="tt-row"><span>🕐</span><span id="ttTime">—</span></div>
+            <div class="tt-row" id="ttNoteRow" style="display:none"><span>📝</span><span id="ttNote" style="word-break:break-word;white-space:normal"></span></div>
+          </div>
+        </div>
         <div class="legend">
           <div class="leg-item"><div class="leg-dot" style="background:#22c55e"></div>Normal</div>
           <div class="leg-item"><div class="leg-dot" style="background:#f97316"></div>Low</div>
           <div class="leg-item"><div class="leg-dot" style="background:#ef4444"></div>High</div>
+          <div class="leg-item" style="margin-left:auto;font-size:11px;color:var(--muted)">Tap dot for details</div>
         </div>
+        <div class="chart-detail-list" id="chartDetailList"></div>
       </div>
       <div class="card">
         <div class="card-title">Target Ranges</div>
@@ -467,6 +503,8 @@ function loadPatient(pid) {
   localStorage.setItem('glucoCurrentPatient', pid);
   readings = getReadings(pid);
   manualHba1c = getManualHba1c(pid);
+  detailShowAll = false;
+  activeTooltipIdx = -1;
   document.getElementById('pickerScreen').classList.add('hidden');
   document.getElementById('mainApp').classList.remove('hidden');
   const p = patient();
@@ -1037,17 +1075,24 @@ function deletePatient() {
 // ====== CHART ======
 function setRange(days, btn) {
   chartRange = days;
+  detailShowAll = false;
+  activeTooltipIdx = -1;
   document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   drawChart();
 }
 
+let chartFilteredCache = [];
+let chartPadCache = {};
+let activeTooltipIdx = -1;
+
 function drawChart() {
   const canvas = document.getElementById('glucoseChart');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio||1;
   const W = canvas.parentElement.clientWidth;
-  const H = 180;
+  const H = 200;
   canvas.style.width=W+'px'; canvas.style.height=H+'px';
   canvas.width=W*dpr; canvas.height=H*dpr;
   ctx.scale(dpr,dpr);
@@ -1055,12 +1100,15 @@ function drawChart() {
 
   if (readings.length===0) {
     ctx.fillStyle='rgba(232,244,255,0.2)'; ctx.font='14px DM Sans,sans-serif'; ctx.textAlign='center';
-    ctx.fillText('No readings to display',W/2,H/2); return;
+    ctx.fillText('No readings to display',W/2,H/2);
+    renderChartDetailList([], null);
+    return;
   }
 
   const now = Date.now();
   let filtered = chartRange===0 ? readings : readings.filter(r=>r.ts>=now-chartRange*86400000);
   if (filtered.length===0) filtered = readings.slice(-20);
+  chartFilteredCache = filtered;
 
   const units = patient()?.units||'mg/dL';
   const ismmol = units==='mmol/L';
@@ -1069,26 +1117,31 @@ function drawChart() {
   const minV = Math.min(...vals,lo)*0.92;
   const maxV = Math.max(...vals,hi)*1.08;
 
-  const pad={l:38,r:12,t:12,b:28};
+  const pad={l:38,r:14,t:16,b:28};
+  chartPadCache={pad,minV,maxV,W,H,filtered,units,ismmol,lo,hi};
   const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
   const toX=i=>pad.l+(i/(filtered.length-1||1))*cW;
   const toY=v=>pad.t+cH-((v-minV)/(maxV-minV))*cH;
 
+  // Target band
   ctx.fillStyle='rgba(34,197,94,0.07)';
   ctx.fillRect(pad.l,toY(hi),cW,toY(lo)-toY(hi));
 
+  // Grid
   ctx.strokeStyle='rgba(99,178,255,0.08)'; ctx.lineWidth=1;
   [0.25,0.5,0.75,1].forEach(f=>{
     const y=pad.t+cH*(1-f);
     ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+cW,y);ctx.stroke();
   });
 
+  // Y labels
   ctx.fillStyle='rgba(232,244,255,0.35)'; ctx.font='10px DM Sans,sans-serif'; ctx.textAlign='right';
   [0,0.5,1].forEach(f=>{
     const v=minV+(maxV-minV)*f;
     ctx.fillText(ismmol?v.toFixed(1):Math.round(v),pad.l-4,pad.t+cH*(1-f)+3);
   });
 
+  // Area fill
   ctx.beginPath();
   ctx.moveTo(toX(0),toY(filtered[0].val));
   for(let i=1;i<filtered.length;i++) ctx.lineTo(toX(i),toY(filtered[i].val));
@@ -1099,25 +1152,191 @@ function drawChart() {
   ag.addColorStop(0,'rgba(79,168,255,0.18)');ag.addColorStop(1,'rgba(79,168,255,0)');
   ctx.fillStyle=ag; ctx.fill();
 
+  // Line
   ctx.beginPath(); ctx.strokeStyle='#4fa8ff'; ctx.lineWidth=2; ctx.lineJoin='round';
   ctx.moveTo(toX(0),toY(filtered[0].val));
   for(let i=1;i<filtered.length;i++) ctx.lineTo(toX(i),toY(filtered[i].val));
   ctx.stroke();
 
+  // Dots
+  const dotR = filtered.length>30?3:5;
   filtered.forEach((r,i)=>{
     const s=getStatus(r.val,units);
-    ctx.beginPath(); ctx.arc(toX(i),toY(r.val),filtered.length>30?2:4,0,Math.PI*2);
-    ctx.fillStyle=s.color; ctx.fill();
-    if(filtered.length<=30){ctx.strokeStyle='rgba(10,22,40,0.6)';ctx.lineWidth=1;ctx.stroke();}
+    const isActive = i===activeTooltipIdx;
+    ctx.beginPath();
+    ctx.arc(toX(i),toY(r.val),isActive?dotR+3:dotR,0,Math.PI*2);
+    ctx.fillStyle=s.color;
+    ctx.fill();
+    if(filtered.length<=40){
+      ctx.strokeStyle=isActive?'white':'rgba(10,22,40,0.6)';
+      ctx.lineWidth=isActive?2:1;
+      ctx.stroke();
+    }
+    // meal icon above dot for larger views
+    if(filtered.length<=15) {
+      const icon = mealIcon(r.meal);
+      ctx.font='10px serif'; ctx.textAlign='center';
+      ctx.fillText(icon, toX(i), toY(r.val)-dotR-4);
+    }
   });
 
+  // X labels
   ctx.fillStyle='rgba(232,244,255,0.35)'; ctx.font='9px DM Sans,sans-serif'; ctx.textAlign='center';
   const step=Math.max(1,Math.floor(filtered.length/5));
   for(let i=0;i<filtered.length;i+=step){
     const d=new Date(filtered[i].ts);
     ctx.fillText((d.getMonth()+1)+'/'+d.getDate(),toX(i),H-6);
   }
+
+  renderChartDetailList(filtered, units);
+  setupChartTap(canvas);
 }
+
+function mealIcon(meal) {
+  if (!meal) return '●';
+  const m = meal.toLowerCase();
+  if (m.includes('fasting')) return '💤';
+  if (m.includes('before')) return '🍽️';
+  if (m.includes('after')) return '🥘';
+  if (m.includes('bedtime')) return '🌙';
+  return '📍';
+}
+
+function setupChartTap(canvas) {
+  // Remove old listeners by replacing with clone
+  const newCanvas = canvas.cloneNode(true);
+  canvas.parentNode.replaceChild(newCanvas, canvas);
+
+  const handler = (e) => {
+    e.preventDefault();
+    const rect = newCanvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    hitTestChart(x, y, newCanvas);
+  };
+  newCanvas.addEventListener('touchstart', handler, {passive:false});
+  newCanvas.addEventListener('click', handler);
+
+  // Tap outside tooltip to dismiss
+  document.addEventListener('touchstart', (e) => {
+    if (!e.target.closest('.chart-tooltip') && !e.target.closest('#glucoseChart')) {
+      hideTooltip();
+    }
+  }, {passive:true});
+}
+
+function hitTestChart(x, y, canvas) {
+  const {pad, minV, maxV, W, H, filtered, units} = chartPadCache;
+  if (!filtered || filtered.length===0) return;
+  const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
+  const toX=i=>pad.l+(i/(filtered.length-1||1))*cW;
+  const toY=v=>pad.t+cH-((v-minV)/(maxV-minV))*cH;
+  const dotR = filtered.length>30?5:8; // hit radius
+
+  let closest = -1, closestDist = Infinity;
+  filtered.forEach((r,i)=>{
+    const dx=x-toX(i), dy=y-toY(r.val);
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<closestDist){closestDist=dist;closest=i;}
+  });
+
+  if(closest>=0 && closestDist < Math.max(dotR*2.5, 28)) {
+    activeTooltipIdx = closest;
+    showTooltipForPoint(closest, toX(closest), toY(filtered[closest].val), W, H, units);
+    drawChart(); // redraw to highlight selected dot
+  } else {
+    hideTooltip();
+  }
+}
+
+function showTooltipForPoint(idx, dotX, dotY, W, H, units) {
+  const r = chartFilteredCache[idx];
+  if (!r) return;
+  const s = getStatus(r.val, units);
+  const tooltip = document.getElementById('chartTooltip');
+  const d = new Date(r.ts);
+  const timeStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' · ' +
+                  d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+
+  document.getElementById('ttVal').textContent = r.val;
+  document.getElementById('ttVal').style.color = s.color;
+  document.getElementById('ttUnit').textContent = units;
+  document.getElementById('ttStatus').textContent = s.label;
+  document.getElementById('ttStatus').style.color = s.color;
+  document.getElementById('ttMeal').textContent = (mealIcon(r.meal)||'') + ' ' + (r.meal||'—');
+  document.getElementById('ttTime').textContent = timeStr;
+  const hasNote = r.notes && r.notes.trim();
+  document.getElementById('ttNoteRow').style.display = hasNote ? 'flex' : 'none';
+  document.getElementById('ttNote').textContent = r.notes || '';
+
+  // Position: prefer above dot, flip if too close to top; left/right based on x
+  const TW = 170, TH = hasNote ? 110 : 88;
+  let left = dotX + 10;
+  let top = dotY - TH - 10;
+  if (top < 4) top = dotY + 14;
+  if (left + TW > W - 4) left = dotX - TW - 10;
+  if (left < 2) left = 2;
+
+  tooltip.style.left = left + 'px';
+  tooltip.style.top = top + 'px';
+  tooltip.classList.add('visible');
+}
+
+function hideTooltip() {
+  activeTooltipIdx = -1;
+  const t = document.getElementById('chartTooltip');
+  if (t) t.classList.remove('visible');
+}
+
+// Detail list below chart
+let detailShowAll = false;
+function renderChartDetailList(filtered, units) {
+  const el = document.getElementById('chartDetailList');
+  if (!el || !filtered || filtered.length===0) {
+    if(el) el.innerHTML=''; return;
+  }
+  const sorted = [...filtered].reverse();
+  const SHOW = detailShowAll ? sorted.length : 5;
+  const slice = sorted.slice(0, SHOW);
+  const p = patient();
+
+  let html = `<div class="chart-detail-title">Readings in this view (${filtered.length})</div>`;
+  html += slice.map(r=>{
+    const s = getStatus(r.val, units);
+    const d = new Date(r.ts);
+    const dateStr = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    const timeStr = d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="chart-detail-item">
+      <div class="cdi-dot" style="background:${s.color}"></div>
+      <div class="cdi-info">
+        <div class="cdi-top">
+          <span class="cdi-val" style="color:${s.color}">${r.val}</span>
+          <span class="cdi-unit">${units}</span>
+          <span style="font-size:10px;color:${s.color};font-weight:600">${s.label}</span>
+        </div>
+        <div class="cdi-meta">${dateStr} · ${timeStr}${r.notes?' · 📝 '+r.notes:''}</div>
+      </div>
+      <div class="cdi-meal">${mealIcon(r.meal)} ${r.meal||''}</div>
+    </div>`;
+  }).join('');
+
+  if (sorted.length > 5) {
+    if (!detailShowAll) {
+      html += `<div class="chart-detail-more" onclick="toggleDetailAll(true)">Show all ${sorted.length} readings ▾</div>`;
+    } else {
+      html += `<div class="chart-detail-more" onclick="toggleDetailAll(false)">Show less ▴</div>`;
+    }
+  }
+  el.innerHTML = html;
+}
+
+function toggleDetailAll(show) {
+  detailShowAll = show;
+  renderChartDetailList(chartFilteredCache, patient()?.units||'mg/dL');
+}
+
 
 // ====== UTILS ======
 function showToast(msg, warn=false) {
