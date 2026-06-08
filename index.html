@@ -13,15 +13,15 @@
 
 :root {
   --bg:#0a1628;--bg2:#0f1f3a;--bg3:#162847;--card:#122035;
-  --border:rgba(99,178,255,0.12);--accent:#4fa8ff;--accent2:#7dd3fc;
+  --border:rgba(99,178,255,0.18);--accent:#4fa8ff;--accent2:#7dd3fc;
   --low:#f97316;--high:#ef4444;--normal:#22c55e;
-  --text:#e8f4ff;--muted:rgba(232,244,255,0.5);--radius:20px;
+  --text:#f0f8ff;--muted:#8eb8d8;--radius:20px;
   --safe-top:env(safe-area-inset-top,44px);--safe-bottom:env(safe-area-inset-bottom,34px);
 }
 body.light-mode {
-  --bg:#f0f4f8;--bg2:#e2eaf2;--bg3:#d4e0ec;--card:#ffffff;
-  --border:rgba(30,80,160,0.13);--accent:#1d6fa8;--accent2:#0e5a8a;
-  --text:#0f172a;--muted:rgba(15,23,42,0.5);
+  --bg:#f0f4f8;--bg2:#dce6f0;--bg3:#c8d8e8;--card:#ffffff;
+  --border:rgba(30,80,160,0.2);--accent:#1558a0;--accent2:#0e4a88;
+  --text:#0a1628;--muted:#3d5a78;
 }
 /* Theme toggle button */
 .theme-toggle{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -77,14 +77,14 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .screen.active{opacity:1;pointer-events:auto;transform:translateY(0)}
 
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
-.card-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:12px}
+.card-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:12px}
 
 /* Stats */
 .stat-row{display:flex;gap:8px;margin-bottom:12px}
 .stat-box{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center}
 .stat-val{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text);line-height:1}
-.stat-unit{font-size:11px;color:var(--muted);margin-top:2px}
-.stat-label{font-size:11px;color:var(--muted);margin-top:5px;font-weight:500}
+.stat-unit{font-size:12px;color:var(--muted);margin-top:2px;font-weight:600}
+.stat-label{font-size:12px;color:var(--text);margin-top:5px;font-weight:600}
 .stat-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px;vertical-align:middle}
 
 /* HbA1c card */
@@ -124,62 +124,63 @@ canvas#hba1cTrendChart{display:block;max-width:100%}
 .range-btn{padding:5px 11px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
 .range-btn.active{background:var(--accent);border-color:var(--accent);color:white}
 .legend{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
-.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
-.leg-dot{width:8px;height:8px;border-radius:50%}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text);font-weight:600}
+.leg-dot{width:10px;height:10px;border-radius:50%}
 /* Tooltip */
-.chart-tooltip{position:absolute;pointer-events:none;opacity:0;transition:opacity 0.15s;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:10px 12px;min-width:160px;z-index:10;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.chart-tooltip{position:absolute;pointer-events:none;opacity:0;transition:opacity 0.15s;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;min-width:170px;z-index:10;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
 .chart-tooltip.visible{opacity:1}
-.tt-val{font-family:'DM Serif Display',serif;font-size:22px;line-height:1}
-.tt-unit{font-size:11px;color:var(--muted);margin-left:2px}
-.tt-row{font-size:11px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:5px}
+.tt-val{font-family:'DM Serif Display',serif;font-size:24px;line-height:1;color:var(--text)}
+.tt-unit{font-size:13px;color:var(--muted);margin-left:2px;font-weight:600}
+.tt-row{font-size:13px;color:var(--text);margin-top:4px;display:flex;align-items:center;gap:6px;font-weight:500}
 .tt-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.tt-divider{border:none;border-top:1px solid var(--border);margin:6px 0}
+.tt-divider{border:none;border-top:1px solid var(--border);margin:7px 0}
 /* Chart detail list */
 .chart-detail-list{margin-top:14px;border-top:1px solid var(--border);padding-top:12px}
-.chart-detail-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
-.chart-detail-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(99,178,255,0.06)}
+.chart-detail-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text);margin-bottom:10px}
+.chart-detail-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
 .chart-detail-item:last-child{border-bottom:none}
-.cdi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cdi-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .cdi-info{flex:1;min-width:0}
 .cdi-top{display:flex;align-items:baseline;gap:6px}
-.cdi-val{font-family:'DM Serif Display',serif;font-size:16px;line-height:1}
-.cdi-unit{font-size:10px;color:var(--muted)}
-.cdi-meal{font-size:10px;background:var(--bg3);border-radius:5px;padding:1px 6px;color:var(--accent2);flex-shrink:0}
-.cdi-meta{font-size:10px;color:var(--muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chart-detail-more{text-align:center;font-size:12px;color:var(--accent);padding:8px 0;cursor:pointer}
+.cdi-val{font-family:'DM Serif Display',serif;font-size:18px;line-height:1}
+.cdi-unit{font-size:12px;color:var(--muted);font-weight:600}
+.cdi-meal{font-size:12px;background:var(--bg3);border-radius:5px;padding:2px 8px;color:var(--text);flex-shrink:0;font-weight:700;border:1px solid var(--border)}
+.cdi-meta{font-size:12px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.chart-detail-more{text-align:center;font-size:14px;color:var(--accent);padding:10px 0;cursor:pointer;font-weight:700}
 
 /* Log */
-.log-entry{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:10px}
+.log-entry{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);gap:10px}
 .log-entry:last-child{border-bottom:none}
-.log-indicator{width:4px;height:40px;border-radius:4px;flex-shrink:0}
+.log-indicator{width:4px;height:44px;border-radius:4px;flex-shrink:0}
 .log-info{flex:1;min-width:0}
-.log-val{font-family:'DM Serif Display',serif;font-size:20px;line-height:1}
-.log-val small{font-family:'DM Sans',sans-serif;font-size:10px;color:var(--muted);font-weight:300;margin-left:2px}
-.log-meta{font-size:11px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.log-meal{font-size:10px;background:var(--bg3);border-radius:6px;padding:3px 7px;color:var(--accent2);white-space:nowrap;flex-shrink:0}
-.log-del{width:28px;height:28px;border-radius:50%;background:rgba(239,68,68,0.12);border:none;color:#ef4444;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.log-val{font-family:'DM Serif Display',serif;font-size:22px;line-height:1;color:var(--text)}
+.log-val small{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);font-weight:400;margin-left:2px}
+.log-meta{font-size:13px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.log-meal{font-size:12px;background:var(--bg3);border-radius:6px;padding:4px 8px;color:var(--text);white-space:nowrap;flex-shrink:0;font-weight:600;border:1px solid var(--border)}
+.log-del{width:30px;height:30px;border-radius:50%;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#ef4444;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.log-edit{width:30px;height:30px;border-radius:50%;background:rgba(79,168,255,0.12);border:1px solid rgba(79,168,255,0.25);color:var(--accent);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:4px}
 
 /* Form */
-.form-group{margin-bottom:14px}
-label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);margin-bottom:6px}
-input[type=number],input[type=text],input[type=date],input[type=time],select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:16px;font-family:'DM Sans',sans-serif;-webkit-appearance:none;outline:none;transition:border-color 0.2s}
-input:focus,select:focus{border-color:var(--accent)}
-select option{background:var(--bg2)}
-.big-input{font-family:'DM Serif Display',serif;font-size:32px;text-align:center;letter-spacing:1px}
-.unit-hint{text-align:center;font-size:12px;color:var(--muted);margin-top:-8px;margin-bottom:14px}
-.btn-primary{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:14px;color:white;font-size:16px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:4px;letter-spacing:0.2px;box-shadow:0 4px 20px rgba(79,168,255,0.25);transition:transform 0.1s,box-shadow 0.1s}
+.form-group{margin-bottom:16px}
+label{display:block;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text);margin-bottom:7px}
+input[type=number],input[type=text],input[type=date],input[type=time],select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-size:16px;font-family:'DM Sans',sans-serif;-webkit-appearance:none;outline:none;transition:border-color 0.2s;font-weight:500}
+input:focus,select:focus{border-color:var(--accent);border-width:2px}
+select option{background:var(--bg2);color:var(--text)}
+.big-input{font-family:'DM Serif Display',serif;font-size:34px;text-align:center;letter-spacing:1px}
+.unit-hint{text-align:center;font-size:13px;color:var(--muted);margin-top:-8px;margin-bottom:14px;font-weight:600}
+.btn-primary{width:100%;padding:16px;background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:14px;color:white;font-size:17px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:4px;letter-spacing:0.2px;box-shadow:0 4px 20px rgba(79,168,255,0.3);transition:transform 0.1s,box-shadow 0.1s}
 .btn-primary:active{transform:scale(0.98);box-shadow:none}
 
 /* Profile */
 .profile-header{text-align:center;padding:8px 0 16px}
-.profile-big-av{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:white;margin:0 auto 12px;box-shadow:0 0 0 4px rgba(79,168,255,0.15)}
-.profile-display-name{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:4px}
-.profile-display-age{font-size:13px;color:var(--muted)}
-.info-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border)}
+.profile-big-av{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:white;margin:0 auto 12px;box-shadow:0 0 0 4px rgba(79,168,255,0.2)}
+.profile-display-name{font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:4px;color:var(--text)}
+.profile-display-age{font-size:14px;color:var(--muted);font-weight:600}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border)}
 .info-row:last-child{border-bottom:none}
-.info-key{font-size:13px;color:var(--muted)}
-.info-val{font-size:14px;font-weight:500}
-.btn-secondary{width:100%;padding:13px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;color:var(--accent);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:10px;transition:background 0.15s}
+.info-key{font-size:14px;color:var(--muted);font-weight:600}
+.info-val{font-size:15px;font-weight:700;color:var(--text)}
+.btn-secondary{width:100%;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;color:var(--accent);font-size:16px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:10px;transition:background 0.15s}
 .btn-secondary:active{background:var(--border)}
 
 /* Report modal */
@@ -242,6 +243,29 @@ select option{background:var(--bg2)}
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closePatientModal()">Cancel</button>
       <button class="btn-primary" style="margin-top:0" onclick="savePatientModal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EDIT READING MODAL ===== -->
+<div class="modal-overlay hidden" id="editReadingModal">
+  <div class="modal">
+    <div class="modal-title">Edit Reading</div>
+    <div class="modal-sub">Update this glucose log entry</div>
+    <input type="hidden" id="editReadingId">
+    <div class="form-group"><label>Blood Glucose</label><input type="number" id="editGlucose" class="big-input" min="20" max="600" step="0.1"></div>
+    <div class="unit-hint" id="editUnitHint">mg/dL</div>
+    <div class="form-group"><label>Meal Context</label>
+      <select id="editMeal">
+        <option>Fasting</option><option>Before meal</option><option>After meal (1hr)</option><option>After meal (2hr)</option><option>Bedtime</option><option>Random</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Date</label><input type="date" id="editReadingDate"></div>
+    <div class="form-group"><label>Time</label><input type="time" id="editReadingTime"></div>
+    <div class="form-group"><label>Notes</label><input type="text" id="editReadingNotes" placeholder="optional notes…" maxlength="80"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeEditReading()">Cancel</button>
+      <button class="btn-primary" style="margin-top:0" onclick="saveEditReading()">Save Changes</button>
     </div>
   </div>
 </div>
@@ -364,7 +388,7 @@ select option{background:var(--bg2)}
         <div id="targetRangeInfo"></div>
       </div>
       <!-- Share Report button -->
-      <button class="btn-primary" style="margin-bottom:12px" onclick="shareReport()">
+      <button class="btn-primary" style="margin-bottom:12px" onclick="openReportModal()">
         📤 Share Glucose Report
       </button>
     </div>
@@ -1190,15 +1214,22 @@ function renderHistory() {
   }
   el.innerHTML = [...readings].reverse().map(r => {
     const s = getStatus(r.val, p.units);
+    const grp = mealGroup(r.meal);
+    const mealColor = MEAL_COLORS[grp] || '#94a3b8';
     const d = new Date(r.ts);
+    const dateStr = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    const timeStr = d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
     return `<div class="log-entry">
       <div class="log-indicator" style="background:${s.color}"></div>
       <div class="log-info">
-        <div class="log-val">${r.val}<small>${p.units}</small></div>
-        <div class="log-meta">${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}${r.notes?' · '+r.notes:''}</div>
+        <div class="log-val" style="color:${s.color}">${r.val}<small>${p.units}</small>
+          <span style="font-size:12px;font-weight:700;margin-left:6px;color:${s.color}">${s.label}</span>
+        </div>
+        <div class="log-meta">${dateStr} · ${timeStr}${r.notes?' · 📝 '+r.notes:''}</div>
       </div>
-      <div class="log-meal">${r.meal}</div>
-      <button class="log-del" onclick="deleteReading(${r.id})">✕</button>
+      <div class="log-meal" style="border-color:${mealColor}44;color:${mealColor}">${mealIcon(r.meal)} ${r.meal||''}</div>
+      <button class="log-edit" onclick="openEditReading(${r.id})" title="Edit">✏️</button>
+      <button class="log-del" onclick="deleteReading(${r.id})" title="Delete">✕</button>
     </div>`;
   }).join('');
 }
@@ -1760,494 +1791,411 @@ function doDownloadPdf() {
 }
 
 
-// ====== A4 LAB REPORT BUILDER ======
+// ====== A4 LAB REPORT BUILDER (#16 #17 #19) ======
 async function buildReportCanvas(periodDays) {
   const p = patient();
-  if (!p) return;
+  if (!p) return null;
   const units = p.units;
   const ismmol = units === 'mmol/L';
   const cutoff = Date.now() - periodDays * 86400000;
-  const filtered = [...readings].filter(r => r.ts >= cutoff).sort((a,b)=>a.ts-b.ts);
-  const labHba1cInPeriod = manualHba1c.filter(m => m.ts >= cutoff);
+  const allFiltered = [...readings].filter(r => r.ts >= cutoff).sort((a,b)=>a.ts-b.ts);
+  const labInPeriod = manualHba1c.filter(m => m.ts >= cutoff);
+  const periodLabel = {7:'7 Days',14:'14 Days',30:'1 Month',90:'3 Months'}[periodDays]||'';
 
-  // A4 at 96dpi ≈ 794×1123px. We use 2× scale for sharpness.
-  const SC = 2;
-  const PW = 794, PH_MIN = 1123;
-  const mg = 48; // page margin
+  const SC = 2, PW = 794, mg = 44;
 
-  // Layout heights
-  const hdrH = 170;
-  const patH = 120;
-  const summaryH = 110;
-  const chartH = 220;
-  const hba1cH = manualHba1c.length > 0 ? 100 + manualHba1c.length * 28 : 0;
-  const tableRowH = 24;
-  const tableH = 56 + filtered.length * tableRowH;
-  const footerH = 60;
-  const sectGap = 24;
-  const totalH = Math.max(PH_MIN, hdrH + patH + summaryH + chartH + (hba1cH>0?hba1cH+sectGap:0) + tableH + footerH + sectGap*6 + 20);
+  // Compute stats
+  const lo = ismmol?4.0:70, hiR = ismmol?10.0:180;
+  const inRng = allFiltered.filter(r=>r.val>=lo&&r.val<=hiR).length;
+  const lowC  = allFiltered.filter(r=>r.val<lo).length;
+  const highC = allFiltered.filter(r=>r.val>hiR).length;
+  const avgAll = allFiltered.length ? (allFiltered.reduce((s,r)=>s+r.val,0)/allFiltered.length) : 0;
+  const mealAvgR = (kws) => {
+    const sub = allFiltered.filter(r=>kws.some(k=>(r.meal||'').toLowerCase().includes(k)));
+    return sub.length ? (sub.reduce((s,r)=>s+r.val,0)/sub.length).toFixed(1) : '—';
+  };
+  const avgFasting  = mealAvgR(['fasting']);
+  const avgPre      = mealAvgR(['before']);
+  const avgPost     = mealAvgR(['after']);
+  const estHba1c    = allFiltered.length>=3 ? calcHba1c(allFiltered, units) : null;
+  const latestLab   = labInPeriod.length ? labInPeriod[labInPeriod.length-1]
+                     : (manualHba1c.length ? manualHba1c[manualHba1c.length-1] : null);
+  const lastR       = allFiltered.length ? allFiltered[allFiltered.length-1] : null;
+
+  // Dynamic height
+  const hdrH    = 190;
+  const patH    = 130;
+  const hiBoxH  = 170; // highlights
+  const chartH  = 230;
+  const hba1cH  = 180;
+  const labTblH = labInPeriod.length>0 ? 40 + labInPeriod.length*26 + 20 : 0;
+  const tblRowH = 26;
+  const tblH    = 52 + allFiltered.length * tblRowH + 20;
+  const ftrH    = 60;
+  const gap     = 20;
+  const totalH  = hdrH+patH+hiBoxH+chartH+hba1cH+(labTblH>0?labTblH+gap:0)+tblH+ftrH+gap*7;
 
   const rc = document.createElement('canvas');
-  rc.width = PW * SC; rc.height = totalH * SC;
+  rc.width = PW*SC; rc.height = totalH*SC;
   const c = rc.getContext('2d');
-  c.scale(SC, SC);
-
+  c.scale(SC,SC);
   const W = PW;
 
-  // ── White background ──────────────────────────────────────────
-  c.fillStyle = '#ffffff';
-  c.fillRect(0, 0, W, totalH);
+  // ── BACKGROUND ─────────────────────────────────────────────────
+  c.fillStyle='#ffffff'; c.fillRect(0,0,W,totalH);
 
-  // ── Header band ───────────────────────────────────────────────
-  // Navy top bar
-  c.fillStyle = '#0a1e3d';
-  c.fillRect(0, 0, W, hdrH);
+  // ── HEADER ─────────────────────────────────────────────────────
+  c.fillStyle='#0a1e3d'; c.fillRect(0,0,W,hdrH);
+  c.fillStyle='#0ea5e9'; c.fillRect(0,hdrH-6,W,6);
 
-  // Teal accent stripe
-  c.fillStyle = '#0ea5e9';
-  c.fillRect(0, hdrH-5, W, 5);
+  // Logo
+  c.fillStyle='#ffffff'; c.font='bold 42px Georgia,serif'; c.textAlign='left';
+  c.fillText('GlucoTrack', mg, 54);
+  c.fillStyle='#7dd3fc'; c.font='16px Arial,sans-serif';
+  c.fillText('Comprehensive Diabetes Monitoring Report', mg, 78);
 
-  // Logo text
-  c.fillStyle = '#ffffff';
-  c.font = 'bold 38px Georgia, serif';
-  c.textAlign = 'left';
-  c.fillText('GlucoTrack', mg, 56);
+  // Right meta
+  c.fillStyle='rgba(255,255,255,0.75)'; c.font='13px Arial,sans-serif'; c.textAlign='right';
+  const df = new Date(cutoff).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  const dt = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  c.fillText('Period: '+periodLabel+' ('+df+' – '+dt+')', W-mg, 44);
+  c.fillText('Generated: '+new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}), W-mg, 64);
+  c.fillStyle='rgba(255,255,255,0.4)'; c.font='11px Arial,sans-serif';
+  c.fillText('For personal use only · Not a medical document', W-mg, 82);
 
-  c.fillStyle = '#7dd3fc';
-  c.font = '15px Arial, sans-serif';
-  c.fillText('Diabetes Monitoring & Glucose Report', mg, 80);
+  // Header divider
+  c.strokeStyle='rgba(255,255,255,0.12)'; c.lineWidth=0.5;
+  c.beginPath(); c.moveTo(mg,96); c.lineTo(W-mg,96); c.stroke();
 
-  // Right side: report meta
-  c.fillStyle = 'rgba(255,255,255,0.7)';
-  c.font = '12px Arial, sans-serif';
-  c.textAlign = 'right';
-  const periodLabel = periodDays===7?'7 Days':periodDays===14?'14 Days':periodDays===30?'1 Month':'3 Months';
-  const dateFrom = new Date(cutoff).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-  const dateTo = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-  c.fillText('Report Period: ' + periodLabel, W-mg, 44);
-  c.fillText(dateFrom + ' – ' + dateTo, W-mg, 62);
-  c.fillText('Generated: ' + new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}), W-mg, 80);
-  c.fillText('For personal use only · Not a medical document', W-mg, 98);
-
-  // Divider line in header
-  c.strokeStyle = 'rgba(255,255,255,0.15)';
-  c.lineWidth = 0.5;
-  c.beginPath(); c.moveTo(mg, 108); c.lineTo(W-mg, 108); c.stroke();
-
-  // Summary stats in header
-  const lo = ismmol?4.0:70, hi2 = ismmol?10.0:180;
-  const inRange = filtered.filter(r=>r.val>=lo&&r.val<=hi2).length;
-  const lowC = filtered.filter(r=>r.val<lo).length;
-  const highC = filtered.filter(r=>r.val>hi2).length;
-  const avgVal = filtered.length ? (filtered.reduce((s,r)=>s+r.val,0)/filtered.length) : 0;
-  const estH = filtered.length>=3 ? calcHba1c(filtered, units) : null;
-  const latestLab = labHba1cInPeriod.length ? labHba1cInPeriod[labHba1cInPeriod.length-1] : (manualHba1c.length?manualHba1c[manualHba1c.length-1]:null);
-
-  const hdrStats = [
-    {label:'Readings', val: filtered.length.toString(), color:'#7dd3fc'},
-    {label:'Avg Glucose', val: filtered.length ? avgVal.toFixed(1)+' '+units : '—', color:'#7dd3fc'},
-    {label:'In Range', val: filtered.length ? Math.round(inRange/filtered.length*100)+'%' : '—', color:'#4ade80'},
-    {label:'Est. HbA1c', val: estH ? estH.toFixed(1)+'%' : '—', color: estH ? interpColor(estH) : '#7dd3fc'},
-    {label:'Lab HbA1c', val: latestLab ? latestLab.val.toFixed(1)+'%' : '—', color: latestLab ? interpColor(latestLab.val) : '#7dd3fc'},
+  // Header summary stats
+  const hStats = [
+    {label:'Total Readings', val:allFiltered.length.toString()},
+    {label:'Avg Glucose',    val:allFiltered.length?avgAll.toFixed(1)+' '+units:'—'},
+    {label:'In Range',       val:allFiltered.length?Math.round(inRng/allFiltered.length*100)+'%':'—'},
+    {label:'Est. HbA1c',    val:estHba1c?estHba1c.toFixed(1)+'%':'—', color:estHba1c?interpColor(estHba1c):null},
+    {label:'Lab HbA1c',     val:latestLab?latestLab.val.toFixed(1)+'%':'—', color:latestLab?interpColor(latestLab.val):null},
   ];
-  const sw = (W - mg*2) / hdrStats.length;
-  hdrStats.forEach((s,i) => {
-    const sx = mg + i*sw + sw/2;
-    c.fillStyle = s.color;
-    c.font = 'bold 22px Georgia, serif';
-    c.textAlign = 'center';
-    c.fillText(s.val, sx, 143);
-    c.fillStyle = 'rgba(255,255,255,0.5)';
-    c.font = '11px Arial, sans-serif';
-    c.fillText(s.label, sx, 159);
+  const sw=(W-mg*2)/hStats.length;
+  hStats.forEach((s,i)=>{
+    const sx=mg+i*sw+sw/2;
+    c.fillStyle=s.color||'#7dd3fc';
+    c.font='bold 26px Georgia,serif'; c.textAlign='center';
+    c.fillText(s.val, sx, 148);
+    c.fillStyle='rgba(255,255,255,0.55)'; c.font='12px Arial,sans-serif';
+    c.fillText(s.label, sx, 168);
   });
 
-  let curY = hdrH + sectGap;
+  let curY = hdrH + gap;
 
-  // ── Patient Information ────────────────────────────────────────
-  c.fillStyle = '#f0f7ff';
-  rRect(c, mg, curY, W-mg*2, patH, 8);
-  c.fill();
-  c.strokeStyle = '#bfdbfe';
-  c.lineWidth = 1;
-  rRect(c, mg, curY, W-mg*2, patH, 8);
-  c.stroke();
-
-  // Section label
-  c.fillStyle = '#0a1e3d';
-  c.font = 'bold 11px Arial, sans-serif';
-  c.textAlign = 'left';
-  c.fillText('PATIENT INFORMATION', mg+16, curY+18);
-
-  // Horizontal divider
-  c.strokeStyle = '#bfdbfe'; c.lineWidth = 0.5;
-  c.beginPath(); c.moveTo(mg+16,curY+24); c.lineTo(W-mg-16,curY+24); c.stroke();
-
-  const patFields = [
-    ['Patient Name', p.name],
-    ['Age', p.age + ' years'],
-    ['Diabetes Type', p.type],
-    ['Units', units],
-    ['Readings in Period', filtered.length.toString()],
-    ['Report Period', periodLabel],
-  ];
-  const pcols = 3, pcolW = (W-mg*2-32) / pcols;
-  patFields.forEach((f, i) => {
-    const col = i % pcols, row = Math.floor(i / pcols);
-    const fx = mg + 16 + col * pcolW;
-    const fy = curY + 38 + row * 34;
-    c.fillStyle = '#64748b';
-    c.font = '10px Arial, sans-serif';
-    c.fillText(f[0].toUpperCase(), fx, fy);
-    c.fillStyle = '#0f172a';
-    c.font = 'bold 14px Arial, sans-serif';
-    c.fillText(f[1], fx, fy+16);
+  // ── PATIENT INFO ────────────────────────────────────────────────
+  rpSectionHeader(c, 'PATIENT INFORMATION', mg, curY, W);
+  curY+=26;
+  c.fillStyle='#f0f7ff'; rpRRect(c,mg,curY,W-mg*2,patH-26,8); c.fill();
+  c.strokeStyle='#bfdbfe'; c.lineWidth=0.8; rpRRect(c,mg,curY,W-mg*2,patH-26,8); c.stroke();
+  const pfs=[['Patient Name',p.name],['Age',p.age+' years'],['Type',p.type],
+             ['Units',units],['Readings in Period',allFiltered.length.toString()],['Report Period',periodLabel]];
+  const pcW=(W-mg*2-32)/3;
+  pfs.forEach((f,i)=>{
+    const col=i%3, row=Math.floor(i/3);
+    const fx=mg+16+col*pcW, fy=curY+12+row*38;
+    c.fillStyle='#4a6080'; c.font='10px Arial,sans-serif'; c.textAlign='left';
+    c.fillText(f[0].toUpperCase(), fx, fy+10);
+    c.fillStyle='#0a1e3d'; c.font='bold 15px Arial,sans-serif';
+    c.fillText(f[1], fx, fy+26);
   });
-  curY += patH + sectGap;
+  curY += patH - 26 + gap;
 
-  // ── Summary Statistics ─────────────────────────────────────────
-  sectionHeader(c, 'GLUCOSE SUMMARY', mg, curY, W);
-  curY += 28;
-
-  const sumBoxes = [
-    {label:'Average Glucose', val: filtered.length?avgVal.toFixed(1):'—', unit:units, color:'#0ea5e9', bg:'#e0f2fe'},
-    {label:'Highest Reading', val: filtered.length?Math.max(...filtered.map(r=>r.val)).toFixed(1):'—', unit:units, color:'#ef4444', bg:'#fee2e2'},
-    {label:'Lowest Reading', val: filtered.length?Math.min(...filtered.map(r=>r.val)).toFixed(1):'—', unit:units, color:'#f97316', bg:'#fff7ed'},
-    {label:'In Target Range', val: filtered.length?Math.round(inRange/filtered.length*100)+'%':'—', unit: inRange+'/'+filtered.length, color:'#16a34a', bg:'#dcfce7'},
-    {label:'Above Range', val: filtered.length?Math.round(highC/filtered.length*100)+'%':'—', unit: highC+' readings', color:'#dc2626', bg:'#fee2e2'},
-    {label:'Below Range', val: filtered.length?Math.round(lowC/filtered.length*100)+'%':'—', unit: lowC+' readings', color:'#ea580c', bg:'#fff7ed'},
+  // ── HIGHLIGHTS ──────────────────────────────────────────────────
+  rpSectionHeader(c, 'KEY HIGHLIGHTS (LAST 30 DAYS)', mg, curY, W);
+  curY+=26;
+  const hBoxes=[
+    {label:'Avg Fasting',   val:avgFasting,  unit:units, color:'#2563eb', bg:'#eff6ff'},
+    {label:'Avg Pre-meal',  val:avgPre,      unit:units, color:'#7c3aed', bg:'#f5f3ff'},
+    {label:'Avg Post-meal', val:avgPost,     unit:units, color:'#059669', bg:'#ecfdf5'},
+    {label:'Est. HbA1c',   val:estHba1c?estHba1c.toFixed(1)+'%':'—', unit:'estimated', color:estHba1c?interpColor(estHba1c):'#64748b', bg:'#f0f9ff'},
+    {label:'Last Reading',  val:lastR?lastR.val+' '+units:'—', unit:lastR?new Date(lastR.ts).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+(', '+lastR.meal):'', color:lastR?getStatus(lastR.val,units).color:'#64748b', bg:'#fff7ed'},
+    {label:'In Target Range',val:allFiltered.length?Math.round(inRng/allFiltered.length*100)+'%':'—', unit:inRng+'/'+allFiltered.length+' readings', color:'#16a34a', bg:'#f0fdf4'},
   ];
-
-  const boxW = (W - mg*2 - 20) / 3, boxH = 72;
-  sumBoxes.forEach((b, i) => {
-    const col = i%3, row = Math.floor(i/3);
-    const bx = mg + col*(boxW+10), by = curY + row*(boxH+10);
-    c.fillStyle = b.bg;
-    rRect(c, bx, by, boxW, boxH, 8); c.fill();
-    c.strokeStyle = b.color+'44'; c.lineWidth=1;
-    rRect(c, bx, by, boxW, boxH, 8); c.stroke();
-    c.fillStyle = '#64748b'; c.font='10px Arial,sans-serif'; c.textAlign='left';
-    c.fillText(b.label.toUpperCase(), bx+12, by+18);
-    c.fillStyle = b.color; c.font='bold 26px Georgia,serif';
-    c.fillText(b.val, bx+12, by+48);
-    c.fillStyle = '#94a3b8'; c.font='11px Arial,sans-serif';
-    c.fillText(b.unit, bx+12, by+63);
+  const bW=(W-mg*2-20)/3, bH=60;
+  hBoxes.forEach((b,i)=>{
+    const col=i%3, row=Math.floor(i/3);
+    const bx=mg+col*(bW+10), by=curY+row*(bH+8);
+    c.fillStyle=b.bg; rpRRect(c,bx,by,bW,bH,8); c.fill();
+    c.strokeStyle=b.color+'55'; c.lineWidth=0.8; rpRRect(c,bx,by,bW,bH,8); c.stroke();
+    c.fillStyle='#4a6080'; c.font='10px Arial,sans-serif'; c.textAlign='left';
+    c.fillText(b.label.toUpperCase(), bx+10, by+14);
+    c.fillStyle=b.color; c.font='bold 22px Georgia,serif';
+    c.fillText(b.val, bx+10, by+40);
+    c.fillStyle='#64748b'; c.font='10px Arial,sans-serif';
+    c.fillText(b.unit, bx+10, by+54);
   });
-  curY += summaryH + sectGap;
+  curY += hiBoxH - 26 + gap;
 
-  // ── Glucose Trend Chart ────────────────────────────────────────
-  sectionHeader(c, 'GLUCOSE TREND CHART', mg, curY, W);
-  curY += 28;
-
-  if (filtered.length >= 2) {
-    c.fillStyle = '#f8fafc';
-    rRect(c, mg, curY, W-mg*2, chartH, 8); c.fill();
-    c.strokeStyle='#e2e8f0'; c.lineWidth=1;
-    rRect(c, mg, curY, W-mg*2, chartH, 8); c.stroke();
-    drawLabReportChart(c, filtered, units, ismmol, mg+16, curY+14, W-mg*2-32, chartH-28);
+  // ── GLUCOSE TREND CHART ─────────────────────────────────────────
+  rpSectionHeader(c, 'GLUCOSE TREND — SEPARATE LINES BY MEAL TYPE', mg, curY, W);
+  curY+=26;
+  c.fillStyle='#f8fafc'; rpRRect(c,mg,curY,W-mg*2,chartH-26,8); c.fill();
+  c.strokeStyle='#e2e8f0'; c.lineWidth=0.8; rpRRect(c,mg,curY,W-mg*2,chartH-26,8); c.stroke();
+  if (allFiltered.length>=2) {
+    rpDrawMealChart(c, allFiltered, units, ismmol, mg+14, curY+12, W-mg*2-28, chartH-26-24);
   } else {
-    c.fillStyle='#f8fafc'; rRect(c,mg,curY,W-mg*2,chartH,8); c.fill();
     c.fillStyle='#94a3b8'; c.font='14px Arial,sans-serif'; c.textAlign='center';
-    c.fillText('Not enough data to draw chart (need ≥2 readings)', W/2, curY+chartH/2);
+    c.fillText('Not enough data (need ≥2 readings)', W/2, curY+(chartH-26)/2);
   }
-  curY += chartH + sectGap;
+  // Chart meal legend
+  const mls=[{c:'#2563eb',l:'Fasting'},{c:'#7c3aed',l:'Pre-meal'},{c:'#059669',l:'Post-meal'},{c:'#94a3b8',l:'Other'}];
+  let legX=mg+14;
+  mls.forEach(ml=>{
+    c.fillStyle=ml.c; c.beginPath(); c.arc(legX,curY+chartH-26-6,5,0,Math.PI*2); c.fill();
+    c.fillStyle='#334155'; c.font='bold 11px Arial,sans-serif'; c.textAlign='left';
+    c.fillText(ml.l, legX+8, curY+chartH-26-2);
+    legX+=70;
+  });
+  curY+=chartH-26+gap;
 
-  // ── HbA1c Section ─────────────────────────────────────────────
-  sectionHeader(c, 'HbA1c RESULTS', mg, curY, W);
-  curY += 28;
-
-  // HbA1c summary row
-  const hba1cBoxW = (W-mg*2-10)/2;
+  // ── HBA1C ───────────────────────────────────────────────────────
+  rpSectionHeader(c, 'HbA1c ANALYSIS', mg, curY, W);
+  curY+=26;
+  const hbxW=(W-mg*2-10)/2;
   // Estimated box
-  c.fillStyle = estH ? '#f0f9ff' : '#f8fafc';
-  rRect(c,mg,curY,hba1cBoxW,84,8); c.fill();
-  c.strokeStyle=estH?'#0ea5e944':'#e2e8f0'; c.lineWidth=1;
-  rRect(c,mg,curY,hba1cBoxW,84,8); c.stroke();
-  c.fillStyle='#64748b'; c.font='10px Arial,sans-serif'; c.textAlign='left';
-  c.fillText('ESTIMATED HbA1c (from glucose log)', mg+14, curY+18);
-  if (estH) {
-    const ip = hba1cInterp(estH);
-    c.fillStyle=ip.color; c.font='bold 32px Georgia,serif';
-    c.fillText(estH.toFixed(1)+'%', mg+14, curY+56);
+  c.fillStyle=estHba1c?'#f0f9ff':'#f8fafc'; rpRRect(c,mg,curY,hbxW,88,8); c.fill();
+  c.strokeStyle=estHba1c?'#0ea5e955':'#e2e8f0'; c.lineWidth=0.8; rpRRect(c,mg,curY,hbxW,88,8); c.stroke();
+  c.fillStyle='#4a6080'; c.font='10px Arial,sans-serif'; c.textAlign='left';
+  c.fillText('ESTIMATED HbA1c (FROM GLUCOSE LOG)', mg+12, curY+16);
+  if (estHba1c) {
+    const ip=hba1cInterp(estHba1c);
+    c.fillStyle=ip.color; c.font='bold 36px Georgia,serif'; c.fillText(estHba1c.toFixed(1)+'%', mg+12, curY+58);
+    c.fillStyle='#334155'; c.font='bold 13px Arial,sans-serif'; c.fillText(ip.label, mg+12, curY+78);
+    const eag=hba1cToEag(estHba1c);
     c.fillStyle='#64748b'; c.font='12px Arial,sans-serif';
-    c.fillText(ip.label, mg+14, curY+74);
-    const eag = hba1cToEag(estH);
-    c.fillText('eAG: '+(ismmol?(eag/18.018).toFixed(1):eag)+' '+units, mg+14+100, curY+74);
+    c.fillText('eAG: '+(ismmol?(eag/18.018).toFixed(1):eag)+' '+units, mg+130, curY+78);
   } else {
-    c.fillStyle='#94a3b8'; c.font='14px Arial,sans-serif';
-    c.fillText('Insufficient data (need ≥3 readings)', mg+14, curY+50);
+    c.fillStyle='#94a3b8'; c.font='14px Arial,sans-serif'; c.fillText('Insufficient data', mg+12, curY+54);
   }
-
-  // Latest lab box
-  const lbx = mg+hba1cBoxW+10;
-  c.fillStyle = latestLab ? '#f0fdf4' : '#f8fafc';
-  rRect(c,lbx,curY,hba1cBoxW,84,8); c.fill();
-  c.strokeStyle=latestLab?'#16a34a44':'#e2e8f0'; c.lineWidth=1;
-  rRect(c,lbx,curY,hba1cBoxW,84,8); c.stroke();
-  c.fillStyle='#64748b'; c.font='10px Arial,sans-serif'; c.textAlign='left';
-  c.fillText('LATEST LAB HbA1c', lbx+14, curY+18);
+  // Lab box
+  const lbx=mg+hbxW+10;
+  c.fillStyle=latestLab?'#f0fdf4':'#f8fafc'; rpRRect(c,lbx,curY,hbxW,88,8); c.fill();
+  c.strokeStyle=latestLab?'#16a34a55':'#e2e8f0'; c.lineWidth=0.8; rpRRect(c,lbx,curY,hbxW,88,8); c.stroke();
+  c.fillStyle='#4a6080'; c.font='10px Arial,sans-serif'; c.textAlign='left';
+  c.fillText('LATEST LAB HbA1c', lbx+12, curY+16);
   if (latestLab) {
-    const ip = hba1cInterp(latestLab.val);
-    c.fillStyle=ip.color; c.font='bold 32px Georgia,serif';
-    c.fillText(latestLab.val.toFixed(1)+'%', lbx+14, curY+56);
-    c.fillStyle='#64748b'; c.font='12px Arial,sans-serif';
+    const ip=hba1cInterp(latestLab.val);
+    c.fillStyle=ip.color; c.font='bold 36px Georgia,serif'; c.fillText(latestLab.val.toFixed(1)+'%', lbx+12, curY+58);
     const ld=new Date(latestLab.ts).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-    c.fillText(ip.label+' · '+ld, lbx+14, curY+74);
+    c.fillStyle='#334155'; c.font='bold 13px Arial,sans-serif'; c.fillText(ip.label, lbx+12, curY+78);
+    c.fillStyle='#64748b'; c.font='12px Arial,sans-serif'; c.fillText(ld, lbx+130, curY+78);
   } else {
-    c.fillStyle='#94a3b8'; c.font='14px Arial,sans-serif';
-    c.fillText('No lab result recorded', lbx+14, curY+50);
+    c.fillStyle='#94a3b8'; c.font='14px Arial,sans-serif'; c.fillText('No lab result recorded', lbx+12, curY+54);
   }
-  curY += 84 + 14;
+  curY+=88+10;
 
-  // HbA1c reference range bar
-  drawHba1cRefBar(c, mg, curY, W-mg*2, 28, estH, latestLab);
-  curY += 28 + 10;
+  // HbA1c reference bar
+  rpHba1cRefBar(c, mg, curY, W-mg*2, 30, estHba1c, latestLab);
+  curY+=30+10;
 
-  // Lab HbA1c log table (if any in period)
-  if (labHba1cInPeriod.length > 0) {
-    c.fillStyle='#64748b'; c.font='bold 11px Arial,sans-serif'; c.textAlign='left';
-    c.fillText('Lab HbA1c History (in report period)', mg, curY+12);
-    curY += 20;
-    const hCols=[{x:mg,w:180,label:'Date'},{x:mg+180,w:100,label:'HbA1c (%)'},{x:mg+280,w:120,label:'Status'},{x:mg+400,w:280,label:'Notes'}];
-    // header
-    c.fillStyle='#e0f2fe';
-    c.fillRect(mg, curY, W-mg*2, 24);
-    c.fillStyle='#0369a1'; c.font='bold 11px Arial,sans-serif';
-    hCols.forEach(col=>{c.textAlign='left';c.fillText(col.label,col.x+6,curY+16);});
-    curY+=24;
-    labHba1cInPeriod.forEach((m,i)=>{
-      if(i%2===0){c.fillStyle='#f8fafc';c.fillRect(mg,curY,W-mg*2,24);}
+  // In-range bar
+  if (allFiltered.length>0) {
+    const pct=v=>Math.round(v/allFiltered.length*100);
+    const barW=W-mg*2;
+    c.fillStyle='#22c55e'; c.fillRect(mg, curY, barW*pct(inRng)/100, 14);
+    c.fillStyle='#f97316'; c.fillRect(mg+barW*pct(inRng)/100, curY, barW*pct(lowC)/100, 14);
+    c.fillStyle='#ef4444'; c.fillRect(mg+barW*(pct(inRng)+pct(lowC))/100, curY, barW*pct(highC)/100, 14);
+    c.fillStyle='#334155'; c.font='11px Arial,sans-serif'; c.textAlign='left';
+    c.fillText('In Range: '+pct(inRng)+'%  Low: '+pct(lowC)+'%  High: '+pct(highC)+'%', mg, curY+28);
+    curY+=36;
+  }
+  curY+=gap;
+
+  // Lab HbA1c table
+  if (labInPeriod.length>0) {
+    rpSectionHeader(c, 'LAB HbA1c HISTORY IN PERIOD', mg, curY, W);
+    curY+=26;
+    const lCols=[{x:mg,w:200,label:'Date'},{x:mg+200,w:120,label:'HbA1c (%)'},{x:mg+320,w:140,label:'Status'},{x:mg+460,w:W-mg-460-mg,label:'Notes'}];
+    c.fillStyle='#e0f2fe'; c.fillRect(mg,curY,W-mg*2,26);
+    c.fillStyle='#0369a1'; c.font='bold 12px Arial,sans-serif'; c.textAlign='left';
+    lCols.forEach(col=>c.fillText(col.label, col.x+6, curY+18));
+    curY+=26;
+    labInPeriod.forEach((m,i)=>{
+      if(i%2===0){c.fillStyle='#f8fafc';c.fillRect(mg,curY,W-mg*2,26);}
       const ip=hba1cInterp(m.val);
-      c.fillStyle='#334155'; c.font='12px Arial,sans-serif';
-      c.textAlign='left';
-      c.fillText(new Date(m.ts).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),hCols[0].x+6,curY+16);
-      c.fillStyle=ip.color; c.font='bold 12px Arial,sans-serif';
-      c.fillText(m.val.toFixed(1)+'%',hCols[1].x+6,curY+16);
-      c.fillStyle='#334155'; c.font='12px Arial,sans-serif';
-      c.fillText(ip.label,hCols[2].x+6,curY+16);
-      c.fillStyle='#64748b';
-      c.fillText(m.notes||'—',hCols[3].x+6,curY+16);
+      c.fillStyle='#0f172a'; c.font='13px Arial,sans-serif'; c.textAlign='left';
+      c.fillText(new Date(m.ts).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}), lCols[0].x+6, curY+18);
+      c.fillStyle=ip.color; c.font='bold 13px Arial,sans-serif';
+      c.fillText(m.val.toFixed(1)+'%', lCols[1].x+6, curY+18);
+      c.fillStyle='#334155'; c.font='13px Arial,sans-serif';
+      c.fillText(ip.label, lCols[2].x+6, curY+18);
+      c.fillStyle='#64748b'; c.fillText(m.notes||'—', lCols[3].x+6, curY+18);
       c.strokeStyle='#e2e8f0'; c.lineWidth=0.5;
-      c.beginPath();c.moveTo(mg,curY+24);c.lineTo(W-mg,curY+24);c.stroke();
-      curY+=24;
+      c.beginPath();c.moveTo(mg,curY+26);c.lineTo(W-mg,curY+26);c.stroke();
+      curY+=26;
     });
-    curY += 14;
+    curY+=gap;
   }
 
-  curY += sectGap;
-
-  // ── Glucose Readings Table ─────────────────────────────────────
-  sectionHeader(c, 'DETAILED GLUCOSE READINGS', mg, curY, W);
-  curY += 28;
-
-  const cols = [
-    {x:mg, w:90, label:'#'},
-    {x:mg+36, w:110, label:'Date'},
-    {x:mg+148, w:72, label:'Time'},
-    {x:mg+222, w:100, label:'Glucose'},
-    {x:mg+326, w:40, label:'Status'},
-    {x:mg+374, w:140, label:'Meal Context'},
-    {x:mg+516, w:W-mg-516-mg, label:'Notes'},
+  // ── READINGS TABLE (newest to oldest) ──────────────────────────
+  rpSectionHeader(c, 'ALL GLUCOSE READINGS — NEWEST TO OLDEST ('+allFiltered.length+' TOTAL)', mg, curY, W);
+  curY+=26;
+  const tCols=[
+    {x:mg,    w:32,  label:'#'},
+    {x:mg+32, w:115, label:'Date'},
+    {x:mg+147,w:72,  label:'Time'},
+    {x:mg+219,w:110, label:'Glucose'},
+    {x:mg+329,w:56,  label:'Status'},
+    {x:mg+385,w:140, label:'Meal Type'},
+    {x:mg+525,w:W-mg-525-mg, label:'Notes'},
   ];
-
   // Table header
-  c.fillStyle='#0a1e3d';
-  c.fillRect(mg, curY, W-mg*2, 30);
-  c.fillStyle='#ffffff'; c.font='bold 11px Arial,sans-serif'; c.textAlign='left';
-  cols.forEach(col=>c.fillText(col.label, col.x+6, curY+20));
+  c.fillStyle='#0a1e3d'; c.fillRect(mg, curY, W-mg*2, 30);
+  c.fillStyle='#ffffff'; c.font='bold 12px Arial,sans-serif'; c.textAlign='left';
+  tCols.forEach(col=>c.fillText(col.label, col.x+4, curY+20));
   curY+=30;
 
-  // Alternating rows
-  [...filtered].reverse().forEach((r,i)=>{
+  const sortedDesc=[...allFiltered].reverse(); // newest first (#19)
+  sortedDesc.forEach((r,i)=>{
     const s=getStatus(r.val,units);
+    const grpC = {fasting:'#2563eb',pre:'#7c3aed',post:'#059669',other:'#94a3b8'}[mealGroup(r.meal)]||'#94a3b8';
     c.fillStyle=i%2===0?'#ffffff':'#f8fafc';
-    c.fillRect(mg,curY,W-mg*2,tableRowH);
-
+    c.fillRect(mg, curY, W-mg*2, tblRowH);
+    // Row number (descending = newest first)
+    c.fillStyle='#94a3b8'; c.font='12px Arial,sans-serif'; c.textAlign='left';
+    c.fillText((i+1).toString(), tCols[0].x+4, curY+18);
     const d=new Date(r.ts);
-    const rowData=[
-      {col:cols[0], val:(filtered.length-i).toString(), color:'#94a3b8'},
-      {col:cols[1], val:d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}), color:'#334155'},
-      {col:cols[2], val:d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}), color:'#334155'},
-      {col:cols[3], val:r.val+' '+units, color:s.color, bold:true},
-      {col:cols[4], val:s.label, color:s.color},
-      {col:cols[5], val:r.meal||'', color:'#475569'},
-      {col:cols[6], val:(r.notes||'').slice(0,30), color:'#64748b'},
-    ];
-    rowData.forEach(({col,val,color,bold})=>{
-      c.fillStyle=color;
-      c.font=(bold?'bold ':'')+'12px Arial,sans-serif';
-      c.textAlign='left';
-      c.fillText(val, col.x+6, curY+16);
-    });
-    c.strokeStyle='#e2e8f0'; c.lineWidth=0.5;
-    c.beginPath();c.moveTo(mg,curY+tableRowH);c.lineTo(W-mg,curY+tableRowH);c.stroke();
-    curY+=tableRowH;
+    c.fillStyle='#0f172a';
+    c.fillText(d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}), tCols[1].x+4, curY+18);
+    c.fillText(d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}), tCols[2].x+4, curY+18);
+    c.fillStyle=s.color; c.font='bold 13px Arial,sans-serif';
+    c.fillText(r.val+' '+units, tCols[3].x+4, curY+18);
+    c.fillStyle=s.color; c.font='12px Arial,sans-serif';
+    c.fillText(s.label, tCols[4].x+4, curY+18);
+    c.fillStyle=grpC; c.font='bold 12px Arial,sans-serif';
+    c.fillText(r.meal||'', tCols[5].x+4, curY+18);
+    if(r.notes){c.fillStyle='#64748b'; c.font='11px Arial,sans-serif'; c.fillText((r.notes||'').slice(0,28), tCols[6].x+4, curY+18);}
+    c.strokeStyle='#e2e8f0'; c.lineWidth=0.4;
+    c.beginPath();c.moveTo(mg,curY+tblRowH);c.lineTo(W-mg,curY+tblRowH);c.stroke();
+    curY+=tblRowH;
   });
 
-  curY += sectGap;
+  curY+=gap;
 
-  // ── Footer ────────────────────────────────────────────────────
-  c.fillStyle='#0a1e3d';
-  c.fillRect(0, curY, W, footerH);
-  c.fillStyle='#7dd3fc'; c.font='bold 14px Arial,sans-serif'; c.textAlign='left';
+  // ── FOOTER ─────────────────────────────────────────────────────
+  c.fillStyle='#0a1e3d'; c.fillRect(0,curY,W,ftrH);
+  c.fillStyle='#7dd3fc'; c.font='bold 16px Georgia,serif'; c.textAlign='left';
   c.fillText('GlucoTrack', mg, curY+22);
-  c.fillStyle='rgba(255,255,255,0.5)'; c.font='11px Arial,sans-serif';
-  c.fillText('Personal Diabetes Monitoring App', mg, curY+38);
-  c.fillStyle='rgba(255,255,255,0.35)'; c.font='10px Arial,sans-serif'; c.textAlign='right';
+  c.fillStyle='rgba(255,255,255,0.5)'; c.font='12px Arial,sans-serif';
+  c.fillText('Personal Diabetes Monitoring App', mg, curY+40);
+  c.fillStyle='rgba(255,255,255,0.35)'; c.font='11px Arial,sans-serif'; c.textAlign='right';
   c.fillText('This report is generated for personal health tracking only.', W-mg, curY+22);
-  c.fillText('It is not a substitute for professional medical advice or laboratory testing.', W-mg, curY+38);
+  c.fillText('It is NOT a substitute for professional medical advice or laboratory testing.', W-mg, curY+40);
 
-  // Return the canvas for caller to share/download
   return rc;
 }
 
-function sectionHeader(c, text, mg, y, W) {
-  c.fillStyle='#0a1e3d';
-  c.fillRect(mg, y, W-mg*2, 22);
-  // Left accent bar
-  c.fillStyle='#0ea5e9';
-  c.fillRect(mg, y, 4, 22);
-  c.fillStyle='#ffffff';
-  c.font='bold 11px Arial,sans-serif';
-  c.textAlign='left';
-  c.fillText(text, mg+14, y+15);
+// ── Report helper functions ─────────────────────────────────────
+function rpSectionHeader(c, text, mg, y, W) {
+  c.fillStyle='#0a1e3d'; c.fillRect(mg, y, W-mg*2, 24);
+  c.fillStyle='#0ea5e9'; c.fillRect(mg, y, 5, 24);
+  c.fillStyle='#ffffff'; c.font='bold 12px Arial,sans-serif'; c.textAlign='left';
+  c.fillText(text, mg+14, y+16);
 }
 
-function rRect(ctx, x, y, w, h, r) {
+function rpRRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
-  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
-  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
   ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
   ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);
-  ctx.closePath();
+  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
 }
 
-// Keep old roundRect alias
-function roundRect(ctx,x,y,w,h,r){rRect(ctx,x,y,w,h,r);}
+// Keep old aliases
+function sectionHeader(c,t,mg,y,W){rpSectionHeader(c,t,mg,y,W);}
+function rRect(ctx,x,y,w,h,r){rpRRect(ctx,x,y,w,h,r);}
+function roundRect(ctx,x,y,w,h,r){rpRRect(ctx,x,y,w,h,r);}
 
 function interpColor(h) {
-  if(h<5.7) return '#16a34a';
-  if(h<6.5) return '#65a30d';
-  if(h<7.5) return '#ca8a04';
-  if(h<9.0) return '#ea580c';
+  if(h<5.7)  return '#16a34a';
+  if(h<6.5)  return '#65a30d';
+  if(h<7.5)  return '#ca8a04';
+  if(h<9.0)  return '#ea580c';
   return '#dc2626';
 }
 
-function drawHba1cRefBar(c, x, y, w, h, estH, latestLab) {
-  const segs=[{label:'Normal',range:'<5.7%',color:'#4ade80',pct:0.2},{label:'Pre-diab','range':'5.7–6.4%',color:'#a3e635',pct:0.15},{label:'Controlled',range:'6.5–7.4%',color:'#fde047',pct:0.2},{label:'Elevated',range:'7.5–8.9%',color:'#fb923c',pct:0.25},{label:'Very High',range:'≥9%',color:'#f87171',pct:0.2}];
+function rpHba1cRefBar(c, x, y, w, h, estH, latestLab) {
+  const segs=[{l:'Normal',r:'<5.7',color:'#4ade80',p:0.2},{l:'Pre-diab',r:'5.7–6.4',color:'#a3e635',p:0.15},
+              {l:'Controlled',r:'6.5–7.4',color:'#fde047',p:0.2},{l:'Elevated',r:'7.5–8.9',color:'#fb923c',p:0.25},{l:'Very High',r:'≥9%',color:'#f87171',p:0.2}];
   let cx=x;
   segs.forEach(s=>{
-    const sw=w*s.pct;
-    c.fillStyle=s.color+'44'; c.fillRect(cx,y,sw,h);
-    c.strokeStyle=s.color+'88'; c.lineWidth=0.5;
-    c.strokeRect(cx,y,sw,h);
-    c.fillStyle='#475569'; c.font='9px Arial,sans-serif'; c.textAlign='center';
-    c.fillText(s.label,cx+sw/2,y+11);
-    c.fillStyle='#64748b';
-    c.fillText(s.range,cx+sw/2,y+22);
+    const sw=w*s.p;
+    c.fillStyle=s.color+'55'; c.fillRect(cx,y,sw,h);
+    c.strokeStyle=s.color+'88'; c.lineWidth=0.5; c.strokeRect(cx,y,sw,h);
+    c.fillStyle='#334155'; c.font='9px Arial,sans-serif'; c.textAlign='center';
+    c.fillText(s.l, cx+sw/2, y+11);
+    c.fillStyle='#64748b'; c.fillText(s.r, cx+sw/2, y+23);
     cx+=sw;
   });
-  // Marker for estimated
-  if(estH) {
-    const pct=Math.min(1,Math.max(0,(estH-4)/(12-4)));
-    const mx=x+w*pct;
-    c.fillStyle='#0ea5e9';
-    c.beginPath();c.moveTo(mx-5,y-1);c.lineTo(mx+5,y-1);c.lineTo(mx,y+h+4);c.closePath();c.fill();
-  }
-  if(latestLab) {
-    const pct=Math.min(1,Math.max(0,(latestLab.val-4)/(12-4)));
-    const mx=x+w*pct;
-    c.fillStyle='#16a34a';
-    c.beginPath();c.moveTo(mx-5,y-1);c.lineTo(mx+5,y-1);c.lineTo(mx,y+h+4);c.closePath();c.fill();
-  }
+  if(estH){const pct=Math.min(1,Math.max(0,(estH-4)/8));const mx=x+w*pct;c.fillStyle='#0ea5e9';c.beginPath();c.moveTo(mx-6,y-2);c.lineTo(mx+6,y-2);c.lineTo(mx,y+h+5);c.closePath();c.fill();}
+  if(latestLab){const pct=Math.min(1,Math.max(0,(latestLab.val-4)/8));const mx=x+w*pct;c.fillStyle='#16a34a';c.beginPath();c.moveTo(mx-6,y-2);c.lineTo(mx+6,y-2);c.lineTo(mx,y+h+5);c.closePath();c.fill();}
 }
 
-function drawLabReportChart(c, filtered, units, ismmol, x, y, w, h) {
-  const lo=ismmol?4.0:70, hi=ismmol?10.0:180;
+// Meal-type separate lines chart for report
+function rpDrawMealChart(c, filtered, units, ismmol, x, y, w, h) {
+  const lo=ismmol?4.0:70, hiR=ismmol?10.0:180;
   const vals=filtered.map(r=>r.val);
-  const minV=Math.min(...vals,lo)*0.88, maxV=Math.max(...vals,hi)*1.08;
-  const pad={l:46,r:12,t:10,b:32};
+  const minV=Math.min(...vals,lo)*0.88, maxV=Math.max(...vals,hiR)*1.08;
+  const pad={l:46,r:12,t:8,b:28};
   const cW=w-pad.l-pad.r, cH=h-pad.t-pad.b;
   const toX=i=>x+pad.l+(i/(filtered.length-1||1))*cW;
   const toY=v=>y+pad.t+cH-((v-minV)/(maxV-minV))*cH;
 
   // Target band
   c.fillStyle='rgba(34,197,94,0.08)';
-  c.fillRect(x+pad.l,toY(hi),cW,toY(lo)-toY(hi));
-  // Target band labels
+  c.fillRect(x+pad.l,toY(hiR),cW,toY(lo)-toY(hiR));
   c.fillStyle='#16a34a'; c.font='9px Arial,sans-serif'; c.textAlign='left';
-  c.fillText('Target range', x+pad.l+4, toY(hi)-3);
+  c.fillText('Target', x+pad.l+4, toY(hiR)-3);
 
-  // Grid lines + Y labels
+  // Grid
   c.strokeStyle='#e2e8f0'; c.lineWidth=0.5;
-  const yTicks = 5;
-  for(let i=0;i<=yTicks;i++) {
-    const f=i/yTicks;
+  [0,0.25,0.5,0.75,1].forEach(f=>{
     const gy=y+pad.t+cH*(1-f);
     c.beginPath();c.moveTo(x+pad.l,gy);c.lineTo(x+pad.l+cW,gy);c.stroke();
     const v=minV+(maxV-minV)*f;
     c.fillStyle='#64748b'; c.font='10px Arial,sans-serif'; c.textAlign='right';
-    c.fillText(ismmol?v.toFixed(1):Math.round(v), x+pad.l-4, gy+3);
-  }
-
-  // Y axis label
-  c.save();
-  c.translate(x+10, y+pad.t+cH/2);
-  c.rotate(-Math.PI/2);
-  c.fillStyle='#64748b'; c.font='10px Arial,sans-serif'; c.textAlign='center';
-  c.fillText(units, 0, 0);
-  c.restore();
-
-  // Area fill
-  c.beginPath();
-  c.moveTo(toX(0),toY(filtered[0].val));
-  for(let i=1;i<filtered.length;i++) c.lineTo(toX(i),toY(filtered[i].val));
-  c.lineTo(toX(filtered.length-1),y+pad.t+cH);
-  c.lineTo(toX(0),y+pad.t+cH); c.closePath();
-  const ag=c.createLinearGradient(0,y,0,y+h);
-  ag.addColorStop(0,'rgba(14,165,233,0.15)');ag.addColorStop(1,'rgba(14,165,233,0)');
-  c.fillStyle=ag; c.fill();
-
-  // Line
-  c.beginPath(); c.strokeStyle='#0ea5e9'; c.lineWidth=2; c.lineJoin='round';
-  c.moveTo(toX(0),toY(filtered[0].val));
-  for(let i=1;i<filtered.length;i++) c.lineTo(toX(i),toY(filtered[i].val));
-  c.stroke();
-
-  // Dots
-  const dotR=filtered.length>40?2:4;
-  filtered.forEach((r,i)=>{
-    const s=getStatus(r.val,units);
-    c.beginPath();c.arc(toX(i),toY(r.val),dotR,0,Math.PI*2);
-    c.fillStyle=s.color; c.fill();
-    c.strokeStyle='rgba(255,255,255,0.8)'; c.lineWidth=0.5; c.stroke();
+    c.fillText(ismmol?v.toFixed(1):Math.round(v), x+pad.l-3, gy+3);
   });
 
-  // X date labels (spaced)
-  c.fillStyle='#64748b'; c.font='9px Arial,sans-serif'; c.textAlign='center';
+  // Y axis label
+  c.save(); c.translate(x+12, y+pad.t+cH/2); c.rotate(-Math.PI/2);
+  c.fillStyle='#64748b'; c.font='10px Arial,sans-serif'; c.textAlign='center';
+  c.fillText(units, 0, 0); c.restore();
+
+  // Separate lines per meal group
+  const rpMealColors={fasting:'#2563eb',pre:'#7c3aed',post:'#059669',other:'#94a3b8'};
+  const groups=['fasting','pre','post','other'];
+  groups.forEach(grp=>{
+    const pts=filtered.map((r,i)=>({r,i})).filter(({r})=>mealGroup(r.meal)===grp);
+    if(pts.length<1) return;
+    const color=rpMealColors[grp];
+    if(pts.length>=2){
+      c.beginPath(); c.strokeStyle=color; c.lineWidth=2.5; c.lineJoin='round'; c.setLineDash([]);
+      c.moveTo(toX(pts[0].i),toY(pts[0].r.val));
+      for(let k=1;k<pts.length;k++) c.lineTo(toX(pts[k].i),toY(pts[k].r.val));
+      c.stroke();
+    }
+    pts.forEach(({r,i})=>{
+      c.beginPath(); c.arc(toX(i),toY(r.val),4,0,Math.PI*2);
+      c.fillStyle=color; c.fill();
+      c.strokeStyle='rgba(255,255,255,0.8)'; c.lineWidth=0.8; c.stroke();
+    });
+  });
+
+  // X date labels
+  c.fillStyle='#64748b'; c.font='9px Arial,sans-serif'; c.textAlign='center'; c.setLineDash([]);
   const step=Math.max(1,Math.floor(filtered.length/8));
   for(let i=0;i<filtered.length;i+=step){
     const d=new Date(filtered[i].ts);
-    c.fillText(d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'}), toX(i), y+pad.t+cH+22);
+    c.fillText(d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'}), toX(i), y+pad.t+cH+20);
   }
-
-  // Legend
-  const legX=x+pad.l+cW-160, legY=y+pad.t+6;
-  [[getStatus(0,units),'#16a34a','In Range'],[{color:'#f97316'},'#f97316','Low'],[{color:'#ef4444'},'#ef4444','High']].forEach(([,color,label],i)=>{
-    c.fillStyle=color; c.beginPath(); c.arc(legX+i*58,legY,5,0,Math.PI*2); c.fill();
-    c.fillStyle='#475569'; c.font='9px Arial,sans-serif'; c.textAlign='left';
-    c.fillText(label, legX+i*58+8, legY+4);
-  });
-  // Fix: draw proper legend
-  const legends=[{color:'#16a34a',label:'In Range'},{color:'#f97316',label:'Low'},{color:'#ef4444',label:'High'}];
-  legends.forEach((lg,i)=>{
-    const lx=x+pad.l+4+i*70;
-    c.fillStyle=lg.color; c.beginPath(); c.arc(lx,y+pad.t+cH+14,4,0,Math.PI*2); c.fill();
-    c.fillStyle='#64748b'; c.font='9px Arial,sans-serif'; c.textAlign='left';
-    c.fillText(lg.label,lx+7,y+pad.t+cH+18);
-  });
 }
+
 
 // ====== OCR / SCAN ======
 function setLogMode(mode, btn) {
@@ -2400,7 +2348,44 @@ function fileToBase64(file) {
 }
 
 
-// ====== THEME TOGGLE (#11) ======
+// ====== EDIT READING (#7) ======
+function openEditReading(id) {
+  const r = readings.find(x=>x.id===id);
+  if (!r) return;
+  const p = patient();
+  document.getElementById('editReadingId').value = id;
+  document.getElementById('editGlucose').value = r.val;
+  document.getElementById('editUnitHint').textContent = p?.units || 'mg/dL';
+  document.getElementById('editMeal').value = r.meal || 'Random';
+  document.getElementById('editReadingDate').value = r.date || new Date(r.ts).toISOString().split('T')[0];
+  document.getElementById('editReadingTime').value = r.time || new Date(r.ts).toTimeString().slice(0,5);
+  document.getElementById('editReadingNotes').value = r.notes || '';
+  document.getElementById('editReadingModal').classList.remove('hidden');
+}
+function closeEditReading() {
+  document.getElementById('editReadingModal').classList.add('hidden');
+}
+function saveEditReading() {
+  const id = parseInt(document.getElementById('editReadingId').value);
+  const val = parseFloat(document.getElementById('editGlucose').value);
+  const meal = document.getElementById('editMeal').value;
+  const date = document.getElementById('editReadingDate').value;
+  const time = document.getElementById('editReadingTime').value;
+  const notes = document.getElementById('editReadingNotes').value.trim();
+  if (!val || val < 20 || val > 600) { showToast('Enter a valid glucose value', true); return; }
+  if (!date || !time) { showToast('Set date and time', true); return; }
+  const idx = readings.findIndex(x=>x.id===id);
+  if (idx === -1) { showToast('Reading not found', true); return; }
+  readings[idx] = { ...readings[idx], val, meal, date, time, notes, ts: new Date(date+'T'+time).getTime() };
+  readings.sort((a,b)=>a.ts-b.ts);
+  saveReadings(currentPatientId, readings);
+  closeEditReading();
+  showToast('Reading updated ✓');
+  refreshDashboard();
+  renderHistory();
+}
+
+
 function toggleTheme() {
   const isLight = document.body.classList.toggle('light-mode');
   document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
