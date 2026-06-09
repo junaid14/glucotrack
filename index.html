@@ -2294,7 +2294,7 @@ async function loadAiInsights() {
   btn.disabled = true; btn.textContent = '⏳';
 
   const body = document.getElementById('aiInsightsBody');
-  body.innerHTML = '<div class="ai-streaming" id="aiStream"></div><span class="ai-cursor" id="aiCursor"></span>';
+  body.innerHTML = '<div style="text-align:center;padding:20px;color:var(--accent);font-size:14px"><div style="font-size:32px;margin-bottom:10px">🩺</div><div>Analysing your glucose data…</div><div style="margin-top:8px;font-size:12px;color:var(--muted)">This takes a few seconds</div></div>';
 
   const thirtyAgo = Date.now() - 30*86400000;
   const recent = readings.filter(r=>r.ts>=thirtyAgo);
@@ -2360,49 +2360,34 @@ Keep each section concise. Be specific with numbers. End with: "⚠️ This is A
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        stream: true,
         messages: [{ role: 'user', content: prompt }]
       })
     });
 
-    if (!resp.ok) throw new Error('API error ' + resp.status);
-
-    const reader = resp.body.getReader();
-    const decoder = new TextDecoder();
-    const streamEl = document.getElementById('aiStream');
-    let fullText = '';
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const chunk = decoder.decode(value);
-      const lines = chunk.split('\n');
-      for (const line of lines) {
-        if (!line.startsWith('data:')) continue;
-        const data = line.slice(5).trim();
-        if (data === '[DONE]') break;
-        try {
-          const parsed = JSON.parse(data);
-          const delta = parsed?.delta?.text || '';
-          if (delta) {
-            fullText += delta;
-            streamEl.textContent = fullText;
-            // Auto-scroll insights into view
-            streamEl.scrollIntoView({behavior:'smooth', block:'nearest'});
-          }
-        } catch {}
-      }
+    if (!resp.ok) {
+      const errText = await resp.text();
+      throw new Error('API ' + resp.status + ': ' + errText.slice(0,120));
     }
 
-    // Remove cursor after done
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error.message);
+
+    const fullText = data.content?.find(b=>b.type==='text')?.text || '';
+    if (!fullText) throw new Error('Empty response from AI');
+
+    // Remove cursor
     const cursor = document.getElementById('aiCursor');
     if (cursor) cursor.remove();
 
-    // Format sections nicely
+    // Format and display
     body.innerHTML = formatAiInsights(fullText);
 
   } catch(e) {
@@ -2529,7 +2514,11 @@ Return ONLY a JSON array. No explanation, no markdown. Example:
 
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1500,
@@ -2859,14 +2848,21 @@ Use today's date and current time as defaults if not specified. Convert units if
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 300,
         messages: [{ role: 'user', content: prompt }]
       })
     });
-    if (!resp.ok) throw new Error('API error ' + resp.status);
+    if (!resp.ok) {
+      const errText = await resp.text();
+      throw new Error('API ' + resp.status + ': ' + errText.slice(0,100));
+    }
     const data = await resp.json();
     if (data.error) throw new Error(data.error.message);
     const raw = (data.content?.find(b=>b.type==='text')?.text||'').replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
