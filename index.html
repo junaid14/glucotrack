@@ -644,8 +644,9 @@ select option{background:var(--bg2);color:var(--text)}
 
       <!-- API Key card -->
       <div class="card" style="margin-top:4px">
-        <div class="card-title">🔑 AI Features (API Key)</div>
+        <div class="card-title">🔑 AI Features (Gemini API Key)</div>
         <div id="apiKeyStatus" style="font-size:14px;color:var(--muted);margin-bottom:12px">Not set — required for AI Insights, Voice &amp; OCR</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">Free key from <strong style="color:var(--text)">aistudio.google.com</strong> — no credit card needed</div>
         <button class="btn-primary" onclick="openApiKeyModal()">Set / Update API Key</button>
         <button id="apiKeyClearBtn" style="display:none;margin-top:10px" class="btn-secondary" onclick="clearApiKey()">🗑 Remove API Key</button>
       </div>
@@ -657,18 +658,19 @@ select option{background:var(--bg2);color:var(--text)}
 <!-- ===== API KEY MODAL ===== -->
 <div class="modal-overlay hidden" id="apiKeyModal">
   <div class="modal">
-    <div class="modal-title">🔑 Anthropic API Key</div>
-    <div class="modal-sub">Required for AI Insights, Voice input, and OCR scanning</div>
-    <div style="background:rgba(79,168,255,0.08);border:1px solid rgba(79,168,255,0.2);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--text);line-height:1.7">
-      <strong>How to get your free API key:</strong><br>
-      1. Go to <strong>console.anthropic.com</strong><br>
-      2. Sign up / Log in → API Keys → Create Key<br>
-      3. Copy and paste it below<br><br>
-      <span style="color:var(--muted);font-size:12px">🔒 Stored only on your device (localStorage). Never sent anywhere except Anthropic's API.</span>
+    <div class="modal-title">🔑 Google Gemini API Key</div>
+    <div class="modal-sub">Free API key — required for AI Insights, Voice &amp; OCR</div>
+    <div style="background:rgba(79,168,255,0.08);border:1px solid rgba(79,168,255,0.2);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--text);line-height:1.8">
+      <strong>Get your FREE key in 1 minute:</strong><br>
+      1. Go to <strong>aistudio.google.com</strong><br>
+      2. Sign in with Google → tap <strong>Get API key</strong><br>
+      3. Click <strong>Create API key</strong> → Copy it<br>
+      4. Paste below — no credit card needed<br><br>
+      <span style="color:var(--muted);font-size:12px">🔒 Stored only on your device. Never sent anywhere except Google's API.</span>
     </div>
     <div class="form-group">
-      <label>API Key</label>
-      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off" autocorrect="off" spellcheck="false" style="font-family:monospace;font-size:13px;letter-spacing:0.5px">
+      <label>Gemini API Key</label>
+      <input type="password" id="apiKeyInput" placeholder="AIza…" autocomplete="off" autocorrect="off" spellcheck="false" style="font-family:monospace;font-size:13px;letter-spacing:0.5px">
     </div>
     <div id="apiKeyError" style="display:none;color:#ef4444;font-size:13px;margin:-8px 0 12px;font-weight:600"></div>
     <div class="modal-actions">
@@ -794,6 +796,8 @@ function loadPatient(pid) {
   switchTab('dashboard');
   refreshAll();
   setDefaultDateTime();
+  // Load saved AI insights for this patient after a brief layout settle
+  setTimeout(loadSavedInsights, 100);
 }
 
 function goToPicker() { showPicker(); }
@@ -934,7 +938,7 @@ function switchTab(id) {
   // Double-RAF: wait for browser to paint the newly visible screen
   // so canvas.parentElement.clientWidth is non-zero before we draw
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    if (id==='dashboard') drawChart();
+    if (id==='dashboard') { drawChart(); loadSavedInsights(); }
     if (id==='hba1c') renderHba1c();
     if (id==='profile') populateProfileForm();
     if (id==='add') setDefaultDateTime();
@@ -2326,8 +2330,8 @@ async function loadAiInsights() {
   const btn = document.getElementById('aiInsightsBtn');
   btn.disabled = true; btn.textContent = '⏳';
 
-  const body = document.getElementById('aiInsightsBody');
-  body.innerHTML = '<div style="text-align:center;padding:20px;color:var(--accent);font-size:14px"><div style="font-size:32px;margin-bottom:10px">🩺</div><div>Analysing your glucose data…</div><div style="margin-top:8px;font-size:12px;color:var(--muted)">This takes a few seconds</div></div>';
+  const bodyEl = document.getElementById('aiInsightsBody');
+  bodyEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--accent);font-size:14px"><div style="font-size:32px;margin-bottom:10px">🩺</div><div>Analysing glucose data for '+p.name+'…</div><div style="margin-top:8px;font-size:12px;color:var(--muted)">This takes a few seconds</div></div>';
 
   const thirtyAgo = Date.now() - 30*86400000;
   const recent = readings.filter(r=>r.ts>=thirtyAgo);
@@ -2346,7 +2350,6 @@ async function loadAiInsights() {
   const inRng = recent.filter(r=>r.val>=lo&&r.val<=hi).length;
   const pct = v => recent.length ? Math.round(v/recent.length*100) : 0;
 
-  // Last 10 readings summary for context
   const last10 = [...all].reverse().slice(0,10).map(r=>{
     const d=new Date(r.ts);
     return `${d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})} ${d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})} — ${r.val} ${units} (${r.meal||'Random'})${r.notes?' ['+r.notes+']':''}`;
@@ -2377,10 +2380,10 @@ Give your assessment in these exact sections — use the exact headings:
 [1-2 sentences on overall diabetes control status]
 
 ## Key Patterns
-[2-4 bullet points on specific patterns you see — fasting trends, post-meal spikes, time of day patterns, etc.]
+[2-4 bullet points on specific patterns — fasting trends, post-meal spikes, time of day patterns]
 
 ## Concerns
-[Any red flags or areas needing immediate attention. If none, say so briefly]
+[Any red flags needing attention. If none, say so briefly]
 
 ## What's Going Well
 [Positive observations]
@@ -2388,26 +2391,48 @@ Give your assessment in these exact sections — use the exact headings:
 ## Suggestions
 [3-5 specific, actionable suggestions — diet timing, testing frequency, when to see doctor, lifestyle]
 
-Keep each section concise. Be specific with numbers. End with: "⚠️ This is AI-generated guidance for personal awareness only — always consult your doctor for medical decisions."`;
+Be specific with numbers. End with: "⚠️ This is AI-generated guidance for personal awareness only — always consult your doctor for medical decisions."`;
 
   try {
-    const data = await anthropicFetch({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: prompt }]
-    });
-
-    const fullText = data.content?.find(b=>b.type==='text')?.text || '';
+    const fullText = await geminiFetch(prompt);
     if (!fullText) throw new Error('Empty response from AI');
 
-    body.innerHTML = formatAiInsights(fullText);
+    const formatted = formatAiInsights(fullText);
+    bodyEl.innerHTML = formatted;
+
+    // Save insights for this patient with timestamp
+    const insightData = {
+      html: formatted,
+      ts: Date.now(),
+      patientId: currentPatientId
+    };
+    localStorage.setItem('glucoInsights_' + currentPatientId, JSON.stringify(insightData));
 
   } catch(e) {
     console.error('AI Insights error:', e);
-    body.innerHTML = `<div style="font-size:14px;color:var(--high)">⚠️ Could not load insights: ${e.message||'Please try again.'}</div>`;
+    bodyEl.innerHTML = `<div style="font-size:14px;color:var(--high)">⚠️ ${e.message||'Could not load insights. Please try again.'}</div>`;
   } finally {
     btn.disabled = false; btn.textContent = '↻ Refresh';
   }
+}
+
+function loadSavedInsights() {
+  if (!currentPatientId) return;
+  const saved = localStorage.getItem('glucoInsights_' + currentPatientId);
+  if (!saved) return;
+  try {
+    const data = JSON.parse(saved);
+    if (data.patientId !== currentPatientId) return;
+    const bodyEl = document.getElementById('aiInsightsBody');
+    const btn = document.getElementById('aiInsightsBtn');
+    if (!bodyEl) return;
+    const d = new Date(data.ts);
+    const timeStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' · ' +
+                    d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    bodyEl.innerHTML = data.html +
+      `<div style="margin-top:10px;font-size:11px;color:var(--muted);text-align:right">Last analysed: ${timeStr}</div>`;
+    if (btn) btn.textContent = '↻ Refresh';
+  } catch {}
 }
 
 function formatAiInsights(text) {
@@ -2516,22 +2541,8 @@ For each glucose reading found, return a JSON object with:
 Return ONLY a JSON array. No explanation, no markdown. Example:
 [{"val":98,"date":"2024-03-15","time":"07:30","meal":"Fasting","notes":"FBS","source":"labreport"}]`;
 
-    const contentBlocks = [
-      {
-        type: isPdf ? 'document' : 'image',
-        source: { type: 'base64', media_type: mediaType, data: base64 }
-      },
-      { type: 'text', text: prompt }
-    ];
-
-    const data = await anthropicFetch({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1500,
-      messages: [{ role: 'user', content: contentBlocks }]
-    });
-
-    const rawText = data.content?.find(b=>b.type==='text')?.text || '';
-    const clean = rawText.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
+    const data = await geminiFetch(prompt, base64, mediaType);
+    const rawText = data.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
 
     let extracted;
     try {
@@ -2840,12 +2851,7 @@ Return ONLY a JSON array with one object — no explanation:
 Use today's date and current time as defaults if not specified. Convert units if needed.`;
 
   try {
-    const data = await anthropicFetch({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 300,
-      messages: [{ role: 'user', content: prompt }]
-    });
-    const raw = (data.content?.find(b=>b.type==='text')?.text||'').replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
+    const raw = (await geminiFetch(prompt)).replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
     let extracted;
     try { extracted = JSON.parse(raw); }
     catch { const m=raw.match(/\[[\s\S]*?\]/); extracted = m ? JSON.parse(m[0]) : null; }
@@ -2907,10 +2913,10 @@ function saveApiKey() {
   const errEl = document.getElementById('apiKeyError');
   if (!raw) {
     if (getApiKey()) { closeApiKeyModal(); if(window._apiKeyOnSuccess) window._apiKeyOnSuccess(); return; }
-    errEl.textContent = 'Please enter your API key'; errEl.style.display='block'; return;
+    errEl.textContent = 'Please enter your Gemini API key'; errEl.style.display='block'; return;
   }
-  if (!raw.startsWith('sk-ant-')) {
-    errEl.textContent = 'Key should start with sk-ant-… — check and try again'; errEl.style.display='block'; return;
+  if (!raw.startsWith('AIza') && raw.length < 20) {
+    errEl.textContent = 'Gemini keys start with AIza… — check and try again'; errEl.style.display='block'; return;
   }
   localStorage.setItem('glucoApiKey', raw);
   updateApiKeyStatus();
@@ -2931,39 +2937,58 @@ function updateApiKeyStatus() {
   if (s) { s.textContent = key ? '✅ API key set — AI Insights, Voice & OCR active' : 'Not set — required for AI Insights, Voice & OCR'; s.style.color = key ? 'var(--normal)' : 'var(--muted)'; }
   if (b) b.style.display = key ? 'block' : 'none';
 }
-// Central fetch helper used by all 3 AI features
-async function anthropicFetch(body) {
+// Central Gemini API fetch — used by all 3 AI features
+async function geminiFetch(prompt, imageBase64, imageMimeType) {
   let key = getApiKey();
   if (!key) {
     return new Promise((resolve, reject) => {
       openApiKeyModal(() => {
         const k = getApiKey();
         if (!k) { reject(new Error('API key required — add it in Profile → API Key')); return; }
-        anthropicFetch(body).then(resolve).catch(reject);
+        geminiFetch(prompt, imageBase64, imageMimeType).then(resolve).catch(reject);
       });
     });
   }
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+
+  // Build Gemini content parts
+  const parts = [];
+  if (imageBase64 && imageMimeType) {
+    parts.push({ inlineData: { mimeType: imageMimeType, data: imageBase64 } });
+  }
+  parts.push({ text: prompt });
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+  const resp = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify(body)
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts }],
+      generationConfig: { temperature: 0.3, maxOutputTokens: 1500 }
+    })
   });
+
   const rawText = await resp.text();
   if (!resp.ok) {
     let msg = 'HTTP ' + resp.status;
-    try { msg = JSON.parse(rawText)?.error?.message || msg; } catch {}
-    if (resp.status === 401) { localStorage.removeItem('glucoApiKey'); updateApiKeyStatus(); }
+    try {
+      const e = JSON.parse(rawText);
+      msg = e?.error?.message || msg;
+      if (resp.status === 400 && msg.includes('API_KEY')) {
+        localStorage.removeItem('glucoApiKey'); updateApiKeyStatus();
+        throw new Error('Invalid API key. Re-enter it in Profile tab.');
+      }
+    } catch(pe) { if(pe.message.includes('Invalid API')) throw pe; }
     throw new Error(msg);
   }
+
   let data;
-  try { data = JSON.parse(rawText); } catch { throw new Error('Could not parse API response'); }
+  try { data = JSON.parse(rawText); } catch { throw new Error('Could not parse Gemini response'); }
   if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-  return data;
+
+  // Extract text from Gemini response format
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) throw new Error('No text in Gemini response');
+  return text;
 }
 
 // ====== EDIT READING (#7) ======
