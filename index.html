@@ -641,8 +641,40 @@ select option{background:var(--bg2);color:var(--text)}
       <button class="btn-secondary" onclick="exportData()">📤 Export CSV</button>
       <button class="btn-secondary" style="color:#ef4444;border-color:rgba(239,68,68,0.3)" onclick="clearReadings()">🗑 Clear All Readings</button>
       <button class="btn-secondary" style="color:#ef4444;border-color:rgba(239,68,68,0.3)" onclick="deletePatient()">❌ Delete This Patient</button>
+
+      <!-- API Key card -->
+      <div class="card" style="margin-top:4px">
+        <div class="card-title">🔑 AI Features (API Key)</div>
+        <div id="apiKeyStatus" style="font-size:14px;color:var(--muted);margin-bottom:12px">Not set — required for AI Insights, Voice &amp; OCR</div>
+        <button class="btn-primary" onclick="openApiKeyModal()">Set / Update API Key</button>
+        <button id="apiKeyClearBtn" style="display:none;margin-top:10px" class="btn-secondary" onclick="clearApiKey()">🗑 Remove API Key</button>
+      </div>
     </div>
 
+  </div>
+</div>
+
+<!-- ===== API KEY MODAL ===== -->
+<div class="modal-overlay hidden" id="apiKeyModal">
+  <div class="modal">
+    <div class="modal-title">🔑 Anthropic API Key</div>
+    <div class="modal-sub">Required for AI Insights, Voice input, and OCR scanning</div>
+    <div style="background:rgba(79,168,255,0.08);border:1px solid rgba(79,168,255,0.2);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--text);line-height:1.7">
+      <strong>How to get your free API key:</strong><br>
+      1. Go to <strong>console.anthropic.com</strong><br>
+      2. Sign up / Log in → API Keys → Create Key<br>
+      3. Copy and paste it below<br><br>
+      <span style="color:var(--muted);font-size:12px">🔒 Stored only on your device (localStorage). Never sent anywhere except Anthropic's API.</span>
+    </div>
+    <div class="form-group">
+      <label>API Key</label>
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off" autocorrect="off" spellcheck="false" style="font-family:monospace;font-size:13px;letter-spacing:0.5px">
+    </div>
+    <div id="apiKeyError" style="display:none;color:#ef4444;font-size:13px;margin:-8px 0 12px;font-weight:600"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeApiKeyModal()">Cancel</button>
+      <button class="btn-primary" style="margin-top:0" onclick="saveApiKey()">Save Key</button>
+    </div>
   </div>
 </div>
 
@@ -729,6 +761,7 @@ function initials(name) { return name.split(' ').map(w=>w[0]).join('').toUpperCa
 // ====== BOOT ======
 window.onload = () => {
   applyTheme();
+  updateApiKeyStatus();
   if (patients.length === 0) {
     showPicker();
   } else if (currentPatientId && patients.find(p=>p.id===currentPatientId)) {
@@ -2358,36 +2391,15 @@ Give your assessment in these exact sections — use the exact headings:
 Keep each section concise. Be specific with numbers. End with: "⚠️ This is AI-generated guidance for personal awareness only — always consult your doctor for medical decisions."`;
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
+    const data = await anthropicFetch({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
     });
-
-    if (!resp.ok) {
-      const errText = await resp.text();
-      throw new Error('API ' + resp.status + ': ' + errText.slice(0,120));
-    }
-
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error.message);
 
     const fullText = data.content?.find(b=>b.type==='text')?.text || '';
     if (!fullText) throw new Error('Empty response from AI');
 
-    // Remove cursor
-    const cursor = document.getElementById('aiCursor');
-    if (cursor) cursor.remove();
-
-    // Format and display
     body.innerHTML = formatAiInsights(fullText);
 
   } catch(e) {
@@ -2512,37 +2524,19 @@ Return ONLY a JSON array. No explanation, no markdown. Example:
       { type: 'text', text: prompt }
     ];
 
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1500,
-        messages: [{ role: 'user', content: contentBlocks }]
-      })
+    const data = await anthropicFetch({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 1500,
+      messages: [{ role: 'user', content: contentBlocks }]
     });
 
-    if (!resp.ok) {
-      const err = await resp.text();
-      throw new Error('API error: ' + resp.status + ' ' + err);
-    }
-
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error.message || 'API error');
-
     const rawText = data.content?.find(b=>b.type==='text')?.text || '';
-    // Strip any markdown fences
     const clean = rawText.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
 
     let extracted;
     try {
       extracted = JSON.parse(clean);
     } catch(parseErr) {
-      // Try to extract JSON array from text
       const match = clean.match(/\[[\s\S]*\]/);
       if (match) extracted = JSON.parse(match[0]);
       else throw new Error('Could not parse AI response: ' + clean.slice(0,100));
@@ -2846,25 +2840,11 @@ Return ONLY a JSON array with one object — no explanation:
 Use today's date and current time as defaults if not specified. Convert units if needed.`;
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 300,
-        messages: [{ role: 'user', content: prompt }]
-      })
+    const data = await anthropicFetch({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 300,
+      messages: [{ role: 'user', content: prompt }]
     });
-    if (!resp.ok) {
-      const errText = await resp.text();
-      throw new Error('API ' + resp.status + ': ' + errText.slice(0,100));
-    }
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error.message);
     const raw = (data.content?.find(b=>b.type==='text')?.text||'').replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
     let extracted;
     try { extracted = JSON.parse(raw); }
@@ -2904,6 +2884,87 @@ function clearVoiceResults() {
   resetMicBtn();
 }
 
+
+// ====== API KEY MANAGEMENT ======
+function getApiKey() {
+  return localStorage.getItem('glucoApiKey') || '';
+}
+function openApiKeyModal(onSuccess) {
+  const existing = getApiKey();
+  const input = document.getElementById('apiKeyInput');
+  if (input) { input.value = ''; input.placeholder = existing ? 'Enter new key to replace current…' : 'sk-ant-api03-…'; }
+  document.getElementById('apiKeyError').style.display = 'none';
+  document.getElementById('apiKeyModal').classList.remove('hidden');
+  window._apiKeyOnSuccess = onSuccess || null;
+  setTimeout(()=>{ document.getElementById('apiKeyInput')?.focus(); }, 200);
+}
+function closeApiKeyModal() {
+  document.getElementById('apiKeyModal').classList.add('hidden');
+  window._apiKeyOnSuccess = null;
+}
+function saveApiKey() {
+  const raw = document.getElementById('apiKeyInput').value.trim();
+  const errEl = document.getElementById('apiKeyError');
+  if (!raw) {
+    if (getApiKey()) { closeApiKeyModal(); if(window._apiKeyOnSuccess) window._apiKeyOnSuccess(); return; }
+    errEl.textContent = 'Please enter your API key'; errEl.style.display='block'; return;
+  }
+  if (!raw.startsWith('sk-ant-')) {
+    errEl.textContent = 'Key should start with sk-ant-… — check and try again'; errEl.style.display='block'; return;
+  }
+  localStorage.setItem('glucoApiKey', raw);
+  updateApiKeyStatus();
+  closeApiKeyModal();
+  showToast('API key saved 🔑');
+  if (window._apiKeyOnSuccess) { window._apiKeyOnSuccess(); window._apiKeyOnSuccess = null; }
+}
+function clearApiKey() {
+  if (!confirm('Remove API key? AI features will stop working.')) return;
+  localStorage.removeItem('glucoApiKey');
+  updateApiKeyStatus();
+  showToast('API key removed');
+}
+function updateApiKeyStatus() {
+  const key = getApiKey();
+  const s = document.getElementById('apiKeyStatus');
+  const b = document.getElementById('apiKeyClearBtn');
+  if (s) { s.textContent = key ? '✅ API key set — AI Insights, Voice & OCR active' : 'Not set — required for AI Insights, Voice & OCR'; s.style.color = key ? 'var(--normal)' : 'var(--muted)'; }
+  if (b) b.style.display = key ? 'block' : 'none';
+}
+// Central fetch helper used by all 3 AI features
+async function anthropicFetch(body) {
+  let key = getApiKey();
+  if (!key) {
+    return new Promise((resolve, reject) => {
+      openApiKeyModal(() => {
+        const k = getApiKey();
+        if (!k) { reject(new Error('API key required — add it in Profile → API Key')); return; }
+        anthropicFetch(body).then(resolve).catch(reject);
+      });
+    });
+  }
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify(body)
+  });
+  const rawText = await resp.text();
+  if (!resp.ok) {
+    let msg = 'HTTP ' + resp.status;
+    try { msg = JSON.parse(rawText)?.error?.message || msg; } catch {}
+    if (resp.status === 401) { localStorage.removeItem('glucoApiKey'); updateApiKeyStatus(); }
+    throw new Error(msg);
+  }
+  let data;
+  try { data = JSON.parse(rawText); } catch { throw new Error('Could not parse API response'); }
+  if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+  return data;
+}
 
 // ====== EDIT READING (#7) ======
 function openEditReading(id) {
