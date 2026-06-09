@@ -199,6 +199,15 @@ select option{background:var(--bg2);color:var(--text)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.warn{background:var(--high);box-shadow:0 4px 20px rgba(239,68,68,0.4)}
 
+/* AI Insights */
+.ai-section{margin-bottom:14px}
+.ai-section-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.ai-section-body{font-size:14px;color:var(--text);line-height:1.8}
+.ai-tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:8px}
+.ai-streaming{font-size:14px;color:var(--text);line-height:1.8;white-space:pre-wrap;word-break:break-word}
+.ai-cursor{display:inline-block;width:2px;height:15px;background:var(--accent);animation:blink 0.7s infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
 /* Misc */
 .empty{text-align:center;padding:36px 20px;color:var(--muted)}
 .empty-icon{font-size:38px;margin-bottom:12px}
@@ -387,6 +396,25 @@ select option{background:var(--bg2);color:var(--text)}
         <div class="card-title">Target Ranges</div>
         <div id="targetRangeInfo"></div>
       </div>
+
+      <!-- AI Insights card -->
+      <div class="card" id="aiInsightsCard">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div class="card-title" style="margin-bottom:0">🩺 AI Doctor Insights</div>
+          <button id="aiInsightsBtn" onclick="loadAiInsights()"
+            style="background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:10px;color:white;font-size:12px;font-weight:700;padding:7px 14px;cursor:pointer;font-family:'DM Sans',sans-serif">
+            Analyse
+          </button>
+        </div>
+        <div id="aiInsightsBody">
+          <div style="font-size:13px;color:var(--muted);line-height:1.7">
+            Tap <strong style="color:var(--text)">Analyse</strong> for an AI assessment of your glucose logs — patterns, trends, and suggestions based on your readings.
+            <br><br>
+            <span style="font-size:11px;opacity:0.7">⚠️ AI-generated guidance only. Not a substitute for your doctor.</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Share Report button -->
       <button class="btn-primary" style="margin-bottom:12px" onclick="openReportModal()">
         📤 Share Glucose Report
@@ -538,10 +566,20 @@ select option{background:var(--bg2);color:var(--text)}
       <div id="logPanelVoice" style="display:none">
         <div class="card">
           <div class="card-title">🎤 Speak Your Reading</div>
-          <p style="font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.7">
-            Tap the mic and say your reading naturally.<br>
-            e.g. <em style="color:var(--text)">"126 fasting this morning"</em> or <em style="color:var(--text)">"Blood sugar 180 after lunch yesterday at 2pm"</em>
+          <p style="font-size:14px;color:var(--muted);margin-bottom:14px;line-height:1.7">
+            Tap the mic and speak naturally — in English or Hindi.<br>
+            e.g. <em style="color:var(--text)">"126 fasting this morning"</em> or
+            <em style="color:var(--text)">"sugar 180 lunch ke baad kal"</em>
           </p>
+          <!-- Language selector -->
+          <div class="form-group" style="margin-bottom:14px">
+            <label>Language</label>
+            <div class="toggle-pills" id="voiceLangPills">
+              <button class="toggle-pill active" onclick="setVoiceLang('en-IN',this)">🇬🇧 English</button>
+              <button class="toggle-pill" onclick="setVoiceLang('hi-IN',this)">🇮🇳 Hindi</button>
+              <button class="toggle-pill" onclick="setVoiceLang('hi-IN',this)">🔀 Hinglish</button>
+            </div>
+          </div>
           <!-- Mic button -->
           <div style="text-align:center;margin-bottom:18px">
             <button id="voiceMicBtn" onclick="toggleVoiceRecording()"
@@ -549,13 +587,12 @@ select option{background:var(--bg2);color:var(--text)}
               🎤
             </button>
             <div id="voiceStatus" style="margin-top:12px;font-size:14px;color:var(--muted);font-weight:600">Tap to start speaking</div>
+            <div id="voiceSilenceBar" style="display:none;margin-top:10px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;width:160px;margin-left:auto;margin-right:auto">
+              <div id="voiceSilenceFill" style="height:100%;background:var(--accent);width:100%;transition:width 0.1s linear"></div>
+            </div>
           </div>
           <!-- Transcript display -->
           <div id="voiceTranscript" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;font-size:15px;color:var(--text);line-height:1.6;min-height:52px"></div>
-          <!-- Analyse button -->
-          <button id="voiceAnalyseBtn" onclick="analyseVoiceTranscript()" style="display:none;width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:14px;color:white;font-size:16px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:8px">
-            🔍 Extract Reading from Speech
-          </button>
           <div id="voiceAiStatus" style="display:none;text-align:center;padding:14px;color:var(--accent);font-size:14px">
             <div style="font-size:28px;margin-bottom:6px">⏳</div>Interpreting speech…
           </div>
@@ -1495,15 +1532,27 @@ function drawChartInternal(canvas, ctx, W, H, dpr, pad, filtered, units, ismmol,
     });
   });
 
-  // X date labels
-  ctx.fillStyle = lightMode ? 'rgba(15,23,42,0.4)' : 'rgba(232,244,255,0.4)';
+  // X date labels — deduplicated, spread evenly, no repeats
+  ctx.fillStyle = lightMode ? 'rgba(15,23,42,0.5)' : 'rgba(232,244,255,0.55)';
   ctx.font='10px DM Sans,sans-serif'; ctx.textAlign='center';
   ctx.setLineDash([]);
-  const step=Math.max(1,Math.floor(filtered.length/6));
-  for(let i=0;i<filtered.length;i+=step){
-    const d=new Date(filtered[i].ts);
-    ctx.fillText((d.getMonth()+1)+'/'+d.getDate(),toX(i),H-6);
-  }
+  // Build unique date labels with their x positions
+  const seenDates = new Set();
+  const labelPoints = [];
+  filtered.forEach((r,i) => {
+    const d = new Date(r.ts);
+    const key = (d.getMonth()+1)+'/'+d.getDate();
+    if (!seenDates.has(key)) {
+      seenDates.add(key);
+      labelPoints.push({label: key, x: toX(i)});
+    }
+  });
+  // Show at most 6 labels spread evenly
+  const maxLabels = 6;
+  const stride = Math.max(1, Math.ceil(labelPoints.length / maxLabels));
+  labelPoints.forEach((pt, i) => {
+    if (i % stride === 0) ctx.fillText(pt.label, pt.x, H-6);
+  });
 }
 
 function mealIcon(meal) {
@@ -2231,6 +2280,170 @@ function rpDrawMealChart(c, filtered, units, ismmol, x, y, w, h) {
 }
 
 
+// ====== AI DOCTOR INSIGHTS (streaming) ======
+async function loadAiInsights() {
+  const p = patient();
+  if (!p) return;
+  if (readings.length < 3) {
+    document.getElementById('aiInsightsBody').innerHTML =
+      '<div style="font-size:14px;color:var(--muted)">Need at least 3 readings for AI analysis.</div>';
+    return;
+  }
+
+  const btn = document.getElementById('aiInsightsBtn');
+  btn.disabled = true; btn.textContent = '⏳';
+
+  const body = document.getElementById('aiInsightsBody');
+  body.innerHTML = '<div class="ai-streaming" id="aiStream"></div><span class="ai-cursor" id="aiCursor"></span>';
+
+  const thirtyAgo = Date.now() - 30*86400000;
+  const recent = readings.filter(r=>r.ts>=thirtyAgo);
+  const all = readings;
+  const units = p.units;
+  const ismmol = units === 'mmol/L';
+  const lo = ismmol?4.0:70, hi = ismmol?10.0:180;
+
+  const mealAvg = (kws, src) => {
+    const sub = src.filter(r=>kws.some(k=>(r.meal||'').toLowerCase().includes(k)));
+    return sub.length ? (sub.reduce((s,r)=>s+r.val,0)/sub.length).toFixed(1) : 'N/A';
+  };
+
+  const estH = all.length>=3 ? calcHba1c(all,units) : null;
+  const labH = manualHba1c.length ? manualHba1c[manualHba1c.length-1].val : null;
+  const inRng = recent.filter(r=>r.val>=lo&&r.val<=hi).length;
+  const pct = v => recent.length ? Math.round(v/recent.length*100) : 0;
+
+  // Last 10 readings summary for context
+  const last10 = [...all].reverse().slice(0,10).map(r=>{
+    const d=new Date(r.ts);
+    return `${d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})} ${d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})} — ${r.val} ${units} (${r.meal||'Random'})${r.notes?' ['+r.notes+']':''}`;
+  }).join('\n');
+
+  const prompt = `You are an experienced diabetologist giving a clinical assessment based on glucose monitoring data. Be direct, specific, and clinically useful. Speak like a doctor talking to a patient — warm but professional.
+
+PATIENT: ${p.name}, Age ${p.age}, ${p.type}, Units: ${units}
+TARGET RANGE: ${lo}–${hi} ${units}
+
+LAST 30 DAYS SUMMARY:
+- Total readings: ${recent.length}
+- Avg fasting: ${mealAvg(['fasting'],recent)} ${units}
+- Avg pre-meal: ${mealAvg(['before'],recent)} ${units}
+- Avg post-meal: ${mealAvg(['after'],recent)} ${units}
+- In target range: ${pct(inRng)}% (${inRng}/${recent.length})
+- Above range: ${pct(recent.filter(r=>r.val>hi).length)}%
+- Below range: ${pct(recent.filter(r=>r.val<lo).length)}%
+- Estimated HbA1c: ${estH?estH.toFixed(1)+'%':'Not enough data'}
+- Lab HbA1c: ${labH?labH+'%':'Not recorded'}
+
+MOST RECENT 10 READINGS:
+${last10}
+
+Give your assessment in these exact sections — use the exact headings:
+
+## Overall Control
+[1-2 sentences on overall diabetes control status]
+
+## Key Patterns
+[2-4 bullet points on specific patterns you see — fasting trends, post-meal spikes, time of day patterns, etc.]
+
+## Concerns
+[Any red flags or areas needing immediate attention. If none, say so briefly]
+
+## What's Going Well
+[Positive observations]
+
+## Suggestions
+[3-5 specific, actionable suggestions — diet timing, testing frequency, when to see doctor, lifestyle]
+
+Keep each section concise. Be specific with numbers. End with: "⚠️ This is AI-generated guidance for personal awareness only — always consult your doctor for medical decisions."`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        stream: true,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!resp.ok) throw new Error('API error ' + resp.status);
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    const streamEl = document.getElementById('aiStream');
+    let fullText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value);
+      const lines = chunk.split('\n');
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
+        const data = line.slice(5).trim();
+        if (data === '[DONE]') break;
+        try {
+          const parsed = JSON.parse(data);
+          const delta = parsed?.delta?.text || '';
+          if (delta) {
+            fullText += delta;
+            streamEl.textContent = fullText;
+            // Auto-scroll insights into view
+            streamEl.scrollIntoView({behavior:'smooth', block:'nearest'});
+          }
+        } catch {}
+      }
+    }
+
+    // Remove cursor after done
+    const cursor = document.getElementById('aiCursor');
+    if (cursor) cursor.remove();
+
+    // Format sections nicely
+    body.innerHTML = formatAiInsights(fullText);
+
+  } catch(e) {
+    console.error('AI Insights error:', e);
+    body.innerHTML = `<div style="font-size:14px;color:var(--high)">⚠️ Could not load insights: ${e.message||'Please try again.'}</div>`;
+  } finally {
+    btn.disabled = false; btn.textContent = '↻ Refresh';
+  }
+}
+
+function formatAiInsights(text) {
+  const sectionConfig = {
+    'Overall Control':    { icon:'🩺', color:'#0ea5e9', bg:'rgba(14,165,233,0.08)' },
+    'Key Patterns':       { icon:'📊', color:'#8b5cf6', bg:'rgba(139,92,246,0.08)' },
+    'Concerns':           { icon:'⚠️', color:'#ef4444', bg:'rgba(239,68,68,0.08)'  },
+    "What's Going Well":  { icon:'✅', color:'#22c55e', bg:'rgba(34,197,94,0.08)'  },
+    'Suggestions':        { icon:'💡', color:'#f59e0b', bg:'rgba(245,158,11,0.08)' },
+  };
+  let html = '';
+  const parts = text.split(/##\s+/);
+  parts.forEach(part => {
+    if (!part.trim()) return;
+    const firstLine = part.split('\n')[0].trim();
+    const body = part.slice(firstLine.length).trim();
+    const cfg = sectionConfig[firstLine] || {icon:'📋',color:'var(--accent)',bg:'rgba(79,168,255,0.06)'};
+    // Format bullet points
+    const formatted = body
+      .replace(/^[-•]\s+/gm, '• ')
+      .replace(/\n{2,}/g, '\n')
+      .trim();
+    html += `<div class="ai-section" style="background:${cfg.bg};border-radius:12px;padding:12px 14px;border-left:3px solid ${cfg.color}">
+      <div class="ai-section-title">${cfg.icon} <span style="color:${cfg.color}">${firstLine}</span></div>
+      <div class="ai-section-body">${formatted.replace(/\n/g,'<br>')}</div>
+    </div>`;
+  });
+  // Handle disclaimer line
+  html = html.replace(/(⚠️ This is AI-generated.*)/g,
+    '<div style="margin-top:10px;font-size:12px;color:var(--muted);font-style:italic;text-align:center">$1</div>');
+  return html || `<div class="ai-streaming">${text}</div>`;
+}
+
 // ====== LOG MODE TOGGLE ======
 function setLogMode(mode, btn) {
   document.querySelectorAll('#logModePills .toggle-pill').forEach(b=>b.classList.remove('active'));
@@ -2466,82 +2679,154 @@ function fileToBase64(file) {
   });
 }
 
-// ====== VOICE INPUT (#21) ======
+// ====== VOICE INPUT (#21 fixed) ======
 let voiceRecognition = null;
 let voiceTranscriptText = '';
 let voiceRecording = false;
+let voiceLang = 'en-IN';
+let voiceSilenceTimer = null;
+let voiceFinalText = '';
+const VOICE_SILENCE_MS = 2000; // auto-analyse after 2s silence
+
+function setVoiceLang(lang, btn) {
+  voiceLang = lang;
+  document.querySelectorAll('#voiceLangPills .toggle-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  // Reset recognition so it uses new lang next start
+  if (voiceRecognition) { try { voiceRecognition.abort(); } catch{} voiceRecognition = null; }
+}
 
 function initVoice() {
-  const status = document.getElementById('voiceStatus');
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    if(status) status.textContent = '⚠️ Voice input not supported in this browser. Use Safari on iPhone.';
-    document.getElementById('voiceMicBtn').disabled = true;
-    return;
+    const s = document.getElementById('voiceStatus');
+    if(s) s.textContent = '⚠️ Voice not supported. Use Safari on iPhone.';
+    const b = document.getElementById('voiceMicBtn');
+    if(b) b.disabled = true;
+    return false;
   }
-  if (voiceRecognition) return; // already initialised
   voiceRecognition = new SpeechRecognition();
-  voiceRecognition.continuous = false;
-  voiceRecognition.interimResults = true;
-  voiceRecognition.lang = 'en-US';
+  voiceRecognition.lang = voiceLang;
+  voiceRecognition.continuous = true;       // keep listening
+  voiceRecognition.interimResults = true;   // show live transcript
+  voiceRecognition.maxAlternatives = 1;
 
   voiceRecognition.onresult = (e) => {
     let interim = '', final = '';
-    for (let i=e.resultIndex; i<e.results.length; i++) {
-      if (e.results[i].isFinal) final += e.results[i][0].transcript;
-      else interim += e.results[i][0].transcript;
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal) final += t + ' ';
+      else interim += t;
     }
-    voiceTranscriptText = final || interim;
-    const el = document.getElementById('voiceTranscript');
-    if(el){ el.style.display='block'; el.textContent = '"' + voiceTranscriptText + '"'; }
-  };
+    if (final) voiceFinalText += final;
+    voiceTranscriptText = (voiceFinalText + interim).trim();
 
-  voiceRecognition.onend = () => {
-    voiceRecording = false;
-    const btn = document.getElementById('voiceMicBtn');
-    const status = document.getElementById('voiceStatus');
-    if(btn){ btn.style.background='linear-gradient(135deg,var(--accent),#1d6fa8)'; btn.textContent='🎤'; }
-    if(status) status.textContent = voiceTranscriptText ? 'Done — tap Analyse to extract' : 'Tap to try again';
-    if (voiceTranscriptText) {
-      const ab = document.getElementById('voiceAnalyseBtn');
-      if(ab) ab.style.display='block';
-    }
+    const el = document.getElementById('voiceTranscript');
+    if (el) { el.style.display='block'; el.textContent = '"' + voiceTranscriptText + '"'; }
+
+    // Reset silence countdown every time speech is detected
+    resetSilenceTimer();
   };
 
   voiceRecognition.onerror = (e) => {
+    if (e.error === 'no-speech') return; // ignore, keep listening
+    clearSilenceTimer();
     voiceRecording = false;
-    const status = document.getElementById('voiceStatus');
-    if(status) status.textContent = '⚠️ Error: ' + (e.error==='not-allowed'?'Microphone permission denied':e.error) + '. Tap to retry.';
-    const btn = document.getElementById('voiceMicBtn');
-    if(btn){ btn.style.background='linear-gradient(135deg,var(--accent),#1d6fa8)'; btn.textContent='🎤'; }
+    const s = document.getElementById('voiceStatus');
+    if(s) s.textContent = e.error==='not-allowed'
+      ? '⚠️ Microphone permission denied. Allow in Settings.'
+      : '⚠️ Error: '+e.error+'. Tap to retry.';
+    resetMicBtn();
   };
+
+  voiceRecognition.onend = () => {
+    // Only handle onend if we didn't trigger it via stopAndAnalyse
+    if (voiceRecording) {
+      // Unexpected end — restart if still recording
+      try { voiceRecognition.start(); } catch {}
+    }
+  };
+
+  return true;
+}
+
+function resetSilenceTimer() {
+  clearSilenceTimer();
+  if (!voiceTranscriptText.trim()) return;
+
+  // Animate silence bar countdown
+  const bar = document.getElementById('voiceSilenceBar');
+  const fill = document.getElementById('voiceSilenceFill');
+  if(bar) bar.style.display='block';
+  if(fill){ fill.style.transition='none'; fill.style.width='100%'; }
+  // Trigger reflow then animate
+  setTimeout(()=>{
+    if(fill){ fill.style.transition=`width ${VOICE_SILENCE_MS}ms linear`; fill.style.width='0%'; }
+  },30);
+
+  voiceSilenceTimer = setTimeout(()=>{
+    if(voiceTranscriptText.trim()) stopAndAnalyse();
+  }, VOICE_SILENCE_MS);
+}
+
+function clearSilenceTimer() {
+  if(voiceSilenceTimer){ clearTimeout(voiceSilenceTimer); voiceSilenceTimer=null; }
+  const bar = document.getElementById('voiceSilenceBar');
+  const fill = document.getElementById('voiceSilenceFill');
+  if(bar) bar.style.display='none';
+  if(fill){ fill.style.transition='none'; fill.style.width='100%'; }
+}
+
+function stopAndAnalyse() {
+  voiceRecording = false;
+  clearSilenceTimer();
+  try { voiceRecognition.stop(); } catch {}
+  resetMicBtn();
+  const s = document.getElementById('voiceStatus');
+  if(s) s.textContent = 'Got it — analysing…';
+  analyseVoiceTranscript();
+}
+
+function resetMicBtn() {
+  const btn = document.getElementById('voiceMicBtn');
+  if(btn){ btn.style.background='linear-gradient(135deg,var(--accent),#1d6fa8)'; btn.textContent='🎤'; }
 }
 
 function toggleVoiceRecording() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) return;
-  if (!voiceRecognition) initVoice();
-  const btn = document.getElementById('voiceMicBtn');
-  const status = document.getElementById('voiceStatus');
   if (voiceRecording) {
-    voiceRecognition.stop();
-    voiceRecording = false;
-  } else {
-    voiceTranscriptText = '';
-    const el = document.getElementById('voiceTranscript'); if(el) el.style.display='none';
-    const ab = document.getElementById('voiceAnalyseBtn'); if(ab) ab.style.display='none';
-    document.getElementById('voiceResults').style.display='none';
+    // Manual stop — immediately analyse if there's text
+    stopAndAnalyse();
+    return;
+  }
+  if (!voiceRecognition && !initVoice()) return;
+  // Reset state
+  voiceTranscriptText = ''; voiceFinalText = '';
+  const el = document.getElementById('voiceTranscript'); if(el){ el.style.display='none'; el.textContent=''; }
+  document.getElementById('voiceResults').style.display='none';
+  document.getElementById('voiceAiStatus').style.display='none';
+  clearSilenceTimer();
+
+  try {
+    voiceRecognition.lang = voiceLang;
     voiceRecognition.start();
     voiceRecording = true;
+    const btn = document.getElementById('voiceMicBtn');
     if(btn){ btn.style.background='linear-gradient(135deg,#ef4444,#b91c1c)'; btn.textContent='⏹'; }
-    if(status) status.textContent='🔴 Listening… tap to stop';
+    const s = document.getElementById('voiceStatus');
+    if(s) s.textContent='🔴 Listening… tap to stop';
+  } catch(e) {
+    const s = document.getElementById('voiceStatus');
+    if(s) s.textContent='⚠️ Could not start microphone. '+e.message;
   }
 }
 
 async function analyseVoiceTranscript() {
-  if (!voiceTranscriptText.trim()) { showToast('Nothing to analyse', true); return; }
+  const text = voiceTranscriptText.trim();
+  if (!text) {
+    const s=document.getElementById('voiceStatus'); if(s) s.textContent='Nothing recorded. Tap to try again.';
+    return;
+  }
   document.getElementById('voiceAiStatus').style.display = 'block';
-  document.getElementById('voiceAnalyseBtn').style.display = 'none';
   document.getElementById('voiceResults').style.display = 'none';
 
   const p = patient();
@@ -2550,26 +2835,26 @@ async function analyseVoiceTranscript() {
   const todayDate = now.toISOString().split('T')[0];
   const nowTime = now.toTimeString().slice(0,5);
 
-  const prompt = `Extract a blood glucose reading from this spoken text:
-"${voiceTranscriptText}"
+  const prompt = `Extract a blood glucose reading from this spoken text (may be in English, Hindi, or Hinglish):
+"${text}"
 
-Today is ${todayDate} and current time is ${nowTime}.
+Today is ${todayDate}, current time is ${nowTime}.
+Patient glucose units: ${units}.
 
-Return ONLY a JSON array with one object:
-{
-  "val": <glucose number>,
-  "date": "<YYYY-MM-DD — use today if not specified>",
-  "time": "<HH:MM — use current time if not specified>",
-  "meal": "<one of: Fasting, Before meal, After meal (1hr), After meal (2hr), Bedtime, Random>",
-  "notes": "<any extra context from speech or null>"
-}
+Hindi/Hinglish mappings to help you:
+- "sugar", "shakar", "glucose", "blood sugar" = glucose reading
+- "khali pet" / "bhooke" / "fasting" = Fasting
+- "khane se pehle" / "before meal" = Before meal
+- "khane ke baad" / "after meal" / "lunch ke baad" / "dinner ke baad" = After meal
+- "raat ko" / "sone se pehle" / "bedtime" = Bedtime
+- "kal" = yesterday, "aaj" = today, "kal subah" = yesterday morning
+- "subah" = morning (~7-9am), "dopahar" = afternoon (~1pm), "shaam" = evening (~6pm), "raat" = night (~9pm)
+- Numbers in Hindi: ek=1, do=2, teen=3, char=4, paanch=5, chhe=6, saat=7, aath=8, nau=9, das=10
 
-Units: ${units}. Convert if needed.
-Words like "fasting", "empty stomach" → meal: "Fasting"
-Words like "after lunch/dinner/breakfast" → meal: "After meal (1hr)" or "After meal (2hr)"
-Words like "before meal/food" → meal: "Before meal"
-Words like "bedtime", "night" → meal: "Bedtime"
-Return ONLY the JSON array, no explanation.`;
+Return ONLY a JSON array with one object — no explanation:
+[{"val":<number>,"date":"<YYYY-MM-DD>","time":"<HH:MM>","meal":"<Fasting|Before meal|After meal (1hr)|After meal (2hr)|Bedtime|Random>","notes":"<original speech snippet or null>"}]
+
+Use today's date and current time as defaults if not specified. Convert units if needed.`;
 
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -2584,43 +2869,43 @@ Return ONLY the JSON array, no explanation.`;
     if (!resp.ok) throw new Error('API error ' + resp.status);
     const data = await resp.json();
     if (data.error) throw new Error(data.error.message);
-    const raw = data.content?.find(b=>b.type==='text')?.text || '';
-    const clean = raw.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
+    const raw = (data.content?.find(b=>b.type==='text')?.text||'').replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
     let extracted;
-    try { extracted = JSON.parse(clean); }
-    catch { const m=clean.match(/\[[\s\S]*\]/); extracted = m ? JSON.parse(m[0]) : null; }
+    try { extracted = JSON.parse(raw); }
+    catch { const m=raw.match(/\[[\s\S]*?\]/); extracted = m ? JSON.parse(m[0]) : null; }
+
+    document.getElementById('voiceAiStatus').style.display = 'none';
 
     if (!extracted || !Array.isArray(extracted) || !extracted[0]?.val) {
-      document.getElementById('voiceAiStatus').innerHTML = '<div style="font-size:24px;margin-bottom:6px">❓</div>Could not extract a reading. Try speaking more clearly.';
+      const s=document.getElementById('voiceStatus');
+      if(s) s.textContent='❓ Could not find a number. Say e.g. "sugar 126 fasting" and try again.';
+      resetMicBtn();
       return;
     }
 
     ocrPendingReadings = extracted;
-    document.getElementById('voiceAiStatus').style.display = 'none';
-    document.getElementById('voiceResultsList').innerHTML = '';
-    // Re-use renderOcrResults for the voice result card
-    const tmpDiv = document.createElement('div');
-    tmpDiv.innerHTML = '';
+    // Render into voiceResultsList using renderOcrResults
     renderOcrResults(extracted, units, true);
-    // Move rendered cards to voiceResultsList
     document.getElementById('voiceResultsList').innerHTML = document.getElementById('ocrResultsList').innerHTML;
     document.getElementById('ocrResultsList').innerHTML = '';
     document.getElementById('voiceResults').style.display = 'block';
+    const s=document.getElementById('voiceStatus'); if(s) s.textContent='✅ Reading extracted — review and save';
 
   } catch(e) {
     console.error('Voice AI error:', e);
-    document.getElementById('voiceAiStatus').innerHTML = '<div style="font-size:24px;margin-bottom:6px">⚠️</div>' + (e.message||'Error. Please try again.');
+    document.getElementById('voiceAiStatus').innerHTML =
+      '<div style="font-size:24px;margin-bottom:6px">⚠️</div>' + (e.message||'Error. Tap mic to try again.');
   }
 }
 
 function clearVoiceResults() {
-  ocrPendingReadings = [];
-  voiceTranscriptText = '';
+  ocrPendingReadings = []; voiceTranscriptText = ''; voiceFinalText = '';
+  clearSilenceTimer();
   ['voiceResults','voiceTranscript','voiceAiStatus'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.style.display='none';
   });
-  const ab=document.getElementById('voiceAnalyseBtn'); if(ab) ab.style.display='none';
   const vs=document.getElementById('voiceStatus'); if(vs) vs.textContent='Tap to start speaking';
+  resetMicBtn();
 }
 
 
