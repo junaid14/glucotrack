@@ -239,12 +239,22 @@ select option{background:var(--bg2);color:var(--text)}
   <div class="modal">
     <div class="modal-title" id="modalTitle">New Patient</div>
     <div class="modal-sub">Enter patient details to get started</div>
-    <div class="form-group"><label>Full Name</label><input type="text" id="mName" placeholder="e.g. Sarah Johnson" maxlength="40" autocorrect="off"></div>
-    <div class="form-group"><label>Age</label><input type="number" id="mAge" placeholder="e.g. 42" min="1" max="120"></div>
+    <div class="form-group"><label>Full Name</label><input type="text" id="mName" placeholder="e.g. Arjun Hashmi" maxlength="40" autocorrect="off"></div>
+    <div class="form-group"><label>Age</label><input type="number" id="mAge" placeholder="e.g. 81" min="1" max="120"></div>
+    <div class="form-group"><label>Gender</label>
+      <select id="mGender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other / Prefer not to say</option>
+      </select>
+    </div>
     <div class="form-group"><label>Diabetes Type</label>
       <select id="mType">
         <option>Type 1</option><option>Type 2</option><option>Gestational</option><option>Pre-diabetes</option><option>Other</option>
       </select>
+    </div>
+    <div class="form-group"><label>Diabetic Since (Year)</label>
+      <input type="number" id="mDiabetesSince" placeholder="e.g. 2001" min="1950" max="2030">
     </div>
     <div class="form-group"><label>Units</label>
       <select id="mUnits"><option value="mg/dL">mg/dL</option><option value="mmol/L">mmol/L</option></select>
@@ -253,6 +263,7 @@ select option{background:var(--bg2);color:var(--text)}
       <button class="btn-cancel" onclick="closePatientModal()">Cancel</button>
       <button class="btn-primary" style="margin-top:0" onclick="savePatientModal()">Save</button>
     </div>
+    <div style="font-size:12px;color:var(--muted);margin-top:10px;text-align:center">Medications, general condition &amp; additional remarks can be added in the Profile tab after saving</div>
   </div>
 </div>
 
@@ -630,6 +641,12 @@ select option{background:var(--bg2);color:var(--text)}
         <div class="card-title">Edit Profile</div>
         <div class="form-group"><label>Full Name</label><input type="text" id="editName" maxlength="40" autocorrect="off"></div>
         <div class="form-group"><label>Age</label><input type="number" id="editAge" min="1" max="120"></div>
+        <div class="form-group"><label>Gender</label>
+          <select id="editGender"><option value="male">Male</option><option value="female">Female</option><option value="other">Other / Prefer not to say</option></select>
+        </div>
+        <div class="form-group"><label>Diabetic Since (Year)</label>
+          <input type="number" id="editDiabetesSince" placeholder="e.g. 2001" min="1950" max="2030">
+        </div>
         <div class="form-group"><label>Diabetes Type</label>
           <select id="editType"><option>Type 1</option><option>Type 2</option><option>Gestational</option><option>Pre-diabetes</option><option>Other</option></select>
         </div>
@@ -638,9 +655,33 @@ select option{background:var(--bg2);color:var(--text)}
         </div>
         <button class="btn-primary" onclick="updateProfile()">Save Changes</button>
       </div>
+
+      <!-- Medications card -->
+      <div class="card">
+        <div class="card-title">💊 Current Medications</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6">List all current medications, doses and timing. Used by AI Insights for personalised analysis.</div>
+        <textarea id="editMedications" placeholder="e.g.&#10;Metformin 500mg — twice daily (morning &amp; night)&#10;Glimepiride 2mg — morning before breakfast&#10;Insulin Glargine 10 units — bedtime&#10;Aspirin 75mg — morning&#10;Amlodipine 5mg — morning" rows="7" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;resize:vertical;outline:none;line-height:1.6;-webkit-appearance:none" maxlength="1200"></textarea>
+        <button class="btn-primary" style="margin-top:12px" onclick="saveMedications()">Save Medications</button>
+      </div>
+
+      <!-- General condition card -->
+      <div class="card">
+        <div class="card-title">🏥 General Condition &amp; Additional Remarks</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6">Overall health status, comorbidities, lifestyle, diet habits, recent events. Used by AI Insights.</div>
+        <textarea id="editGeneralCondition" placeholder="e.g.&#10;81-year-old with 24-year history of Type 2 diabetes. Hypertensive, on BP medication. Mild CKD stage 2. Generally sedentary lifestyle. Vegetarian diet, tends to eat carb-heavy meals. Recently hospitalised for hyperglycemia in March. Now on revised medication regimen. Mobility limited due to arthritis. Mentally alert and cooperative. Family monitors closely." rows="7" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;resize:vertical;outline:none;line-height:1.6;-webkit-appearance:none" maxlength="700"></textarea>
+        <button class="btn-primary" style="margin-top:12px" onclick="saveGeneralCondition()">Save Remarks</button>
+      </div>
       <button class="btn-secondary" onclick="exportData()">📤 Export CSV</button>
       <button class="btn-secondary" style="color:#ef4444;border-color:rgba(239,68,68,0.3)" onclick="clearReadings()">🗑 Clear All Readings</button>
       <button class="btn-secondary" style="color:#ef4444;border-color:rgba(239,68,68,0.3)" onclick="deletePatient()">❌ Delete This Patient</button>
+
+      <!-- Reference Analysis -->
+      <div class="card">
+        <div class="card-title">📋 Reference Analysis (AI Training Example)</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6">Paste a high-quality analysis (e.g. from your doctor or ChatGPT) as a reference. AI Insights will use this as a style and depth example for this patient.</div>
+        <textarea id="editReferenceAnalysis" placeholder="Paste a sample analysis here to guide the AI on depth, tone and personalisation expected…" rows="8" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;resize:vertical;outline:none;line-height:1.6;-webkit-appearance:none" maxlength="3000"></textarea>
+        <button class="btn-primary" style="margin-top:12px" onclick="saveReferenceAnalysis()">Save Reference</button>
+      </div>
 
       <!-- API Key card -->
       <div class="card" style="margin-top:4px">
@@ -837,6 +878,8 @@ function openAddPatient() {
   document.getElementById('modalTitle').textContent = 'New Patient';
   document.getElementById('mName').value = '';
   document.getElementById('mAge').value = '';
+  document.getElementById('mGender').value = 'male';
+  document.getElementById('mDiabetesSince').value = '';
   document.getElementById('mType').value = 'Type 2';
   document.getElementById('mUnits').value = 'mg/dL';
   document.getElementById('patientModal').classList.remove('hidden');
@@ -850,6 +893,8 @@ function openEditPatient(pid) {
   document.getElementById('modalTitle').textContent = 'Edit Patient';
   document.getElementById('mName').value = p.name;
   document.getElementById('mAge').value = p.age;
+  document.getElementById('mGender').value = p.gender || 'male';
+  document.getElementById('mDiabetesSince').value = p.diabetesSince || '';
   document.getElementById('mType').value = p.type;
   document.getElementById('mUnits').value = p.units;
   document.getElementById('patientModal').classList.remove('hidden');
@@ -860,17 +905,19 @@ function closePatientModal() { document.getElementById('patientModal').classList
 function savePatientModal() {
   const name = document.getElementById('mName').value.trim();
   const age = parseInt(document.getElementById('mAge').value);
+  const gender = document.getElementById('mGender').value;
+  const diabetesSince = document.getElementById('mDiabetesSince').value ? parseInt(document.getElementById('mDiabetesSince').value) : null;
   const type = document.getElementById('mType').value;
   const units = document.getElementById('mUnits').value;
   if (!name) { showToast('Enter a name', true); return; }
   if (!age || age < 1 || age > 120) { showToast('Enter a valid age', true); return; }
   if (editingPatientId) {
     const p = patients.find(x=>x.id===editingPatientId);
-    p.name = name; p.age = age; p.type = type; p.units = units;
+    p.name = name; p.age = age; p.gender = gender; p.diabetesSince = diabetesSince; p.type = type; p.units = units;
   } else {
     const id = 'p_' + Date.now();
     const colorIdx = patients.length;
-    patients.push({ id, name, age, type, units, colorIdx });
+    patients.push({ id, name, age, gender, diabetesSince, type, units, colorIdx });
   }
   localStorage.setItem('glucoPatients', JSON.stringify(patients));
   closePatientModal();
@@ -1346,33 +1393,68 @@ function populateProfileForm() {
   const p = patient(); if (!p) return;
   document.getElementById('editName').value = p.name;
   document.getElementById('editAge').value = p.age;
+  document.getElementById('editGender').value = p.gender || 'male';
+  document.getElementById('editDiabetesSince').value = p.diabetesSince || '';
   document.getElementById('editType').value = p.type;
   document.getElementById('editUnits').value = p.units;
+  document.getElementById('editMedications').value = localStorage.getItem('glucoMeds_'+p.id) || '';
+  document.getElementById('editGeneralCondition').value = localStorage.getItem('glucoCond_'+p.id) || '';
+  document.getElementById('editReferenceAnalysis').value = localStorage.getItem('glucoRef_'+p.id) || '';
   document.getElementById('profileAv').textContent = initials(p.name);
   document.getElementById('profileAv').className = 'profile-big-av ' + AV_COLORS[p.colorIdx%6];
   document.getElementById('profileName').textContent = p.name;
-  document.getElementById('profileAge').textContent = `Age ${p.age} · ${p.type}`;
+  const genderLabel = p.gender==='female'?'Female':p.gender==='other'?'Other':'Male';
+  const yr = new Date().getFullYear();
+  const yearsLabel = p.diabetesSince ? (yr-p.diabetesSince)+' yrs (since '+p.diabetesSince+')' : '—';
+  document.getElementById('profileAge').textContent = `Age ${p.age} · ${genderLabel} · ${p.type}`;
+  const hasMeds = !!localStorage.getItem('glucoMeds_'+p.id);
+  const hasCond = !!localStorage.getItem('glucoCond_'+p.id);
   document.getElementById('profileInfo').innerHTML = `
     <div class="info-row"><div class="info-key">Units</div><div class="info-val">${p.units}</div></div>
+    <div class="info-row"><div class="info-key">Gender</div><div class="info-val">${genderLabel}</div></div>
+    <div class="info-row"><div class="info-key">Diabetic since</div><div class="info-val">${yearsLabel}</div></div>
     <div class="info-row"><div class="info-key">Total readings</div><div class="info-val">${readings.length}</div></div>
     <div class="info-row"><div class="info-key">First reading</div><div class="info-val">${readings.length?new Date(readings[0].ts).toLocaleDateString():'—'}</div></div>
-    <div class="info-row"><div class="info-key">Last reading</div><div class="info-val">${readings.length?new Date(readings[readings.length-1].ts).toLocaleDateString():'—'}</div></div>`;
+    <div class="info-row"><div class="info-key">Last reading</div><div class="info-val">${readings.length?new Date(readings[readings.length-1].ts).toLocaleDateString():'—'}</div></div>
+    <div class="info-row"><div class="info-key">Medications</div><div class="info-val" style="color:${hasMeds?'var(--normal)':'var(--muted)'}">${hasMeds?'✅ Saved':'Not entered'}</div></div>
+    <div class="info-row"><div class="info-key">General condition</div><div class="info-val" style="color:${hasCond?'var(--normal)':'var(--muted)'}">${hasCond?'✅ Saved':'Not entered'}</div></div>`;
 }
 
 function updateProfile() {
   const p = patient(); if (!p) return;
   const name = document.getElementById('editName').value.trim();
   const age = parseInt(document.getElementById('editAge').value);
+  const gender = document.getElementById('editGender').value;
+  const diabetesSince = document.getElementById('editDiabetesSince').value ? parseInt(document.getElementById('editDiabetesSince').value) : null;
   const type = document.getElementById('editType').value;
   const units = document.getElementById('editUnits').value;
   if (!name||!age) { showToast('Fill all fields', true); return; }
-  p.name=name; p.age=age; p.type=type; p.units=units;
+  p.name=name; p.age=age; p.gender=gender; p.diabetesSince=diabetesSince; p.type=type; p.units=units;
   localStorage.setItem('glucoPatients', JSON.stringify(patients));
   document.getElementById('psName').textContent = p.name.split(' ')[0];
   document.getElementById('psAv').textContent = initials(p.name);
   refreshAll();
   showToast('Profile updated ✓');
 }
+
+function saveMedications() {
+  const p = patient(); if (!p) return;
+  localStorage.setItem('glucoMeds_'+p.id, document.getElementById('editMedications').value.trim());
+  showToast('Medications saved ✓'); populateProfileForm();
+}
+
+function saveGeneralCondition() {
+  const p = patient(); if (!p) return;
+  localStorage.setItem('glucoCond_'+p.id, document.getElementById('editGeneralCondition').value.trim());
+  showToast('Remarks saved ✓'); populateProfileForm();
+}
+
+function saveReferenceAnalysis() {
+  const p = patient(); if (!p) return;
+  localStorage.setItem('glucoRef_'+p.id, document.getElementById('editReferenceAnalysis').value.trim());
+  showToast('Reference analysis saved ✓');
+}
+
 
 function deletePatient() {
   const p = patient(); if (!p) return;
@@ -2331,117 +2413,218 @@ async function loadAiInsights() {
   btn.disabled = true; btn.textContent = '⏳';
 
   const bodyEl = document.getElementById('aiInsightsBody');
-  bodyEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--accent);font-size:14px"><div style="font-size:32px;margin-bottom:10px">🩺</div><div>Analysing glucose data for '+p.name+'…</div><div style="margin-top:8px;font-size:12px;color:var(--muted)">Trying available models — may take a few seconds</div></div>';
+  bodyEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--accent);font-size:14px"><div style="font-size:32px;margin-bottom:10px">🩺</div><div>Analysing data for ' + p.name + '…</div><div style="margin-top:8px;font-size:12px;color:var(--muted)">May take a few seconds</div></div>';
 
-  const thirtyAgo = Date.now() - 30*86400000;
-  const recent = readings.filter(r=>r.ts>=thirtyAgo);
-  const all = readings;
   const units = p.units;
   const ismmol = units === 'mmol/L';
-  const lo = ismmol?4.0:70, hi = ismmol?10.0:180;
+  const lo = ismmol ? 4.0 : 70, hi = ismmol ? 10.0 : 180;
+
+  const ninetyAgo = Date.now() - 90*86400000;
+  const thirtyAgo  = Date.now() - 30*86400000;
+  const periodRdgs = readings.filter(r => r.ts >= ninetyAgo);
+  const useRdgs    = periodRdgs.length >= 3 ? periodRdgs : readings;
+  const periodLabel = periodRdgs.length >= 3 ? 'last 90 days' : 'all available data (' + readings.length + ' readings)';
 
   const mealAvg = (kws, src) => {
-    const sub = src.filter(r=>kws.some(k=>(r.meal||'').toLowerCase().includes(k)));
-    return sub.length ? (sub.reduce((s,r)=>s+r.val,0)/sub.length).toFixed(1) : 'N/A';
+    const sub = src.filter(r => kws.some(k => (r.meal||'').toLowerCase().includes(k)));
+    return sub.length ? sub.reduce((s,r)=>s+r.val,0)/sub.length : null;
+  };
+  const fmt = (v, n) => v !== null ? v.toFixed(1)+' '+units+' ('+n+' rdgs)' : 'No data';
+
+  const fastSub  = useRdgs.filter(r=>(r.meal||'').toLowerCase().includes('fasting'));
+  const preSub   = useRdgs.filter(r=>(r.meal||'').toLowerCase().includes('before'));
+  const postSub  = useRdgs.filter(r=>(r.meal||'').toLowerCase().includes('after'));
+  const bedSub   = useRdgs.filter(r=>(r.meal||'').toLowerCase().includes('bedtime'));
+
+  const mealTrend = (sub) => {
+    if (sub.length < 4) return 'insufficient data';
+    const half = Math.floor(sub.length/2);
+    const early = sub.slice(0,half).reduce((s,r)=>s+r.val,0)/half;
+    const late  = sub.slice(half).reduce((s,r)=>s+r.val,0)/(sub.length-half);
+    const diff  = (late-early).toFixed(1);
+    return late > early+2 ? `worsening (+${diff} ${units})` : late < early-2 ? `improving (${diff} ${units})` : 'stable';
   };
 
-  const estH = all.length>=3 ? calcHba1c(all,units) : null;
-  const labH = manualHba1c.length ? manualHba1c[manualHba1c.length-1].val : null;
-  const inRng = recent.filter(r=>r.val>=lo&&r.val<=hi).length;
-  const pct = v => recent.length ? Math.round(v/recent.length*100) : 0;
+  const highEp = useRdgs.filter(r=>r.val>hi).length;
+  const lowEp  = useRdgs.filter(r=>r.val<lo).length;
+  const inRng  = useRdgs.filter(r=>r.val>=lo&&r.val<=hi).length;
+  const pctIn  = useRdgs.length ? Math.round(inRng/useRdgs.length*100) : 0;
+  const maxVal = useRdgs.length ? Math.max(...useRdgs.map(r=>r.val)) : null;
+  const minVal = useRdgs.length ? Math.min(...useRdgs.map(r=>r.val)) : null;
 
-  const last10 = [...all].reverse().slice(0,10).map(r=>{
-    const d=new Date(r.ts);
-    return `${d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})} ${d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})} — ${r.val} ${units} (${r.meal||'Random'})${r.notes?' ['+r.notes+']':''}`;
+  const estH = readings.length>=3 ? calcHba1c(readings, units) : null;
+  const labH = manualHba1c.length ? manualHba1c[manualHba1c.length-1] : null;
+
+  const rdgLines = [...useRdgs].reverse().slice(0,30).map(r => {
+    const d = new Date(r.ts);
+    return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'})+' '+
+           d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})+' | '+
+           r.val+' '+units+' | '+(r.meal||'Random')+(r.notes?' | '+r.notes:'');
   }).join('\n');
 
-  const prompt = `You are an experienced diabetologist giving a clinical assessment based on glucose monitoring data. Be direct, specific, and clinically useful. Speak like a doctor talking to a patient — warm but professional.
+  const salutation = p.gender==='female' ? 'Ms.' : p.gender==='other' ? '' : 'Mr.';
+  const addressName = salutation ? salutation+' '+p.name.split(' ').slice(-1)[0] : p.name;
 
-PATIENT: ${p.name}, Age ${p.age}, ${p.type}, Units: ${units}
-TARGET RANGE: ${lo}–${hi} ${units}
+  // Load extended profile data
+  const medications     = localStorage.getItem('glucoMeds_'+p.id) || '';
+  const generalCond     = localStorage.getItem('glucoCond_'+p.id) || '';
+  const referenceAnalysis = localStorage.getItem('glucoRef_'+p.id) || '';
 
-LAST 30 DAYS SUMMARY:
-- Total readings: ${recent.length}
-- Avg fasting: ${mealAvg(['fasting'],recent)} ${units}
-- Avg pre-meal: ${mealAvg(['before'],recent)} ${units}
-- Avg post-meal: ${mealAvg(['after'],recent)} ${units}
-- In target range: ${pct(inRng)}% (${inRng}/${recent.length})
-- Above range: ${pct(recent.filter(r=>r.val>hi).length)}%
-- Below range: ${pct(recent.filter(r=>r.val<lo).length)}%
-- Estimated HbA1c: ${estH?estH.toFixed(1)+'%':'Not enough data'}
-- Lab HbA1c: ${labH?labH+'%':'Not recorded'}
+  // Diabetes duration
+  const currentYear = new Date().getFullYear();
+  const diabetesDuration = p.diabetesSince
+    ? `${currentYear - p.diabetesSince} years (since ${p.diabetesSince})`
+    : 'Not specified';
 
-MOST RECENT 10 READINGS:
-${last10}
+  // Age-appropriate targets
+  const ageN = parseInt(p.age) || 0;
+  let ageTargetNote = '';
+  if (ageN >= 75) ageTargetNote = `NOTE: Patient is ${ageN} years old. For elderly patients, many guidelines recommend relaxed targets (fasting 90–150 ${units}, post-meal <200 ${units}, HbA1c 7.5–8.5%) to avoid hypoglycaemia risk. Weigh this carefully in your assessment.`;
+  else if (ageN >= 65) ageTargetNote = `NOTE: Patient is ${ageN} years old. Moderate targets appropriate — avoid aggressive control that risks hypoglycaemia.`;
 
-Give your assessment in these exact sections — use the exact headings:
+  // Reference example section
+  const referenceSection = referenceAnalysis
+    ? `\nREFERENCE ANALYSIS (style and depth example — replicate this quality and personalisation):\n${referenceAnalysis}\n`
+    : '';
 
-## Overall Control
-[1-2 sentences on overall diabetes control status]
+  const prompt = `You are an experienced diabetologist and endocrinologist providing a detailed, personalised clinical assessment. You have full context about this patient. Be specific, use the actual numbers from the data, and write like a doctor who knows this patient well.
 
-## Key Patterns
-[2-4 bullet points on specific patterns — fasting trends, post-meal spikes, time of day patterns]
+CRITICAL: Do NOT be generic. Reference the specific readings, dates, patterns and clinical context provided. Do NOT cut off or truncate — complete every section fully.
+${ageTargetNote ? '\n'+ageTargetNote+'\n' : ''}
+═══════════════════════════════════════
+PATIENT PROFILE
+═══════════════════════════════════════
+Name:              ${p.name}
+Gender:            ${p.gender==='female'?'Female':p.gender==='other'?'Other':'Male'}
+Age:               ${p.age} years
+Diabetes Type:     ${p.type}
+Diabetes Duration: ${diabetesDuration}
+Glucose Units:     ${units}
+Target Range:      ${lo}–${hi} ${units}
+Analysis Period:   ${periodLabel} (${useRdgs.length} readings)
 
-## Concerns
-[Any red flags needing attention. If none, say so briefly]
+CURRENT MEDICATIONS:
+${medications || 'Not provided'}
 
-## What's Going Well
-[Positive observations]
+GENERAL CONDITION & CLINICAL HISTORY:
+${generalCond || 'Not provided'}
+${referenceSection}
+═══════════════════════════════════════
+GLUCOSE DATA SUMMARY
+═══════════════════════════════════════
+Fasting avg:     ${fmt(mealAvg(['fasting'],useRdgs), fastSub.length)}  | Trend: ${mealTrend(fastSub)}
+Pre-meal avg:    ${fmt(mealAvg(['before'],useRdgs),  preSub.length)}   | Trend: ${mealTrend(preSub)}
+Post-meal avg:   ${fmt(mealAvg(['after'],useRdgs),   postSub.length)}  | Trend: ${mealTrend(postSub)}
+Bedtime avg:     ${fmt(mealAvg(['bedtime'],useRdgs), bedSub.length)}
+In target range: ${pctIn}% (${inRng}/${useRdgs.length} readings)
+High episodes:   ${highEp} readings above ${hi} ${units}
+Low episodes:    ${lowEp} readings below ${lo} ${units}
+Peak reading:    ${maxVal} ${units}
+Lowest reading:  ${minVal} ${units}
+Est. HbA1c:      ${estH ? estH.toFixed(1)+'%' : 'insufficient data'}
+Lab HbA1c:       ${labH ? labH.val+'% on '+new Date(labH.ts).toLocaleDateString('en-GB') : 'not recorded'}
 
-## Suggestions
-[3-5 specific, actionable suggestions — diet timing, testing frequency, when to see doctor, lifestyle]
+INDIVIDUAL READINGS LOG (newest first, up to 30):
+Date       | Time  | Value      | Meal Type        | Notes
+${rdgLines}
 
-Keep each section concise but complete — do not cut off mid-sentence. Be specific with numbers. End with: "⚠️ This is AI-generated guidance for personal awareness only — always consult your doctor for medical decisions."`;
+═══════════════════════════════════════
+ASSESSMENT REQUIRED
+═══════════════════════════════════════
+Write a complete, personalised clinical assessment for ${addressName}. Use these EXACT section headings. Minimum 4 sentences per section. Reference actual readings and numbers throughout.
+
+## Overall Glucose Control
+Summarise overall control. Reference HbA1c, time-in-range, highest/lowest readings and what they indicate clinically. Comment on the ${diabetesDuration} duration of diabetes and how that affects interpretation.
+
+## Fasting Glucose Analysis
+Detailed analysis of fasting readings — average, range, dawn phenomenon, overnight control. Compare to appropriate targets for this patient's age and condition. Reference specific fasting values from the log.
+
+## Pre-Meal Glucose Analysis
+Analyse pre-meal readings. Discuss whether glucose is adequately controlled before eating, possible medication timing issues, and patterns across different meals of the day.
+
+## Post-Meal Glucose Analysis
+Analyse post-meal spikes in detail. How high are they, how quickly does glucose return to range, which meals cause the worst spikes. Comment on carbohydrate impact if visible from notes.
+
+## Trends & Patterns
+Identify temporal patterns — time of day, day-to-day variability, week-on-week improvement or worsening. Note any specific concerning episodes. Comment on monitoring frequency and whether gaps in data affect assessment.
+
+## Medication Effectiveness
+Based on current medications listed above, assess whether the regimen appears adequate. Note timing concerns, potential adjustments to discuss with doctor, or signs of medication wearing off.
+
+## Concerns & Risk Flags
+Clinical concerns in priority order — hypoglycaemia risk, persistent highs, variability, HbA1c implications. Be direct and specific.
+
+## Positive Observations
+What is going well — consistent monitoring, improving readings, good fasting control, medication compliance signals.
+
+## Personalised Recommendations
+Give 6–8 specific, actionable recommendations tailored to THIS patient's data, age, medications and condition. Include: meal timing, testing schedule, lifestyle suggestions, red flags requiring urgent doctor visit, targets to aim for next review.
+
+End with exactly this line:
+⚠️ This assessment is AI-generated from glucose log data for personal awareness only. Always consult your doctor or diabetes care team for medical decisions.`;
+
+  const snapId = currentPatientId;
 
   try {
     const fullText = await geminiFetch(prompt);
-    if (!fullText) throw new Error('Empty response from AI');
-
+    if (!fullText || snapId !== currentPatientId) return;
     const formatted = formatAiInsights(fullText);
     bodyEl.innerHTML = formatted;
-
-    // Save insights for this patient with timestamp
-    const insightData = {
-      html: formatted,
-      ts: Date.now(),
-      patientId: currentPatientId
-    };
-    localStorage.setItem('glucoInsights_' + currentPatientId, JSON.stringify(insightData));
-
+    localStorage.setItem('glucoInsights_'+snapId, JSON.stringify({html:formatted, ts:Date.now(), patientId:snapId}));
   } catch(e) {
     console.error('AI Insights error:', e);
-    bodyEl.innerHTML = `<div style="font-size:14px;color:var(--high)">⚠️ ${e.message||'Could not load insights. Please try again.'}</div>`;
+    if (snapId !== currentPatientId) return;
+    bodyEl.innerHTML = `<div style="font-size:14px;color:var(--high)">⚠️ ${e.message||'Could not load insights. Try again.'}</div>`;
   } finally {
-    btn.disabled = false; btn.textContent = '↻ Refresh';
+    if (snapId === currentPatientId) { btn.disabled=false; btn.textContent='↻ Refresh'; }
   }
 }
 
 function loadSavedInsights() {
   if (!currentPatientId) return;
-  const saved = localStorage.getItem('glucoInsights_' + currentPatientId);
-  if (!saved) return;
+  const bodyEl = document.getElementById('aiInsightsBody');
+  const btn    = document.getElementById('aiInsightsBtn');
+  if (!bodyEl) return;
+
+  const raw = localStorage.getItem('glucoInsights_'+currentPatientId);
+  if (!raw) {
+    bodyEl.innerHTML = `<div style="font-size:13px;color:var(--muted);line-height:1.7">Tap <strong style="color:var(--text)">Analyse</strong> for an AI clinical assessment of glucose logs — fasting, pre-meal, post-meal trends and doctor-like recommendations.<br><br><span style="font-size:11px;opacity:0.7">⚠️ AI-generated guidance only. Not a substitute for your doctor.</span></div>`;
+    if(btn) btn.textContent = 'Analyse';
+    return;
+  }
   try {
-    const data = JSON.parse(saved);
-    if (data.patientId !== currentPatientId) return;
-    const bodyEl = document.getElementById('aiInsightsBody');
-    const btn = document.getElementById('aiInsightsBtn');
-    if (!bodyEl) return;
+    const data = JSON.parse(raw);
+    if (data.patientId !== currentPatientId) {
+      bodyEl.innerHTML = `<div style="font-size:13px;color:var(--muted)">Tap <strong style="color:var(--text)">Analyse</strong> to generate insights for this patient.</div>`;
+      if(btn) btn.textContent = 'Analyse';
+      return;
+    }
     const d = new Date(data.ts);
-    const timeStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' · ' +
-                    d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
     bodyEl.innerHTML = data.html +
-      `<div style="margin-top:10px;font-size:11px;color:var(--muted);text-align:right">Last analysed: ${timeStr}</div>`;
-    if (btn) btn.textContent = '↻ Refresh';
-  } catch {}
+      `<div style="margin-top:12px;font-size:11px;color:var(--muted);text-align:right;border-top:1px solid var(--border);padding-top:8px">Last analysed: ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</div>`;
+    if(btn) btn.textContent = '↻ Refresh';
+  } catch { bodyEl.innerHTML = ''; }
 }
+
 
 function formatAiInsights(text) {
   const sectionConfig = {
-    'Overall Control':    { icon:'🩺', color:'#0ea5e9', bg:'rgba(14,165,233,0.08)' },
-    'Key Patterns':       { icon:'📊', color:'#8b5cf6', bg:'rgba(139,92,246,0.08)' },
-    'Concerns':           { icon:'⚠️', color:'#ef4444', bg:'rgba(239,68,68,0.08)'  },
-    "What's Going Well":  { icon:'✅', color:'#22c55e', bg:'rgba(34,197,94,0.08)'  },
-    'Suggestions':        { icon:'💡', color:'#f59e0b', bg:'rgba(245,158,11,0.08)' },
+    'Overall Glucose Control':    { icon:'🩺', color:'#0ea5e9', bg:'rgba(14,165,233,0.08)' },
+    'Fasting Glucose Analysis':   { icon:'💤', color:'#6366f1', bg:'rgba(99,102,241,0.08)' },
+    'Pre-Meal Glucose Analysis':  { icon:'🍽️', color:'#8b5cf6', bg:'rgba(139,92,246,0.08)' },
+    'Post-Meal Glucose Analysis': { icon:'🥘', color:'#06b6d4', bg:'rgba(6,182,212,0.08)'  },
+    'Trends & Patterns':          { icon:'📊', color:'#3b82f6', bg:'rgba(59,130,246,0.08)' },
+    'Medication Effectiveness':   { icon:'💊', color:'#10b981', bg:'rgba(16,185,129,0.08)' },
+    'Concerns & Risk Flags':      { icon:'⚠️', color:'#ef4444', bg:'rgba(239,68,68,0.08)'  },
+    'Positive Observations':      { icon:'✅', color:'#22c55e', bg:'rgba(34,197,94,0.08)'  },
+    'Personalised Recommendations':{ icon:'💡', color:'#f59e0b', bg:'rgba(245,158,11,0.08)'},
+    // Fallbacks for old section names
+    'Overall Control':            { icon:'🩺', color:'#0ea5e9', bg:'rgba(14,165,233,0.08)' },
+    'Key Patterns':               { icon:'📊', color:'#8b5cf6', bg:'rgba(139,92,246,0.08)' },
+    'Concerns':                   { icon:'⚠️', color:'#ef4444', bg:'rgba(239,68,68,0.08)'  },
+    'What\'s Going Well':         { icon:'✅', color:'#22c55e', bg:'rgba(34,197,94,0.08)'  },
+    'Suggestions':                { icon:'💡', color:'#f59e0b', bg:'rgba(245,158,11,0.08)'},
+    'Recommendations':            { icon:'💡', color:'#f59e0b', bg:'rgba(245,158,11,0.08)'},
   };
   let html = '';
   const parts = text.split(/##\s+/);
@@ -2450,19 +2633,14 @@ function formatAiInsights(text) {
     const firstLine = part.split('\n')[0].trim();
     const body = part.slice(firstLine.length).trim();
     const cfg = sectionConfig[firstLine] || {icon:'📋',color:'var(--accent)',bg:'rgba(79,168,255,0.06)'};
-    // Format bullet points
-    const formatted = body
-      .replace(/^[-•]\s+/gm, '• ')
-      .replace(/\n{2,}/g, '\n')
-      .trim();
+    const formatted = body.replace(/^[-•]\s+/gm,'• ').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n{2,}/g,'\n').trim();
     html += `<div class="ai-section" style="background:${cfg.bg};border-radius:12px;padding:12px 14px;border-left:3px solid ${cfg.color}">
       <div class="ai-section-title">${cfg.icon} <span style="color:${cfg.color}">${firstLine}</span></div>
       <div class="ai-section-body">${formatted.replace(/\n/g,'<br>')}</div>
     </div>`;
   });
-  // Handle disclaimer line
-  html = html.replace(/(⚠️ This is AI-generated.*)/g,
-    '<div style="margin-top:10px;font-size:12px;color:var(--muted);font-style:italic;text-align:center">$1</div>');
+  html = html.replace(/(⚠️ This assessment.*)/g,
+    '<div style="margin-top:12px;font-size:12px;color:var(--muted);font-style:italic;text-align:center;padding:8px;border-top:1px solid var(--border)">$1</div>');
   return html || `<div class="ai-streaming">${text}</div>`;
 }
 
