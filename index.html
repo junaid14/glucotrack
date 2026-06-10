@@ -402,11 +402,11 @@ select option{background:var(--bg2);color:var(--text)}
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
           <div class="card-title" style="margin-bottom:0">🩺 AI Doctor Insights</div>
           <button id="aiInsightsBtn" onclick="loadAiInsights()"
-            style="background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:10px;color:white;font-size:12px;font-weight:700;padding:7px 14px;cursor:pointer;font-family:'DM Sans',sans-serif">
+            style="background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:10px;color:white;font-size:12px;font-weight:700;padding:7px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0">
             Analyse
           </button>
         </div>
-        <div id="aiInsightsBody">
+        <div id="aiInsightsBody" style="overflow:visible">
           <div style="font-size:13px;color:var(--muted);line-height:1.7">
             Tap <strong style="color:var(--text)">Analyse</strong> for an AI assessment of your glucose logs — patterns, trends, and suggestions based on your readings.
             <br><br>
@@ -2391,7 +2391,7 @@ Give your assessment in these exact sections — use the exact headings:
 ## Suggestions
 [3-5 specific, actionable suggestions — diet timing, testing frequency, when to see doctor, lifestyle]
 
-Be specific with numbers. End with: "⚠️ This is AI-generated guidance for personal awareness only — always consult your doctor for medical decisions."`;
+Keep each section concise but complete — do not cut off mid-sentence. Be specific with numbers. End with: "⚠️ This is AI-generated guidance for personal awareness only — always consult your doctor for medical decisions."`;
 
   try {
     const fullText = await geminiFetch(prompt);
@@ -2974,7 +2974,7 @@ async function geminiFetch(prompt, imageBase64, imageMimeType) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts }],
-          generationConfig: { temperature: 0.3, maxOutputTokens: 1500 }
+          generationConfig: { temperature: 0.3, maxOutputTokens: 4096 }
         })
       });
 
