@@ -2331,7 +2331,7 @@ async function loadAiInsights() {
   btn.disabled = true; btn.textContent = '⏳';
 
   const bodyEl = document.getElementById('aiInsightsBody');
-  bodyEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--accent);font-size:14px"><div style="font-size:32px;margin-bottom:10px">🩺</div><div>Analysing glucose data for '+p.name+'…</div><div style="margin-top:8px;font-size:12px;color:var(--muted)">This takes a few seconds</div></div>';
+  bodyEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--accent);font-size:14px"><div style="font-size:32px;margin-bottom:10px">🩺</div><div>Analysing glucose data for '+p.name+'…</div><div style="margin-top:8px;font-size:12px;color:var(--muted)">Trying available models — may take a few seconds</div></div>';
 
   const thirtyAgo = Date.now() - 30*86400000;
   const recent = readings.filter(r=>r.ts>=thirtyAgo);
@@ -2957,38 +2957,68 @@ async function geminiFetch(prompt, imageBase64, imageMimeType) {
   }
   parts.push({ text: prompt });
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-  const resp = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts }],
-      generationConfig: { temperature: 0.3, maxOutputTokens: 1500 }
-    })
-  });
+  // Try models in order — fall back if one is overloaded or unavailable
+  const MODELS = [
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-2.0-flash-lite',
+    'gemini-1.5-flash-001',
+  ];
 
-  const rawText = await resp.text();
-  if (!resp.ok) {
-    let msg = 'HTTP ' + resp.status;
+  let lastError = null;
+  for (const model of MODELS) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
     try {
-      const e = JSON.parse(rawText);
-      msg = e?.error?.message || msg;
-      if (resp.status === 400 && msg.includes('API_KEY')) {
-        localStorage.removeItem('glucoApiKey'); updateApiKeyStatus();
-        throw new Error('Invalid API key. Re-enter it in Profile tab.');
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts }],
+          generationConfig: { temperature: 0.3, maxOutputTokens: 1500 }
+        })
+      });
+
+      const rawText = await resp.text();
+
+      if (!resp.ok) {
+        let msg = 'HTTP ' + resp.status;
+        try {
+          const e = JSON.parse(rawText);
+          msg = e?.error?.message || msg;
+          if (resp.status === 400 && (msg.includes('API_KEY') || msg.includes('API key'))) {
+            localStorage.removeItem('glucoApiKey'); updateApiKeyStatus();
+            throw new Error('Invalid API key. Re-enter it in Profile tab.');
+          }
+        } catch(pe) { if(pe.message.includes('Invalid API') || pe.message.includes('Re-enter')) throw pe; }
+        // 429 = overloaded, 503 = unavailable — try next model
+        if (resp.status === 429 || resp.status === 503 || msg.toLowerCase().includes('high demand') || msg.toLowerCase().includes('overloaded')) {
+          lastError = new Error(msg); continue;
+        }
+        throw new Error(msg);
       }
-    } catch(pe) { if(pe.message.includes('Invalid API')) throw pe; }
-    throw new Error(msg);
+
+      let data;
+      try { data = JSON.parse(rawText); } catch { throw new Error('Could not parse Gemini response'); }
+      if (data.error) {
+        const msg = data.error.message || JSON.stringify(data.error);
+        if (msg.toLowerCase().includes('high demand') || msg.toLowerCase().includes('overloaded')) {
+          lastError = new Error(msg); continue;
+        }
+        throw new Error(msg);
+      }
+
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) throw new Error('No text in Gemini response');
+      return text; // success
+
+    } catch(e) {
+      // Re-throw auth errors immediately
+      if (e.message.includes('Invalid API') || e.message.includes('Re-enter')) throw e;
+      lastError = e;
+      // Continue to next model
+    }
   }
-
-  let data;
-  try { data = JSON.parse(rawText); } catch { throw new Error('Could not parse Gemini response'); }
-  if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-
-  // Extract text from Gemini response format
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) throw new Error('No text in Gemini response');
-  return text;
+  throw lastError || new Error('All models unavailable. Please try again in a moment.');
 }
 
 // ====== EDIT READING (#7) ======
