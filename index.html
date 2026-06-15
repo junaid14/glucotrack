@@ -12,22 +12,164 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
 
 :root {
-  --bg:#0a1628;--bg2:#0f1f3a;--bg3:#162847;--card:#122035;
-  --border:rgba(99,178,255,0.18);--accent:#4fa8ff;--accent2:#7dd3fc;
-  --low:#f97316;--high:#ef4444;--normal:#22c55e;
-  --text:#f0f8ff;--muted:#8eb8d8;--radius:20px;
-  --safe-top:env(safe-area-inset-top,44px);--safe-bottom:env(safe-area-inset-bottom,34px);
+  /* Palette — deep charcoal + soft blues */
+  --bg:#111827;--bg2:#1a2535;--bg3:#1e2d42;--card:#1c2b3a;
+  --border:rgba(148,195,255,0.1);
+  --accent:#5b9cf6;--accent2:#93c5fd;
+  --low:#fb923c;--high:#f87171;--normal:#4ade80;
+  --text:#f1f5f9;--muted:#7ba3c4;--radius:18px;
+  --glass:rgba(255,255,255,0.05);
+  --glass-border:rgba(255,255,255,0.08);
+  --safe-top:env(safe-area-inset-top,44px);
+  --safe-bottom:env(safe-area-inset-bottom,34px);
+  --nav-h:72px;
 }
 body.light-mode {
-  --bg:#f0f4f8;--bg2:#dce6f0;--bg3:#c8d8e8;--card:#ffffff;
-  --border:rgba(30,80,160,0.2);--accent:#1558a0;--accent2:#0e4a88;
-  --text:#0a1628;--muted:#3d5a78;
+  --bg:#f8fafc;--bg2:#eef3f8;--bg3:#e2eaf2;--card:#ffffff;
+  --border:rgba(30,80,160,0.12);--accent:#2563eb;--accent2:#1d4ed8;
+  --text:#0f172a;--muted:#4a6580;
+  --glass:rgba(255,255,255,0.7);--glass-border:rgba(30,80,160,0.1);
 }
-/* Theme toggle button */
-.theme-toggle{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+/* ── Reset ── */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;overflow:hidden;overscroll-behavior:none}
-.app{display:flex;flex-direction:column;height:100%;height:-webkit-fill-available;padding-top:var(--safe-top);padding-bottom:var(--safe-bottom)}
+/* ── App shell ── */
+.app{display:flex;flex-direction:column;height:100%;height:-webkit-fill-available;padding-top:var(--safe-top)}
+/* ── Header ── */
+.app-header{
+  padding:14px 20px 10px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg);flex-shrink:0;
+}
+.header-left{display:flex;flex-direction:column}
+.header-logo{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);letter-spacing:-0.5px;line-height:1}
+.header-patient{font-size:13px;color:var(--accent);font-weight:600;margin-top:2px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.header-right{display:flex;align-items:center;gap:8px}
+.theme-toggle{width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s}
+.theme-toggle:active{transform:scale(0.9)}
+/* ── Scrollable content area ── */
+.screens{flex:1;overflow:hidden;position:relative;margin-bottom:var(--nav-h)}
+.screen{
+  position:absolute;inset:0;
+  overflow-y:auto;overflow-x:hidden;
+  padding:12px 16px 24px;
+  opacity:0;pointer-events:none;
+  transform:translateX(28px);
+  transition:opacity 0.3s cubic-bezier(.4,0,.2,1),transform 0.3s cubic-bezier(.4,0,.2,1);
+  -webkit-overflow-scrolling:touch;
+}
+.screen.active{opacity:1;pointer-events:auto;transform:translateX(0)}
+.screen.slide-left{opacity:0;transform:translateX(-28px);pointer-events:none}
+.screen.slide-right{opacity:0;transform:translateX(28px);pointer-events:none}
+/* ── Bottom Nav ── */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  height:calc(var(--nav-h) + var(--safe-bottom));
+  padding-bottom:var(--safe-bottom);
+  background:rgba(17,24,39,0.85);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-top:1px solid var(--glass-border);
+  display:flex;align-items:center;justify-content:space-around;
+  z-index:80;
+}
+body.light-mode .bottom-nav{background:rgba(248,250,252,0.9)}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 14px;cursor:pointer;border:none;background:none;
+  color:var(--muted);font-size:10px;font-weight:600;letter-spacing:0.4px;
+  font-family:'DM Sans',sans-serif;text-transform:uppercase;
+  transition:color 0.2s,transform 0.15s;flex:1;
+}
+.nav-item.active{color:var(--accent)}
+.nav-item:active{transform:scale(0.92)}
+.nav-icon{font-size:22px;line-height:1;margin-bottom:1px;transition:transform 0.2s}
+.nav-item.active .nav-icon{transform:scale(1.12)}
+/* Floating add button */
+.fab{
+  width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#1d4ed8);
+  border:none;box-shadow:0 4px 20px rgba(91,156,246,0.45);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:white;font-size:28px;font-weight:300;
+  transition:transform 0.2s cubic-bezier(.34,1.56,.64,1),box-shadow 0.2s;
+  margin-top:-20px;flex-shrink:0;
+}
+.fab:active{transform:scale(0.88);box-shadow:0 2px 10px rgba(91,156,246,0.3)}
+/* ── Glass cards ── */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px;margin-bottom:14px;
+  animation:fadeUp 0.35s cubic-bezier(.4,0,.2,1) both;
+}
+.card:nth-child(2){animation-delay:0.05s}
+.card:nth-child(3){animation-delay:0.1s}
+.card:nth-child(4){animation-delay:0.15s}
+.card:nth-child(5){animation-delay:0.2s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.glass-card{
+  background:var(--glass);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);padding:16px;margin-bottom:14px;
+}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);margin-bottom:12px}
+/* ── Hero reading card ── */
+.hero-card{
+  background:linear-gradient(135deg,#1e3a5c 0%,#1a2a4a 100%);
+  border:1px solid rgba(91,156,246,0.2);
+  border-radius:24px;padding:20px;margin-bottom:14px;
+  position:relative;overflow:hidden;
+  animation:fadeUp 0.35s cubic-bezier(.4,0,.2,1) both;
+}
+.hero-card::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(91,156,246,0.08)}
+.hero-card::after{content:'';position:absolute;bottom:-30px;left:-20px;width:80px;height:80px;border-radius:50%;background:rgba(148,195,255,0.05)}
+.hero-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(147,197,253,0.7);margin-bottom:6px}
+.hero-val{font-family:'DM Serif Display',serif;font-size:56px;line-height:1;color:#fff;letter-spacing:-1px}
+.hero-unit{font-size:16px;color:rgba(255,255,255,0.6);font-weight:500;margin-left:4px;vertical-align:middle}
+.hero-status-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;margin-top:8px}
+.hero-meta{font-size:12px;color:rgba(255,255,255,0.5);margin-top:6px}
+/* ── Mini stat grid ── */
+.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.mini-stat{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:14px 14px 12px;
+  animation:fadeUp 0.35s cubic-bezier(.4,0,.2,1) both;
+  transition:transform 0.15s;
+}
+.mini-stat:active{transform:scale(0.97)}
+.mini-stat-val{font-family:'DM Serif Display',serif;font-size:28px;line-height:1;color:var(--text)}
+.mini-stat-unit{font-size:11px;color:var(--muted);font-weight:600;margin-left:2px}
+.mini-stat-label{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600}
+.mini-stat-sub{font-size:10px;color:var(--muted);margin-top:1px;opacity:0.7}
+/* ── AI Summary Cards ── */
+.ai-summary-grid{display:flex;flex-direction:column;gap:8px}
+.ai-chip{
+  display:flex;align-items:center;gap:12px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:14px;padding:12px 14px;
+  cursor:pointer;transition:transform 0.15s,border-color 0.15s;
+  animation:fadeUp 0.35s cubic-bezier(.4,0,.2,1) both;
+}
+.ai-chip:active{transform:scale(0.97)}
+.ai-chip.expanded{border-color:var(--accent)}
+.ai-chip-icon{font-size:22px;flex-shrink:0}
+.ai-chip-content{flex:1;min-width:0}
+.ai-chip-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted)}
+.ai-chip-value{font-size:15px;font-weight:700;color:var(--text);margin-top:2px}
+.ai-chip-detail{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6;display:none}
+.ai-chip.expanded .ai-chip-detail{display:block}
+.ai-chip-arrow{font-size:14px;color:var(--muted);transition:transform 0.25s;flex-shrink:0}
+.ai-chip.expanded .ai-chip-arrow{transform:rotate(180deg)}
+/* ── Stat boxes (legacy for HbA1c tab etc) ── */
+.stat-row{display:flex;gap:8px;margin-bottom:12px}
+.stat-box{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center}
+.stat-val{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text);line-height:1}
+.stat-unit{font-size:12px;color:var(--muted);margin-top:2px;font-weight:600}
+.stat-label{font-size:12px;color:var(--text);margin-top:5px;font-weight:600}
+.stat-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px;vertical-align:middle}
 
 /* ---- PATIENT PICKER SCREEN ---- */
 .picker-screen{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;padding:var(--safe-top) 0 var(--safe-bottom)}
@@ -68,13 +210,8 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .ps-name{font-size:12px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
 .ps-arrow{font-size:10px;color:var(--muted);flex-shrink:0}
 
-.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);padding:0 4px}
-.tab{flex:1;padding:11px 4px;text-align:center;font-size:12px;font-weight:500;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;letter-spacing:0.2px}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+/* old tabs removed — using bottom nav */
 
-.screens{flex:1;overflow:hidden;position:relative}
-.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:16px;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s,transform 0.25s;-webkit-overflow-scrolling:touch}
-.screen.active{opacity:1;pointer-events:auto;transform:translateY(0)}
 
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
 .card-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:12px}
@@ -308,71 +445,86 @@ select option{background:var(--bg2);color:var(--text)}
 
 <!-- ===== MAIN APP ===== -->
 <div class="app hidden" id="mainApp">
-  <div class="header">
-    <div class="header-logo">GlucoTrack <span>Diabetes Monitor</span></div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light mode">🌙</button>
-      <div class="patient-switcher" onclick="goToPicker()">
-        <div class="ps-av" id="psAv"></div>
-        <div class="ps-name" id="psName"></div>
-        <div class="ps-arrow">▼</div>
+  <div class="app-header">
+    <div class="header-left">
+      <div class="header-logo">GlucoTrack</div>
+      <div class="header-patient" onclick="goToPicker()">
+        <span id="psName">Select Patient</span> <span style="font-size:10px;opacity:0.7">▼</span>
       </div>
     </div>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
+      <div id="psAv" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;cursor:pointer;flex-shrink:0" onclick="goToPicker()"></div>
+    </div>
   </div>
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('dashboard')" id="tab-dashboard">📊 Dash</button>
-    <button class="tab" onclick="switchTab('hba1c')" id="tab-hba1c">🩸 HbA1c</button>
-    <button class="tab" onclick="switchTab('add')" id="tab-add">+ Log</button>
-    <button class="tab" onclick="switchTab('history')" id="tab-history">📋 History</button>
-    <button class="tab" onclick="switchTab('profile')" id="tab-profile">👤 Profile</button>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <button class="nav-item active" id="tab-dashboard" onclick="switchTab('dashboard',this)">
+      <span class="nav-icon">📊</span>Dash
+    </button>
+    <button class="nav-item" id="tab-hba1c" onclick="switchTab('hba1c',this)">
+      <span class="nav-icon">🩸</span>HbA1c
+    </button>
+    <button class="nav-item" id="tab-insights" onclick="switchTab('insights',this)">
+      <span class="nav-icon">🩺</span>Insights
+    </button>
+    <button class="fab" id="fabBtn" onclick="switchTab('add',document.getElementById('tab-add-hidden'))">➕</button>
+    <button id="tab-add-hidden" style="display:none"></button>
+    <button class="nav-item" id="tab-history" onclick="switchTab('history',this)">
+      <span class="nav-icon">📋</span>History
+    </button>
+    <button class="nav-item" id="tab-profile" onclick="switchTab('profile',this)">
+      <span class="nav-icon">👤</span>Profile
+    </button>
   </div>
   <div class="screens">
 
     <!-- DASHBOARD -->
     <div class="screen active" id="screen-dashboard">
-      <!-- Row 1: Avg Fasting, Avg Pre-meal, Avg Post-meal -->
-      <div class="stat-row">
-        <div class="stat-box">
-          <div class="stat-val" id="avgFasting">—</div>
-          <div class="stat-unit" id="avgFastingUnit">mg/dL</div>
-          <div class="stat-label">Avg Fasting</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">30 days</div>
+
+      <!-- Hero: Current Reading -->
+      <div class="hero-card">
+        <div class="hero-label">Current Reading</div>
+        <div>
+          <span class="hero-val" id="latestVal">—</span>
+          <span class="hero-unit" id="latestUnit">mg/dL</span>
         </div>
-        <div class="stat-box">
-          <div class="stat-val" id="avgPreMeal">—</div>
-          <div class="stat-unit" id="avgPreUnit">mg/dL</div>
-          <div class="stat-label">Avg Pre-meal</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">30 days</div>
+        <div id="latestStatus" class="hero-status-pill" style="background:rgba(74,222,128,0.15);color:#4ade80"></div>
+        <div id="lastReadingMeta" class="hero-meta">—</div>
+      </div>
+
+      <!-- Mini stats: HbA1c + Avg Fasting + Avg Post-meal -->
+      <div class="mini-stats">
+        <div class="mini-stat" style="animation-delay:0.05s">
+          <div class="mini-stat-val" id="hba1cQuick">—<span class="mini-stat-unit">%</span></div>
+          <div class="mini-stat-label">Est. HbA1c</div>
+          <div class="mini-stat-sub">from glucose log</div>
         </div>
-        <div class="stat-box">
-          <div class="stat-val" id="avgPostMeal">—</div>
-          <div class="stat-unit" id="avgPostUnit">mg/dL</div>
-          <div class="stat-label">Avg Post-meal</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">30 days</div>
+        <div class="mini-stat" style="animation-delay:0.1s">
+          <div class="mini-stat-val" id="avgFasting">—<span class="mini-stat-unit" id="avgFastingUnit"> mg/dL</span></div>
+          <div class="mini-stat-label">Avg Fasting</div>
+          <div class="mini-stat-sub">last 30 days</div>
+        </div>
+        <div class="mini-stat" style="animation-delay:0.12s">
+          <div class="mini-stat-val" id="avgPreMeal">—<span class="mini-stat-unit" id="avgPreUnit"> mg/dL</span></div>
+          <div class="mini-stat-label">Avg Pre-meal</div>
+          <div class="mini-stat-sub">last 30 days</div>
+        </div>
+        <div class="mini-stat" style="animation-delay:0.14s">
+          <div class="mini-stat-val" id="avgPostMeal">—<span class="mini-stat-unit" id="avgPostUnit"> mg/dL</span></div>
+          <div class="mini-stat-label">Avg Post-meal</div>
+          <div class="mini-stat-sub">last 30 days</div>
         </div>
       </div>
-      <!-- Row 2: Last reading + Est HbA1c -->
-      <div class="stat-row">
-        <div class="stat-box" style="flex:2;text-align:left;padding:12px 14px">
-          <div style="font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px">Last Reading</div>
-          <div style="display:flex;align-items:baseline;gap:6px">
-            <span class="stat-val" id="latestVal" style="font-size:30px">—</span>
-            <span class="stat-unit" id="latestUnit" style="font-size:13px">mg/dL</span>
-            <span id="latestStatus" style="font-size:12px;font-weight:600"></span>
+
+      <!-- 7-day Trend Chart -->
+      <div class="card" style="animation-delay:0.15s">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div class="card-title" style="margin-bottom:0">7-Day Trend</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <button onclick="openReportModal()" style="background:none;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:11px;font-weight:600;padding:4px 9px;cursor:pointer;font-family:'DM Sans',sans-serif">📤</button>
           </div>
-          <div id="lastReadingMeta" style="font-size:12px;color:var(--muted);margin-top:4px">—</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" id="hba1cQuick" style="font-size:26px">—</div>
-          <div class="stat-unit">%</div>
-          <div class="stat-label">Est. HbA1c</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">estimated</div>
-        </div>
-      </div>
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <div class="card-title" style="margin-bottom:0">Glucose Trend</div>
-          <button onclick="openReportModal()" style="background:none;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;font-family:'DM Sans',sans-serif">📤 Share Report</button>
         </div>
         <div class="range-btns">
           <button class="range-btn" onclick="setRange(7,this)">7D</button>
@@ -381,7 +533,7 @@ select option{background:var(--bg2);color:var(--text)}
           <button class="range-btn" onclick="setRange(0,this)">All</button>
         </div>
         <div class="chart-wrap" style="position:relative">
-          <canvas id="glucoseChart" height="220"></canvas>
+          <canvas id="glucoseChart" height="190"></canvas>
           <div class="chart-tooltip" id="chartTooltip">
             <div style="display:flex;align-items:baseline;gap:4px">
               <span class="tt-val" id="ttVal">—</span>
@@ -403,33 +555,49 @@ select option{background:var(--bg2);color:var(--text)}
         </div>
         <div class="chart-detail-list" id="chartDetailList"></div>
       </div>
-      <div class="card">
-        <div class="card-title">Target Ranges</div>
-        <div id="targetRangeInfo"></div>
-      </div>
 
-      <!-- AI Insights card -->
-      <div class="card" id="aiInsightsCard">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-          <div class="card-title" style="margin-bottom:0">🩺 AI Doctor Insights</div>
+      <!-- AI Summary Cards (compact chips) -->
+      <div class="card" style="animation-delay:0.2s">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div class="card-title" style="margin-bottom:0">🩺 AI Summary</div>
           <button id="aiInsightsBtn" onclick="loadAiInsights()"
-            style="background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:10px;color:white;font-size:12px;font-weight:700;padding:7px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0">
+            style="background:var(--accent);border:none;border-radius:10px;color:white;font-size:12px;font-weight:700;padding:6px 13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform 0.15s,opacity 0.15s">
             Analyse
           </button>
         </div>
-        <div id="aiInsightsBody" style="overflow:visible">
-          <div style="font-size:13px;color:var(--muted);line-height:1.7">
-            Tap <strong style="color:var(--text)">Analyse</strong> for an AI assessment of your glucose logs — patterns, trends, and suggestions based on your readings.
-            <br><br>
-            <span style="font-size:11px;opacity:0.7">⚠️ AI-generated guidance only. Not a substitute for your doctor.</span>
+        <div id="aiInsightsBody">
+          <div style="font-size:13px;color:var(--muted);text-align:center;padding:16px 0">
+            Tap <strong style="color:var(--text)">Analyse</strong> for AI assessment
           </div>
         </div>
       </div>
 
-      <!-- Share Report button -->
-      <button class="btn-primary" style="margin-bottom:12px" onclick="openReportModal()">
+      <button class="btn-primary" style="margin-bottom:8px" onclick="openReportModal()">
         📤 Share Glucose Report
       </button>
+    </div>
+
+    <!-- INSIGHTS (dedicated tab — full scrollable) -->
+    <div class="screen" id="screen-insights">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div class="card-title" style="margin-bottom:0">🩺 AI Doctor Insights</div>
+          <button id="aiInsightsBtnFull" onclick="loadAiInsights()"
+            style="background:var(--accent);border:none;border-radius:10px;color:white;font-size:12px;font-weight:700;padding:6px 13px;cursor:pointer;font-family:'DM Sans',sans-serif">
+            Analyse
+          </button>
+        </div>
+        <div id="aiInsightsBodyFull" style="overflow:visible">
+          <div style="font-size:13px;color:var(--muted);line-height:1.7;text-align:center;padding:20px 0">
+            Tap <strong style="color:var(--text)">Analyse</strong> for a full clinical assessment.<br><br>
+            <span style="font-size:11px;opacity:0.7">⚠️ AI-generated guidance only. Not a substitute for your doctor.</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Target Ranges</div>
+        <div id="targetRangeInfo"></div>
+      </div>
     </div>
 
     <!-- HBA1C -->
@@ -977,18 +1145,40 @@ function showHba1cSub(sub, btn) {
 }
 
 
-function switchTab(id) {
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  document.getElementById('screen-'+id).classList.add('active');
-  // Double-RAF: wait for browser to paint the newly visible screen
-  // so canvas.parentElement.clientWidth is non-zero before we draw
+let currentTabId = 'dashboard';
+function switchTab(id, el) {
+  const prev = currentTabId;
+  currentTabId = id;
+
+  // Update nav items
+  document.querySelectorAll('.nav-item').forEach(t=>t.classList.remove('active'));
+  const navEl = el || document.getElementById('tab-'+id);
+  if (navEl) navEl.classList.add('active');
+
+  // Slide direction based on tab order
+  const order = ['dashboard','hba1c','insights','history','profile'];
+  const prevIdx = order.indexOf(prev), newIdx = order.indexOf(id);
+  const goRight = newIdx > prevIdx;
+
+  document.querySelectorAll('.screen').forEach(s => {
+    if (s.classList.contains('active')) {
+      s.classList.remove('active');
+      s.classList.add(goRight ? 'slide-left' : 'slide-right');
+      setTimeout(() => s.classList.remove('slide-left','slide-right'), 350);
+    }
+  });
+
+  const screen = document.getElementById('screen-'+id);
+  if (screen) {
+    screen.classList.add('active');
+  }
+
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    if (id==='dashboard') { drawChart(); loadSavedInsights(); }
-    if (id==='hba1c') renderHba1c();
-    if (id==='profile') populateProfileForm();
-    if (id==='add') setDefaultDateTime();
+    if (id==='dashboard') { drawChart(); loadSavedInsightsChips(); }
+    if (id==='insights')  { loadSavedInsightsFull(); }
+    if (id==='hba1c')     renderHba1c();
+    if (id==='profile')   populateProfileForm();
+    if (id==='add')       setDefaultDateTime();
   }));
 }
 
@@ -2455,7 +2645,7 @@ async function loadAiInsights() {
   const estH = readings.length>=3 ? calcHba1c(readings, units) : null;
   const labH = manualHba1c.length ? manualHba1c[manualHba1c.length-1] : null;
 
-  const rdgLines = [...useRdgs].reverse().slice(0,30).map(r => {
+  const rdgLines = [...useRdgs].reverse().slice(0,20).map(r => {
     const d = new Date(r.ts);
     return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'})+' '+
            d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})+' | '+
@@ -2465,26 +2655,12 @@ async function loadAiInsights() {
   const salutation = p.gender==='female' ? 'Ms.' : p.gender==='other' ? '' : 'Mr.';
   const addressName = salutation ? salutation+' '+p.name.split(' ').slice(-1)[0] : p.name;
 
-  // Load extended profile data
-  const medications     = localStorage.getItem('glucoMeds_'+p.id) || '';
-  const generalCond     = localStorage.getItem('glucoCond_'+p.id) || '';
-  const referenceAnalysis = localStorage.getItem('glucoRef_'+p.id) || '';
-
-  // Diabetes duration
-  const currentYear = new Date().getFullYear();
-  const diabetesDuration = p.diabetesSince
-    ? `${currentYear - p.diabetesSince} years (since ${p.diabetesSince})`
-    : 'Not specified';
-
-  // Age-appropriate targets
-  const ageN = parseInt(p.age) || 0;
-  let ageTargetNote = '';
-  if (ageN >= 75) ageTargetNote = `NOTE: Patient is ${ageN} years old. For elderly patients, many guidelines recommend relaxed targets (fasting 90–150 ${units}, post-meal <200 ${units}, HbA1c 7.5–8.5%) to avoid hypoglycaemia risk. Weigh this carefully in your assessment.`;
-  else if (ageN >= 65) ageTargetNote = `NOTE: Patient is ${ageN} years old. Moderate targets appropriate — avoid aggressive control that risks hypoglycaemia.`;
-
-  // Reference example section
-  const referenceSection = referenceAnalysis
-    ? `\nREFERENCE ANALYSIS (style and depth example — replicate this quality and personalisation):\n${referenceAnalysis}\n`
+  // Load extended profile data — cap lengths to control prompt size
+  const medications     = (localStorage.getItem('glucoMeds_'+p.id) || '').slice(0, 600);
+  const generalCond     = (localStorage.getItem('glucoCond_'+p.id) || '').slice(0, 500);
+  const referenceRaw    = (localStorage.getItem('glucoRef_'+p.id)  || '').slice(0, 1200);
+  const referenceSection = referenceRaw
+    ? `\nREFERENCE STYLE EXAMPLE (match this depth and personalisation):\n${referenceRaw}\n`
     : '';
 
   const prompt = `You are an experienced diabetologist and endocrinologist providing a detailed, personalised clinical assessment. You have full context about this patient. Be specific, use the actual numbers from the data, and write like a doctor who knows this patient well.
@@ -2566,21 +2742,42 @@ End with exactly this line:
   const snapId = currentPatientId;
 
   try {
-    const fullText = await geminiFetch(prompt);
-    if (!fullText || snapId !== currentPatientId) return;
-    const formatted = formatAiInsights(fullText);
-    bodyEl.innerHTML = formatted;
-    localStorage.setItem('glucoInsights_'+snapId, JSON.stringify({html:formatted, ts:Date.now(), patientId:snapId}));
+    const rawText = await geminiFetch(prompt);
+    if (!rawText || snapId !== currentPatientId) return;
+
+    const { chipHtml, fullHtml } = formatAiInsights(rawText);
+
+    // Dashboard chips
+    const chipEl = document.getElementById('aiInsightsBody');
+    if (chipEl) chipEl.innerHTML = chipHtml;
+
+    // Insights tab full view
+    const fullEl = document.getElementById('aiInsightsBodyFull');
+    if (fullEl) { fullEl.innerHTML = fullHtml; fullEl.style.overflow = 'visible'; }
+
+    // Save everything
+    localStorage.setItem('glucoInsights_'+snapId, JSON.stringify({
+      chipHtml, fullHtml, rawText, ts: Date.now(), patientId: snapId
+    }));
+
   } catch(e) {
     console.error('AI Insights error:', e);
     if (snapId !== currentPatientId) return;
-    bodyEl.innerHTML = `<div style="font-size:14px;color:var(--high)">⚠️ ${e.message||'Could not load insights. Try again.'}</div>`;
+    const errHtml = `<div style="font-size:14px;color:var(--high);padding:12px 0">⚠️ ${e.message||'Could not load insights. Try again.'}</div>`;
+    const b1 = document.getElementById('aiInsightsBodyFull');
+    const b2 = document.getElementById('aiInsightsBody');
+    if(b1) b1.innerHTML = errHtml;
+    if(b2) b2.innerHTML = errHtml;
   } finally {
-    if (snapId === currentPatientId) { btn.disabled=false; btn.textContent='↻ Refresh'; }
+    if (snapId === currentPatientId) {
+      [document.getElementById('aiInsightsBtn'), document.getElementById('aiInsightsBtnFull')]
+        .forEach(b => { if(b) { b.disabled=false; b.textContent='↻ Refresh'; }});
+    }
   }
 }
 
-function loadSavedInsights() {
+// Dashboard: compact chip summary
+function loadSavedInsightsChips() {
   if (!currentPatientId) return;
   const bodyEl = document.getElementById('aiInsightsBody');
   const btn    = document.getElementById('aiInsightsBtn');
@@ -2588,61 +2785,145 @@ function loadSavedInsights() {
 
   const raw = localStorage.getItem('glucoInsights_'+currentPatientId);
   if (!raw) {
-    bodyEl.innerHTML = `<div style="font-size:13px;color:var(--muted);line-height:1.7">Tap <strong style="color:var(--text)">Analyse</strong> for an AI clinical assessment of glucose logs — fasting, pre-meal, post-meal trends and doctor-like recommendations.<br><br><span style="font-size:11px;opacity:0.7">⚠️ AI-generated guidance only. Not a substitute for your doctor.</span></div>`;
+    bodyEl.innerHTML = `<div style="font-size:13px;color:var(--muted);text-align:center;padding:16px 0">Tap <strong style="color:var(--text)">Analyse</strong> for AI assessment</div>`;
     if(btn) btn.textContent = 'Analyse';
     return;
   }
   try {
     const data = JSON.parse(raw);
     if (data.patientId !== currentPatientId) {
-      bodyEl.innerHTML = `<div style="font-size:13px;color:var(--muted)">Tap <strong style="color:var(--text)">Analyse</strong> to generate insights for this patient.</div>`;
-      if(btn) btn.textContent = 'Analyse';
-      return;
+      bodyEl.innerHTML = `<div style="font-size:13px;color:var(--muted);text-align:center;padding:12px 0">Tap <strong style="color:var(--text)">Analyse</strong></div>`;
+      if(btn) btn.textContent = 'Analyse'; return;
+    }
+    // Use saved chipHtml if available, otherwise regenerate from fullHtml via formatAiInsights
+    if (data.chipHtml) {
+      bodyEl.innerHTML = data.chipHtml;
+    } else if (data.rawText) {
+      const { chipHtml } = formatAiInsights(data.rawText);
+      bodyEl.innerHTML = chipHtml;
+    } else {
+      bodyEl.innerHTML = data.html || '';
+    }
+    if(btn) btn.textContent = '↻';
+  } catch { bodyEl.innerHTML = ''; }
+}
+
+// Insights tab: full detailed view
+function loadSavedInsightsFull() {
+  if (!currentPatientId) return;
+  const bodyEl = document.getElementById('aiInsightsBodyFull');
+  const btn    = document.getElementById('aiInsightsBtnFull');
+  if (!bodyEl) return;
+
+  const raw = localStorage.getItem('glucoInsights_'+currentPatientId);
+  if (!raw) {
+    bodyEl.innerHTML = `<div style="font-size:13px;color:var(--muted);line-height:1.7;text-align:center;padding:20px 0">Tap <strong style="color:var(--text)">Analyse</strong> for a full clinical assessment.<br><br><span style="font-size:11px;opacity:0.7">⚠️ AI-generated guidance only. Not a substitute for your doctor.</span></div>`;
+    if(btn) btn.textContent = 'Analyse'; return;
+  }
+  try {
+    const data = JSON.parse(raw);
+    if (data.patientId !== currentPatientId) {
+      bodyEl.innerHTML = `<div style="font-size:13px;color:var(--muted);text-align:center;padding:20px 0">Tap <strong style="color:var(--text)">Analyse</strong></div>`;
+      if(btn) btn.textContent = 'Analyse'; return;
     }
     const d = new Date(data.ts);
-    bodyEl.innerHTML = data.html +
-      `<div style="margin-top:12px;font-size:11px;color:var(--muted);text-align:right;border-top:1px solid var(--border);padding-top:8px">Last analysed: ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</div>`;
+    const timeStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    // Use fullHtml if saved, else fallback to html
+    const displayHtml = data.fullHtml || data.html || '';
+    bodyEl.innerHTML = displayHtml +
+      `<div style="margin-top:12px;font-size:11px;color:var(--muted);text-align:right;border-top:1px solid var(--border);padding-top:8px">Last analysed: ${timeStr}</div>`;
     if(btn) btn.textContent = '↻ Refresh';
   } catch { bodyEl.innerHTML = ''; }
 }
 
+// Keep old name working for patient load
+function loadSavedInsights() { loadSavedInsightsChips(); loadSavedInsightsFull(); }
 
 function formatAiInsights(text) {
-  const sectionConfig = {
-    'Overall Glucose Control':    { icon:'🩺', color:'#0ea5e9', bg:'rgba(14,165,233,0.08)' },
-    'Fasting Glucose Analysis':   { icon:'💤', color:'#6366f1', bg:'rgba(99,102,241,0.08)' },
-    'Pre-Meal Glucose Analysis':  { icon:'🍽️', color:'#8b5cf6', bg:'rgba(139,92,246,0.08)' },
-    'Post-Meal Glucose Analysis': { icon:'🥘', color:'#06b6d4', bg:'rgba(6,182,212,0.08)'  },
-    'Trends & Patterns':          { icon:'📊', color:'#3b82f6', bg:'rgba(59,130,246,0.08)' },
-    'Medication Effectiveness':   { icon:'💊', color:'#10b981', bg:'rgba(16,185,129,0.08)' },
-    'Concerns & Risk Flags':      { icon:'⚠️', color:'#ef4444', bg:'rgba(239,68,68,0.08)'  },
-    'Positive Observations':      { icon:'✅', color:'#22c55e', bg:'rgba(34,197,94,0.08)'  },
-    'Personalised Recommendations':{ icon:'💡', color:'#f59e0b', bg:'rgba(245,158,11,0.08)'},
-    // Fallbacks for old section names
-    'Overall Control':            { icon:'🩺', color:'#0ea5e9', bg:'rgba(14,165,233,0.08)' },
-    'Key Patterns':               { icon:'📊', color:'#8b5cf6', bg:'rgba(139,92,246,0.08)' },
-    'Concerns':                   { icon:'⚠️', color:'#ef4444', bg:'rgba(239,68,68,0.08)'  },
-    'What\'s Going Well':         { icon:'✅', color:'#22c55e', bg:'rgba(34,197,94,0.08)'  },
-    'Suggestions':                { icon:'💡', color:'#f59e0b', bg:'rgba(245,158,11,0.08)'},
-    'Recommendations':            { icon:'💡', color:'#f59e0b', bg:'rgba(245,158,11,0.08)'},
+  const cfg = {
+    'Overall Glucose Control':      { icon:'🩺', color:'#5b9cf6' },
+    'Fasting Glucose Analysis':     { icon:'💤', color:'#818cf8' },
+    'Pre-Meal Glucose Analysis':    { icon:'🍽️', color:'#a78bfa' },
+    'Post-Meal Glucose Analysis':   { icon:'🥘', color:'#22d3ee' },
+    'Trends & Patterns':            { icon:'📈', color:'#60a5fa' },
+    'Medication Effectiveness':     { icon:'💊', color:'#34d399' },
+    'Concerns & Risk Flags':        { icon:'⚠️', color:'#f87171' },
+    'Positive Observations':        { icon:'✅', color:'#4ade80' },
+    'Personalised Recommendations': { icon:'💡', color:'#fbbf24' },
+    // fallbacks
+    'Overall Control':              { icon:'🩺', color:'#5b9cf6' },
+    'Key Patterns':                 { icon:'📈', color:'#818cf8' },
+    'Concerns':                     { icon:'⚠️', color:'#f87171' },
+    "What's Going Well":            { icon:'✅', color:'#4ade80' },
+    'Suggestions':                  { icon:'💡', color:'#fbbf24' },
+    'Recommendations':              { icon:'💡', color:'#fbbf24' },
   };
-  let html = '';
+
+  let chipHtml = '<div class="ai-summary-grid">';
+  let fullHtml = '';
+
   const parts = text.split(/##\s+/);
-  parts.forEach(part => {
+  parts.forEach((part, idx) => {
     if (!part.trim()) return;
     const firstLine = part.split('\n')[0].trim();
     const body = part.slice(firstLine.length).trim();
-    const cfg = sectionConfig[firstLine] || {icon:'📋',color:'var(--accent)',bg:'rgba(79,168,255,0.06)'};
-    const formatted = body.replace(/^[-•]\s+/gm,'• ').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n{2,}/g,'\n').trim();
-    html += `<div class="ai-section" style="background:${cfg.bg};border-radius:12px;padding:12px 14px;border-left:3px solid ${cfg.color}">
-      <div class="ai-section-title">${cfg.icon} <span style="color:${cfg.color}">${firstLine}</span></div>
-      <div class="ai-section-body">${formatted.replace(/\n/g,'<br>')}</div>
+    const s = cfg[firstLine] || { icon:'📋', color:'var(--accent)' };
+
+    // Clean formatting
+    const formatted = body
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^[-•]\s+/gm, '• ')
+      .replace(/\n{2,}/g, '\n')
+      .trim();
+
+    // First sentence for chip summary line
+    const plain = body.replace(/\*\*|\n/g, ' ').replace(/  +/g, ' ').trim();
+    const summary = plain.split(/[.!?]/)[0].trim().slice(0, 90) + (plain.length > 90 ? '…' : '');
+
+    // Chip for dashboard
+    chipHtml += `<div class="ai-chip" onclick="toggleChip(this)" style="animation-delay:${idx * 0.05}s;border-left-color:${s.color}">
+      <div class="ai-chip-icon">${s.icon}</div>
+      <div class="ai-chip-content">
+        <div class="ai-chip-label" style="color:${s.color}">${firstLine}</div>
+        <div class="ai-chip-value">${summary}</div>
+        <div class="ai-chip-detail">${formatted.replace(/\n/g,'<br>')}</div>
+      </div>
+      <span class="ai-chip-arrow">⌄</span>
+    </div>`;
+
+    // Full card for insights tab
+    fullHtml += `<div class="ai-section" style="background:${s.color}12;border-radius:14px;padding:14px 16px;margin-bottom:10px;border-left:3px solid ${s.color};animation:fadeUp 0.3s ease ${idx*0.06}s both">
+      <div style="font-size:13px;font-weight:700;color:${s.color};margin-bottom:8px">${s.icon} ${firstLine}</div>
+      <div style="font-size:14px;color:var(--text);line-height:1.8">${formatted.replace(/\n/g,'<br>')}</div>
     </div>`;
   });
-  html = html.replace(/(⚠️ This assessment.*)/g,
-    '<div style="margin-top:12px;font-size:12px;color:var(--muted);font-style:italic;text-align:center;padding:8px;border-top:1px solid var(--border)">$1</div>');
-  return html || `<div class="ai-streaming">${text}</div>`;
+
+  chipHtml += `<div style="text-align:center;margin-top:8px">
+    <button onclick="switchTab('insights',document.getElementById('tab-insights'))"
+      style="background:none;border:none;color:var(--accent);font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;padding:4px">
+      View full analysis →
+    </button>
+  </div></div>`;
+
+  fullHtml += `<div style="margin-top:12px;font-size:12px;color:var(--muted);font-style:italic;text-align:center;padding:8px;border-top:1px solid var(--border)">
+    ⚠️ AI-generated from glucose log data. Always consult your doctor.
+  </div>`;
+
+  return { chipHtml, fullHtml };
 }
+
+
+
+function toggleChip(el) {
+  if (typeof el === 'string') el = document.getElementById(el);
+  if (!el) return;
+  const isExpanded = el.classList.toggle('expanded');
+  const arrow = el.querySelector('.ai-chip-arrow');
+  if (arrow) arrow.textContent = isExpanded ? '⌃' : '⌄';
+}
+
+
+
 
 // ====== LOG MODE TOGGLE ======
 function setLogMode(mode, btn) {
