@@ -32,7 +32,7 @@ body.light-mode {
 }
 /* ── Reset ── */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;overflow:hidden;overscroll-behavior:none}
+html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;font-size:15px;overflow:hidden;overscroll-behavior:none}
 /* ── App shell ── */
 .app{display:flex;flex-direction:column;height:100%;height:-webkit-fill-available;padding-top:var(--safe-top)}
 /* ── Header ── */
@@ -42,7 +42,7 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
   background:var(--bg);flex-shrink:0;
 }
 .header-left{display:flex;flex-direction:column}
-.header-logo{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);letter-spacing:-0.5px;line-height:1}
+.header-logo{font-family:Arial,sans-serif;font-size:22px;color:var(--text);letter-spacing:-0.5px;line-height:1}
 .header-patient{font-size:13px;color:var(--accent);font-weight:600;margin-top:2px;cursor:pointer;display:flex;align-items:center;gap:4px}
 .header-right{display:flex;align-items:center;gap:8px}
 .theme-toggle{width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s}
@@ -78,7 +78,7 @@ body.light-mode .bottom-nav{background:rgba(248,250,252,0.9)}
   display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:8px 14px;cursor:pointer;border:none;background:none;
   color:var(--muted);font-size:10px;font-weight:600;letter-spacing:0.4px;
-  font-family:'DM Sans',sans-serif;text-transform:uppercase;
+  font-family:Arial,sans-serif;text-transform:uppercase;
   transition:color 0.2s,transform 0.15s;flex:1;
 }
 .nav-item.active{color:var(--accent)}
@@ -127,7 +127,7 @@ body.light-mode .bottom-nav{background:rgba(248,250,252,0.9)}
 .hero-card::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(91,156,246,0.08)}
 .hero-card::after{content:'';position:absolute;bottom:-30px;left:-20px;width:80px;height:80px;border-radius:50%;background:rgba(148,195,255,0.05)}
 .hero-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(147,197,253,0.7);margin-bottom:6px}
-.hero-val{font-family:'DM Serif Display',serif;font-size:56px;line-height:1;color:#fff;letter-spacing:-1px}
+.hero-val{font-family:Arial,sans-serif;font-size:56px;line-height:1;color:#fff;letter-spacing:-1px}
 .hero-unit{font-size:16px;color:rgba(255,255,255,0.6);font-weight:500;margin-left:4px;vertical-align:middle}
 .hero-status-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;margin-top:8px}
 .hero-meta{font-size:12px;color:rgba(255,255,255,0.5);margin-top:6px}
@@ -140,7 +140,7 @@ body.light-mode .bottom-nav{background:rgba(248,250,252,0.9)}
   transition:transform 0.15s;
 }
 .mini-stat:active{transform:scale(0.97)}
-.mini-stat-val{font-family:'DM Serif Display',serif;font-size:28px;line-height:1;color:var(--text)}
+.mini-stat-val{font-family:Arial,sans-serif;font-size:28px;line-height:1;color:var(--text)}
 .mini-stat-unit{font-size:11px;color:var(--muted);font-weight:600;margin-left:2px}
 .mini-stat-label{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600}
 .mini-stat-sub{font-size:10px;color:var(--muted);margin-top:1px;opacity:0.7}
@@ -166,7 +166,7 @@ body.light-mode .bottom-nav{background:rgba(248,250,252,0.9)}
 /* ── Stat boxes (legacy for HbA1c tab etc) ── */
 .stat-row{display:flex;gap:8px;margin-bottom:12px}
 .stat-box{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center}
-.stat-val{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text);line-height:1}
+.stat-val{font-family:Arial,sans-serif;font-size:26px;color:var(--text);line-height:1}
 .stat-unit{font-size:12px;color:var(--muted);margin-top:2px;font-weight:600}
 .stat-label{font-size:12px;color:var(--text);margin-top:5px;font-weight:600}
 .stat-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px;vertical-align:middle}
@@ -175,9 +175,9 @@ body.light-mode .bottom-nav{background:rgba(248,250,252,0.9)}
 .picker-screen{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;padding:var(--safe-top) 0 var(--safe-bottom)}
 .picker-screen.hidden{display:none}
 .picker-header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
-.picker-title{font-family:'DM Serif Display',serif;font-size:24px;color:var(--accent2)}
-.picker-title span{display:block;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);font-weight:300;margin-top:2px}
-.btn-add-patient{background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:12px;color:white;font-size:13px;font-weight:600;padding:8px 14px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.picker-title{font-family:Arial,sans-serif;font-size:24px;color:var(--accent2)}
+.picker-title span{display:block;font-family:Arial,sans-serif;font-size:12px;color:var(--muted);font-weight:300;margin-top:2px}
+.btn-add-patient{background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:12px;color:white;font-size:13px;font-weight:600;padding:8px 14px;cursor:pointer;font-family:Arial,sans-serif}
 .patient-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px}
 .patient-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color 0.15s}
 .patient-card:active{border-color:var(--accent)}
@@ -196,15 +196,15 @@ body.light-mode .bottom-nav{background:rgba(248,250,252,0.9)}
 .modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(10,22,40,0.85);display:flex;align-items:flex-end;padding-bottom:var(--safe-bottom)}
 .modal-overlay.hidden{display:none}
 .modal{background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--border);border-bottom:none;padding:24px 20px 20px;width:100%;max-height:85vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.modal-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--accent2);margin-bottom:4px}
+.modal-title{font-family:Arial,sans-serif;font-size:20px;color:var(--accent2);margin-bottom:4px}
 .modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
 .modal-actions{display:flex;gap:10px;margin-top:4px}
-.btn-cancel{flex:1;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--muted);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer}
+.btn-cancel{flex:1;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--muted);font-size:15px;font-weight:500;font-family:Arial,sans-serif;cursor:pointer}
 
 /* ---- MAIN APP ---- */
 .header{padding:12px 20px 8px;display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-bottom:1px solid var(--border)}
-.header-logo{font-family:'DM Serif Display',serif;font-size:20px;color:var(--accent2);letter-spacing:-0.3px}
-.header-logo span{color:var(--muted);font-size:11px;display:block;font-family:'DM Sans',sans-serif;font-weight:300}
+.header-logo{font-family:Arial,sans-serif;font-size:20px;color:var(--accent2);letter-spacing:-0.3px}
+.header-logo span{color:var(--muted);font-size:11px;display:block;font-family:Arial,sans-serif;font-weight:300}
 .patient-switcher{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:40px;padding:6px 12px 6px 8px;cursor:pointer;max-width:160px}
 .ps-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0}
 .ps-name{font-size:12px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
@@ -219,7 +219,7 @@ body.light-mode .bottom-nav{background:rgba(248,250,252,0.9)}
 /* Stats */
 .stat-row{display:flex;gap:8px;margin-bottom:12px}
 .stat-box{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center}
-.stat-val{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text);line-height:1}
+.stat-val{font-family:Arial,sans-serif;font-size:26px;color:var(--text);line-height:1}
 .stat-unit{font-size:12px;color:var(--muted);margin-top:2px;font-weight:600}
 .stat-label{font-size:12px;color:var(--text);margin-top:5px;font-weight:600}
 .stat-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px;vertical-align:middle}
@@ -228,7 +228,7 @@ body.light-mode .bottom-nav{background:rgba(248,250,252,0.9)}
 .hba1c-band{display:flex;height:10px;border-radius:6px;overflow:hidden;margin:10px 0 6px}
 .hba1c-seg{flex:1;transition:opacity 0.3s}
 .hba1c-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-.hba1c-big{font-family:'DM Serif Display',serif;font-size:38px;line-height:1}
+.hba1c-big{font-family:Arial,sans-serif;font-size:38px;line-height:1}
 .hba1c-sub{font-size:12px;color:var(--muted)}
 .hba1c-interp{font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;display:inline-block;margin-top:6px}
 .hba1c-note{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5;font-style:italic}
@@ -241,16 +241,16 @@ body.light-mode .bottom-nav{background:rgba(248,250,252,0.9)}
 .hba1c-log-entry:last-child{border-bottom:none}
 .hba1c-log-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:2px}
 .hba1c-log-info{flex:1;min-width:0}
-.hba1c-log-val{font-family:'DM Serif Display',serif;font-size:20px;line-height:1}
+.hba1c-log-val{font-family:Arial,sans-serif;font-size:20px;line-height:1}
 .hba1c-log-meta{font-size:11px;color:var(--muted);margin-top:2px}
 .hba1c-log-lab{font-size:10px;background:rgba(125,211,252,0.12);border:1px solid rgba(125,211,252,0.25);border-radius:6px;padding:2px 7px;color:var(--accent2);white-space:nowrap;flex-shrink:0}
 .compare-row{display:flex;gap:10px;margin-bottom:12px}
 .compare-box{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:12px 10px;text-align:center}
-.compare-val{font-family:'DM Serif Display',serif;font-size:26px;line-height:1}
+.compare-val{font-family:Arial,sans-serif;font-size:26px;line-height:1}
 .compare-lbl{font-size:10px;color:var(--muted);margin-top:5px}
 .compare-src{font-size:9px;margin-top:3px;padding:2px 6px;border-radius:10px;display:inline-block}
 .toggle-pills{display:flex;background:var(--bg3);border-radius:12px;padding:3px;gap:3px;margin-bottom:14px}
-.toggle-pill{flex:1;padding:7px 4px;text-align:center;font-size:12px;font-weight:500;color:var(--muted);border:none;background:none;border-radius:9px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.toggle-pill{flex:1;padding:7px 4px;text-align:center;font-size:12px;font-weight:500;color:var(--muted);border:none;background:none;border-radius:9px;cursor:pointer;font-family:Arial,sans-serif;transition:all 0.2s}
 .toggle-pill.active{background:var(--accent);color:white}
 
 /* Chart */
@@ -258,7 +258,7 @@ body.light-mode .bottom-nav{background:rgba(248,250,252,0.9)}
 canvas#glucoseChart{display:block;width:100%}
 canvas#hba1cTrendChart{display:block;max-width:100%}
 .range-btns{display:flex;gap:6px;margin-bottom:12px}
-.range-btn{padding:5px 11px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.range-btn{padding:5px 11px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;font-family:Arial,sans-serif;transition:all 0.15s}
 .range-btn.active{background:var(--accent);border-color:var(--accent);color:white}
 .legend{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
 .leg-item{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text);font-weight:600}
@@ -266,7 +266,7 @@ canvas#hba1cTrendChart{display:block;max-width:100%}
 /* Tooltip */
 .chart-tooltip{position:absolute;pointer-events:none;opacity:0;transition:opacity 0.15s;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;min-width:170px;z-index:10;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
 .chart-tooltip.visible{opacity:1}
-.tt-val{font-family:'DM Serif Display',serif;font-size:24px;line-height:1;color:var(--text)}
+.tt-val{font-family:Arial,sans-serif;font-size:24px;line-height:1;color:var(--text)}
 .tt-unit{font-size:13px;color:var(--muted);margin-left:2px;font-weight:600}
 .tt-row{font-size:13px;color:var(--text);margin-top:4px;display:flex;align-items:center;gap:6px;font-weight:500}
 .tt-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
@@ -279,7 +279,7 @@ canvas#hba1cTrendChart{display:block;max-width:100%}
 .cdi-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .cdi-info{flex:1;min-width:0}
 .cdi-top{display:flex;align-items:baseline;gap:6px}
-.cdi-val{font-family:'DM Serif Display',serif;font-size:18px;line-height:1}
+.cdi-val{font-family:Arial,sans-serif;font-size:18px;line-height:1}
 .cdi-unit{font-size:12px;color:var(--muted);font-weight:600}
 .cdi-meal{font-size:12px;background:var(--bg3);border-radius:5px;padding:2px 8px;color:var(--text);flex-shrink:0;font-weight:700;border:1px solid var(--border)}
 .cdi-meta{font-size:12px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
@@ -290,8 +290,8 @@ canvas#hba1cTrendChart{display:block;max-width:100%}
 .log-entry:last-child{border-bottom:none}
 .log-indicator{width:4px;height:44px;border-radius:4px;flex-shrink:0}
 .log-info{flex:1;min-width:0}
-.log-val{font-family:'DM Serif Display',serif;font-size:22px;line-height:1;color:var(--text)}
-.log-val small{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);font-weight:400;margin-left:2px}
+.log-val{font-family:Arial,sans-serif;font-size:22px;line-height:1;color:var(--text)}
+.log-val small{font-family:Arial,sans-serif;font-size:12px;color:var(--muted);font-weight:400;margin-left:2px}
 .log-meta{font-size:13px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .log-meal{font-size:12px;background:var(--bg3);border-radius:6px;padding:4px 8px;color:var(--text);white-space:nowrap;flex-shrink:0;font-weight:600;border:1px solid var(--border)}
 .log-del{width:30px;height:30px;border-radius:50%;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#ef4444;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -300,34 +300,34 @@ canvas#hba1cTrendChart{display:block;max-width:100%}
 /* Form */
 .form-group{margin-bottom:16px}
 label{display:block;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text);margin-bottom:7px}
-input[type=number],input[type=text],input[type=date],input[type=time],select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-size:16px;font-family:'DM Sans',sans-serif;-webkit-appearance:none;outline:none;transition:border-color 0.2s;font-weight:500}
+input[type=number],input[type=text],input[type=date],input[type=time],select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-size:16px;font-family:Arial,sans-serif;-webkit-appearance:none;outline:none;transition:border-color 0.2s;font-weight:500}
 input:focus,select:focus{border-color:var(--accent);border-width:2px}
 select option{background:var(--bg2);color:var(--text)}
-.big-input{font-family:'DM Serif Display',serif;font-size:34px;text-align:center;letter-spacing:1px}
+.big-input{font-family:Arial,sans-serif;font-size:34px;text-align:center;letter-spacing:1px}
 .unit-hint{text-align:center;font-size:13px;color:var(--muted);margin-top:-8px;margin-bottom:14px;font-weight:600}
-.btn-primary{width:100%;padding:16px;background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:14px;color:white;font-size:17px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:4px;letter-spacing:0.2px;box-shadow:0 4px 20px rgba(79,168,255,0.3);transition:transform 0.1s,box-shadow 0.1s}
+.btn-primary{width:100%;padding:16px;background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:14px;color:white;font-size:17px;font-weight:700;font-family:Arial,sans-serif;cursor:pointer;margin-top:4px;letter-spacing:0.2px;box-shadow:0 4px 20px rgba(79,168,255,0.3);transition:transform 0.1s,box-shadow 0.1s}
 .btn-primary:active{transform:scale(0.98);box-shadow:none}
 
 /* Profile */
 .profile-header{text-align:center;padding:8px 0 16px}
 .profile-big-av{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:white;margin:0 auto 12px;box-shadow:0 0 0 4px rgba(79,168,255,0.2)}
-.profile-display-name{font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:4px;color:var(--text)}
+.profile-display-name{font-family:Arial,sans-serif;font-size:24px;margin-bottom:4px;color:var(--text)}
 .profile-display-age{font-size:14px;color:var(--muted);font-weight:600}
 .info-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border)}
 .info-row:last-child{border-bottom:none}
 .info-key{font-size:14px;color:var(--muted);font-weight:600}
 .info-val{font-size:15px;font-weight:700;color:var(--text)}
-.btn-secondary{width:100%;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;color:var(--accent);font-size:16px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:10px;transition:background 0.15s}
+.btn-secondary{width:100%;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;color:var(--accent);font-size:16px;font-weight:600;font-family:Arial,sans-serif;cursor:pointer;margin-bottom:10px;transition:background 0.15s}
 .btn-secondary:active{background:var(--border)}
 
 /* Report modal */
 .report-overlay{position:fixed;inset:0;z-index:250;background:rgba(10,22,40,0.9);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:var(--safe-top) 0 var(--safe-bottom);overflow-y:auto}
 .report-overlay.hidden{display:none}
 .report-header{display:flex;align-items:center;justify-content:space-between;width:100%;padding:12px 16px;border-bottom:1px solid var(--border)}
-.report-header-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--accent2)}
+.report-header-title{font-family:Arial,sans-serif;font-size:18px;color:var(--accent2)}
 .report-close{background:var(--bg3);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .report-actions{display:flex;gap:8px;padding:12px 16px;width:100%}
-.report-action-btn{flex:1;padding:11px 8px;border-radius:12px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;text-align:center}
+.report-action-btn{flex:1;padding:11px 8px;border-radius:12px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:13px;font-weight:500;font-family:Arial,sans-serif;cursor:pointer;text-align:center}
 .report-action-btn.primary{background:linear-gradient(135deg,var(--accent),#1d6fa8);border-color:var(--accent);color:white}
 #reportCanvas{display:block;width:100%;border-radius:0}
 
@@ -396,11 +396,18 @@ select option{background:var(--bg2);color:var(--text)}
     <div class="form-group"><label>Units</label>
       <select id="mUnits"><option value="mg/dL">mg/dL</option><option value="mmol/L">mmol/L</option></select>
     </div>
+    <div class="form-group">
+      <label>💊 Current Medications</label>
+      <textarea id="mMedications" placeholder="e.g. Metformin 500mg twice daily, Glimepiride 2mg morning…" rows="4" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;font-family:Arial,sans-serif;resize:none;outline:none;line-height:1.6;-webkit-appearance:none" maxlength="1200"></textarea>
+    </div>
+    <div class="form-group">
+      <label>🏥 General Condition &amp; Remarks</label>
+      <textarea id="mGeneralCondition" placeholder="e.g. Hypertensive, CKD stage 2, sedentary lifestyle, vegetarian…" rows="4" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;font-family:Arial,sans-serif;resize:none;outline:none;line-height:1.6;-webkit-appearance:none" maxlength="700"></textarea>
+    </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closePatientModal()">Cancel</button>
       <button class="btn-primary" style="margin-top:0" onclick="savePatientModal()">Save</button>
     </div>
-    <div style="font-size:12px;color:var(--muted);margin-top:10px;text-align:center">Medications, general condition &amp; additional remarks can be added in the Profile tab after saving</div>
   </div>
 </div>
 
@@ -477,6 +484,9 @@ select option{background:var(--bg2);color:var(--text)}
     <button class="nav-item" id="tab-profile" onclick="switchTab('profile',this)">
       <span class="nav-icon">👤</span>Profile
     </button>
+    <button class="nav-item" id="tab-settings" onclick="switchTab('settings',this)">
+      <span class="nav-icon">⚙️</span>Settings
+    </button>
   </div>
   <div class="screens">
 
@@ -485,7 +495,7 @@ select option{background:var(--bg2);color:var(--text)}
 
       <!-- Hero: Current Reading -->
       <div class="hero-card">
-        <div class="hero-label">Current Reading</div>
+        <div class="hero-label">Last Reading</div>
         <div>
           <span class="hero-val" id="latestVal">—</span>
           <span class="hero-unit" id="latestUnit">mg/dL</span>
@@ -523,7 +533,7 @@ select option{background:var(--bg2);color:var(--text)}
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
           <div class="card-title" style="margin-bottom:0">7-Day Trend</div>
           <div style="display:flex;gap:6px;align-items:center">
-            <button onclick="openReportModal()" style="background:none;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:11px;font-weight:600;padding:4px 9px;cursor:pointer;font-family:'DM Sans',sans-serif">📤</button>
+            <button onclick="openReportModal()" style="background:none;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:11px;font-weight:600;padding:4px 9px;cursor:pointer;font-family:Arial,sans-serif">📤</button>
           </div>
         </div>
         <div class="range-btns">
@@ -556,22 +566,6 @@ select option{background:var(--bg2);color:var(--text)}
         <div class="chart-detail-list" id="chartDetailList"></div>
       </div>
 
-      <!-- AI Summary Cards (compact chips) -->
-      <div class="card" style="animation-delay:0.2s">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <div class="card-title" style="margin-bottom:0">🩺 AI Summary</div>
-          <button id="aiInsightsBtn" onclick="loadAiInsights()"
-            style="background:var(--accent);border:none;border-radius:10px;color:white;font-size:12px;font-weight:700;padding:6px 13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform 0.15s,opacity 0.15s">
-            Analyse
-          </button>
-        </div>
-        <div id="aiInsightsBody">
-          <div style="font-size:13px;color:var(--muted);text-align:center;padding:16px 0">
-            Tap <strong style="color:var(--text)">Analyse</strong> for AI assessment
-          </div>
-        </div>
-      </div>
-
       <button class="btn-primary" style="margin-bottom:8px" onclick="openReportModal()">
         📤 Share Glucose Report
       </button>
@@ -583,7 +577,7 @@ select option{background:var(--bg2);color:var(--text)}
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
           <div class="card-title" style="margin-bottom:0">🩺 AI Doctor Insights</div>
           <button id="aiInsightsBtnFull" onclick="loadAiInsights()"
-            style="background:var(--accent);border:none;border-radius:10px;color:white;font-size:12px;font-weight:700;padding:6px 13px;cursor:pointer;font-family:'DM Sans',sans-serif">
+            style="background:var(--accent);border:none;border-radius:10px;color:white;font-size:12px;font-weight:700;padding:6px 13px;cursor:pointer;font-family:Arial,sans-serif">
             Analyse
           </button>
         </div>
@@ -597,6 +591,46 @@ select option{background:var(--bg2);color:var(--text)}
       <div class="card">
         <div class="card-title">Target Ranges</div>
         <div id="targetRangeInfo"></div>
+      </div>
+    </div>
+
+
+    <!-- SETTINGS SCREEN -->
+    <div class="screen" id="screen-settings">
+      <!-- API Key -->
+      <div class="card">
+        <div class="card-title">🔑 Gemini API Key (All Patients)</div>
+        <div id="apiKeyStatus" style="font-size:14px;color:var(--muted);margin-bottom:12px">Not set — required for AI Insights, Voice &amp; OCR</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.7">
+          Get a <strong style="color:var(--text)">free key</strong> from <strong style="color:var(--accent)">aistudio.google.com</strong><br>
+          Sign in with Google → Get API key → Create API key → Copy &amp; paste below.<br>
+          No credit card needed.
+        </div>
+        <button class="btn-primary" onclick="openApiKeyModal()">Set / Update API Key</button>
+        <button id="apiKeyClearBtn" style="display:none;margin-top:10px" class="btn-secondary" onclick="clearApiKey()">🗑 Remove API Key</button>
+      </div>
+      <!-- Reference Analysis -->
+      <div class="card">
+        <div class="card-title">📋 Reference Analysis Style (All Patients)</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6">Paste a high-quality example analysis (from your doctor or ChatGPT). AI Insights will match this depth and style for all patients.</div>
+        <textarea id="editReferenceAnalysis" placeholder="Paste a sample analysis here…" rows="8" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-size:13px;font-family:Arial,sans-serif;resize:vertical;outline:none;line-height:1.6;-webkit-appearance:none" maxlength="3000"></textarea>
+        <button class="btn-primary" style="margin-top:12px" onclick="saveGlobalSettings()">Save Settings</button>
+      </div>
+      <!-- Theme -->
+      <div class="card">
+        <div class="card-title">🎨 Appearance</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+          <span style="font-size:15px;color:var(--text);font-weight:600">Dark / Light Mode</span>
+          <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
+        </div>
+      </div>
+      <!-- App info -->
+      <div class="card">
+        <div class="card-title">ℹ️ About</div>
+        <div class="info-row"><div class="info-key">App</div><div class="info-val">GlucoTrack</div></div>
+        <div class="info-row"><div class="info-key">Version</div><div class="info-val">2.0</div></div>
+        <div class="info-row"><div class="info-key">AI Engine</div><div class="info-val">Google Gemini</div></div>
+        <div class="info-row"><div class="info-key">Storage</div><div class="info-val">On-device only</div></div>
       </div>
     </div>
 
@@ -631,7 +665,7 @@ select option{background:var(--bg2);color:var(--text)}
         <div id="hba1cInterpDiv"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
           <div style="font-size:11px;color:var(--muted)">eAG: <span id="eagVal" style="color:var(--text);font-weight:500">—</span> <span id="eagUnit" style="color:var(--muted)">mg/dL</span></div>
-          <button onclick="openHba1cModal()" style="background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:10px;color:white;font-size:12px;font-weight:600;padding:7px 14px;cursor:pointer;font-family:'DM Sans',sans-serif">+ Log Lab Result</button>
+          <button onclick="openHba1cModal()" style="background:linear-gradient(135deg,var(--accent),#1d6fa8);border:none;border-radius:10px;color:white;font-size:12px;font-weight:600;padding:7px 14px;cursor:pointer;font-family:Arial,sans-serif">+ Log Lab Result</button>
         </div>
         <div class="hba1c-note" style="margin-top:10px">⚠️ Estimated from average glucose (Nathan formula). <strong>Not a substitute for a lab test.</strong></div>
       </div>
@@ -662,7 +696,7 @@ select option{background:var(--bg2);color:var(--text)}
         <div id="hba1cSubLablog" style="display:none">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
             <div class="card-title" style="margin-bottom:0">Lab Results</div>
-            <button onclick="openHba1cModal()" style="background:none;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;font-family:'DM Sans',sans-serif">+ Add</button>
+            <button onclick="openHba1cModal()" style="background:none;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;font-family:Arial,sans-serif">+ Add</button>
           </div>
           <div id="hba1cLabList"></div>
         </div>
@@ -735,7 +769,7 @@ select option{background:var(--bg2);color:var(--text)}
           <div class="card-title">Extracted Readings — Review &amp; Save</div>
           <div id="ocrResultsList"></div>
           <div style="display:flex;gap:10px;margin-top:14px">
-            <button onclick="clearOcrResults()" style="flex:1;padding:13px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Clear</button>
+            <button onclick="clearOcrResults()" style="flex:1;padding:13px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;font-weight:600;cursor:pointer;font-family:Arial,sans-serif">Clear</button>
             <button class="btn-primary" style="flex:2;margin-top:0" onclick="saveAllOcrReadings()">💾 Save All to Log</button>
           </div>
         </div>
@@ -780,7 +814,7 @@ select option{background:var(--bg2);color:var(--text)}
           <div class="card-title">Extracted Reading — Review &amp; Save</div>
           <div id="voiceResultsList"></div>
           <div style="display:flex;gap:10px;margin-top:14px">
-            <button onclick="clearVoiceResults()" style="flex:1;padding:13px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Clear</button>
+            <button onclick="clearVoiceResults()" style="flex:1;padding:13px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;font-weight:600;cursor:pointer;font-family:Arial,sans-serif">Clear</button>
             <button class="btn-primary" style="flex:2;margin-top:0" onclick="saveAllOcrReadings('voice')">💾 Save to Log</button>
           </div>
         </div>
@@ -828,7 +862,7 @@ select option{background:var(--bg2);color:var(--text)}
       <div class="card">
         <div class="card-title">💊 Current Medications</div>
         <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6">List all current medications, doses and timing. Used by AI Insights for personalised analysis.</div>
-        <textarea id="editMedications" placeholder="e.g.&#10;Metformin 500mg — twice daily (morning &amp; night)&#10;Glimepiride 2mg — morning before breakfast&#10;Insulin Glargine 10 units — bedtime&#10;Aspirin 75mg — morning&#10;Amlodipine 5mg — morning" rows="7" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;resize:vertical;outline:none;line-height:1.6;-webkit-appearance:none" maxlength="1200"></textarea>
+        <textarea id="editMedications" placeholder="e.g.&#10;Metformin 500mg — twice daily (morning &amp; night)&#10;Glimepiride 2mg — morning before breakfast&#10;Insulin Glargine 10 units — bedtime&#10;Aspirin 75mg — morning&#10;Amlodipine 5mg — morning" rows="7" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-size:14px;font-family:Arial,sans-serif;resize:vertical;outline:none;line-height:1.6;-webkit-appearance:none" maxlength="1200"></textarea>
         <button class="btn-primary" style="margin-top:12px" onclick="saveMedications()">Save Medications</button>
       </div>
 
@@ -836,30 +870,14 @@ select option{background:var(--bg2);color:var(--text)}
       <div class="card">
         <div class="card-title">🏥 General Condition &amp; Additional Remarks</div>
         <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6">Overall health status, comorbidities, lifestyle, diet habits, recent events. Used by AI Insights.</div>
-        <textarea id="editGeneralCondition" placeholder="e.g.&#10;81-year-old with 24-year history of Type 2 diabetes. Hypertensive, on BP medication. Mild CKD stage 2. Generally sedentary lifestyle. Vegetarian diet, tends to eat carb-heavy meals. Recently hospitalised for hyperglycemia in March. Now on revised medication regimen. Mobility limited due to arthritis. Mentally alert and cooperative. Family monitors closely." rows="7" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;resize:vertical;outline:none;line-height:1.6;-webkit-appearance:none" maxlength="700"></textarea>
+        <textarea id="editGeneralCondition" placeholder="e.g.&#10;81-year-old with 24-year history of Type 2 diabetes. Hypertensive, on BP medication. Mild CKD stage 2. Generally sedentary lifestyle. Vegetarian diet, tends to eat carb-heavy meals. Recently hospitalised for hyperglycemia in March. Now on revised medication regimen. Mobility limited due to arthritis. Mentally alert and cooperative. Family monitors closely." rows="7" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-size:14px;font-family:Arial,sans-serif;resize:vertical;outline:none;line-height:1.6;-webkit-appearance:none" maxlength="700"></textarea>
         <button class="btn-primary" style="margin-top:12px" onclick="saveGeneralCondition()">Save Remarks</button>
       </div>
       <button class="btn-secondary" onclick="exportData()">📤 Export CSV</button>
       <button class="btn-secondary" style="color:#ef4444;border-color:rgba(239,68,68,0.3)" onclick="clearReadings()">🗑 Clear All Readings</button>
       <button class="btn-secondary" style="color:#ef4444;border-color:rgba(239,68,68,0.3)" onclick="deletePatient()">❌ Delete This Patient</button>
 
-      <!-- Reference Analysis -->
-      <div class="card">
-        <div class="card-title">📋 Reference Analysis (AI Training Example)</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6">Paste a high-quality analysis (e.g. from your doctor or ChatGPT) as a reference. AI Insights will use this as a style and depth example for this patient.</div>
-        <textarea id="editReferenceAnalysis" placeholder="Paste a sample analysis here to guide the AI on depth, tone and personalisation expected…" rows="8" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;resize:vertical;outline:none;line-height:1.6;-webkit-appearance:none" maxlength="3000"></textarea>
-        <button class="btn-primary" style="margin-top:12px" onclick="saveReferenceAnalysis()">Save Reference</button>
-      </div>
-
-      <!-- API Key card -->
-      <div class="card" style="margin-top:4px">
-        <div class="card-title">🔑 AI Features (Gemini API Key)</div>
-        <div id="apiKeyStatus" style="font-size:14px;color:var(--muted);margin-bottom:12px">Not set — required for AI Insights, Voice &amp; OCR</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">Free key from <strong style="color:var(--text)">aistudio.google.com</strong> — no credit card needed</div>
-        <button class="btn-primary" onclick="openApiKeyModal()">Set / Update API Key</button>
-        <button id="apiKeyClearBtn" style="display:none;margin-top:10px" class="btn-secondary" onclick="clearApiKey()">🗑 Remove API Key</button>
-      </div>
-    </div>
+      
 
   </div>
 </div>
@@ -1050,6 +1068,8 @@ function openAddPatient() {
   document.getElementById('mDiabetesSince').value = '';
   document.getElementById('mType').value = 'Type 2';
   document.getElementById('mUnits').value = 'mg/dL';
+  document.getElementById('mMedications').value = '';
+  document.getElementById('mGeneralCondition').value = '';
   document.getElementById('patientModal').classList.remove('hidden');
   setTimeout(() => document.getElementById('mName').focus(), 100);
 }
@@ -1065,6 +1085,8 @@ function openEditPatient(pid) {
   document.getElementById('mDiabetesSince').value = p.diabetesSince || '';
   document.getElementById('mType').value = p.type;
   document.getElementById('mUnits').value = p.units;
+  document.getElementById('mMedications').value = localStorage.getItem('glucoMeds_'+pid) || '';
+  document.getElementById('mGeneralCondition').value = localStorage.getItem('glucoCond_'+pid) || '';
   document.getElementById('patientModal').classList.remove('hidden');
 }
 
@@ -1079,13 +1101,19 @@ function savePatientModal() {
   const units = document.getElementById('mUnits').value;
   if (!name) { showToast('Enter a name', true); return; }
   if (!age || age < 1 || age > 120) { showToast('Enter a valid age', true); return; }
+  const meds = document.getElementById('mMedications').value.trim();
+  const cond = document.getElementById('mGeneralCondition').value.trim();
   if (editingPatientId) {
     const p = patients.find(x=>x.id===editingPatientId);
     p.name = name; p.age = age; p.gender = gender; p.diabetesSince = diabetesSince; p.type = type; p.units = units;
+    if (meds) localStorage.setItem('glucoMeds_'+editingPatientId, meds);
+    if (cond) localStorage.setItem('glucoCond_'+editingPatientId, cond);
   } else {
     const id = 'p_' + Date.now();
     const colorIdx = patients.length;
     patients.push({ id, name, age, gender, diabetesSince, type, units, colorIdx });
+    if (meds) localStorage.setItem('glucoMeds_'+id, meds);
+    if (cond) localStorage.setItem('glucoCond_'+id, cond);
   }
   localStorage.setItem('glucoPatients', JSON.stringify(patients));
   closePatientModal();
@@ -1174,7 +1202,9 @@ function switchTab(id, el) {
   }
 
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    if (id==='dashboard') { drawChart(); loadSavedInsightsChips(); }
+    if (id==='dashboard') { drawChart(); }
+  if (id==='insights')  { loadSavedInsightsFull(); }
+  if (id==='settings')  { loadSettingsScreen(); }
     if (id==='insights')  { loadSavedInsightsFull(); }
     if (id==='hba1c')     renderHba1c();
     if (id==='profile')   populateProfileForm();
@@ -1328,7 +1358,7 @@ function renderHba1c() {
       return `<div class="hba1c-log-entry">
         <div class="hba1c-log-dot" style="background:${ip.color}"></div>
         <div class="hba1c-log-info">
-          <div class="hba1c-log-val" style="color:${ip.color}">${m.val.toFixed(1)}<small style="font-size:11px;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:300"> %</small></div>
+          <div class="hba1c-log-val" style="color:${ip.color}">${m.val.toFixed(1)}<small style="font-size:11px;color:var(--muted);font-family:Arial,sans-serif;font-weight:300"> %</small></div>
           <div class="hba1c-log-meta">${d}${m.notes?' · '+m.notes:''}${diffStr}</div>
         </div>
         <div class="hba1c-log-lab">${ip.label}</div>
@@ -1398,7 +1428,7 @@ function drawHba1cTrendChart() {
   const allPts = [...labPts, ...estPts].sort((a,b)=>a.ts-b.ts);
 
   if (allPts.length < 2) {
-    ctx.fillStyle='rgba(232,244,255,0.2)'; ctx.font='13px DM Sans,sans-serif'; ctx.textAlign='center';
+    ctx.fillStyle='rgba(232,244,255,0.2)'; ctx.font='13px Arial,sans-serif'; ctx.textAlign='center';
     ctx.fillText('Need more data to show trend',W/2,H/2); return;
   }
 
@@ -1416,7 +1446,7 @@ function drawHba1cTrendChart() {
       ctx.strokeStyle=c; ctx.lineWidth=1; ctx.setLineDash([4,4]);
       ctx.beginPath(); ctx.moveTo(pad.l,toY(v)); ctx.lineTo(pad.l+cW,toY(v)); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle=c; ctx.font='9px DM Sans,sans-serif'; ctx.textAlign='left';
+      ctx.fillStyle=c; ctx.font='9px Arial,sans-serif'; ctx.textAlign='left';
       ctx.fillText(v+'%',pad.l+2,toY(v)-3);
     }
   });
@@ -1427,7 +1457,7 @@ function drawHba1cTrendChart() {
     const y=pad.t+cH*(1-f);
     ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+cW,y);ctx.stroke();
     const v=minV+(maxV-minV)*f;
-    ctx.fillStyle='rgba(232,244,255,0.35)'; ctx.font='10px DM Sans,sans-serif'; ctx.textAlign='right';
+    ctx.fillStyle='rgba(232,244,255,0.35)'; ctx.font='10px Arial,sans-serif'; ctx.textAlign='right';
     ctx.fillText(v.toFixed(1),pad.l-4,y+3);
   });
 
@@ -1464,7 +1494,7 @@ function drawHba1cTrendChart() {
   });
 
   // X labels (dates)
-  ctx.fillStyle='rgba(232,244,255,0.35)'; ctx.font='9px DM Sans,sans-serif'; ctx.textAlign='center';
+  ctx.fillStyle='rgba(232,244,255,0.35)'; ctx.font='9px Arial,sans-serif'; ctx.textAlign='center';
   const step=Math.max(1,Math.floor(allPts.length/5));
   for(let i=0;i<allPts.length;i+=step){
     const d=new Date(allPts[i].ts);
@@ -1555,7 +1585,7 @@ function renderHistory() {
   const el = document.getElementById('historyList');
   const p = patient();
   if (!p || readings.length===0) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>No readings yet.<br>Tap <strong>+ Log</strong> to add one.</p></div>'; return;
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>No readings yet.<br>Tap <strong>+</strong> to add one.</p></div>'; return;
   }
   el.innerHTML = [...readings].reverse().map(r => {
     const s = getStatus(r.val, p.units);
@@ -1564,7 +1594,7 @@ function renderHistory() {
     const d = new Date(r.ts);
     const dateStr = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
     const timeStr = d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-    return `<div class="log-entry">
+    return `<div class="log-entry" onclick="openEditReading(${r.id})" style="cursor:pointer" title="Tap to edit">
       <div class="log-indicator" style="background:${s.color}"></div>
       <div class="log-info">
         <div class="log-val" style="color:${s.color}">${r.val}<small>${p.units}</small>
@@ -1573,8 +1603,7 @@ function renderHistory() {
         <div class="log-meta">${dateStr} · ${timeStr}${r.notes?' · 📝 '+r.notes:''}</div>
       </div>
       <div class="log-meal" style="border-color:${mealColor}44;color:${mealColor}">${mealIcon(r.meal)} ${r.meal||''}</div>
-      <button class="log-edit" onclick="openEditReading(${r.id})" title="Edit">✏️</button>
-      <button class="log-del" onclick="deleteReading(${r.id})" title="Delete">✕</button>
+      <button class="log-del" onclick="event.stopPropagation();deleteReading(${r.id})" title="Delete">✕</button>
     </div>`;
   }).join('');
 }
@@ -1589,7 +1618,7 @@ function populateProfileForm() {
   document.getElementById('editUnits').value = p.units;
   document.getElementById('editMedications').value = localStorage.getItem('glucoMeds_'+p.id) || '';
   document.getElementById('editGeneralCondition').value = localStorage.getItem('glucoCond_'+p.id) || '';
-  document.getElementById('editReferenceAnalysis').value = localStorage.getItem('glucoRef_'+p.id) || '';
+
   document.getElementById('profileAv').textContent = initials(p.name);
   document.getElementById('profileAv').className = 'profile-big-av ' + AV_COLORS[p.colorIdx%6];
   document.getElementById('profileName').textContent = p.name;
@@ -1641,7 +1670,7 @@ function saveGeneralCondition() {
 
 function saveReferenceAnalysis() {
   const p = patient(); if (!p) return;
-  localStorage.setItem('glucoRef_'+p.id, document.getElementById('editReferenceAnalysis').value.trim());
+  localStorage.setItem('glucoGlobalRef', document.getElementById('editReferenceAnalysis').value.trim());
   showToast('Reference analysis saved ✓');
 }
 
@@ -1695,7 +1724,7 @@ function drawChart() {
   ctx.clearRect(0,0,W,H);
 
   if (readings.length===0) {
-    ctx.fillStyle='rgba(232,244,255,0.2)'; ctx.font='14px DM Sans,sans-serif'; ctx.textAlign='center';
+    ctx.fillStyle='rgba(232,244,255,0.2)'; ctx.font='14px Arial,sans-serif'; ctx.textAlign='center';
     ctx.fillText('No readings to display',W/2,H/2);
     renderChartDetailList([], null);
     return;
@@ -1731,7 +1760,7 @@ function drawChart() {
   });
 
   // Y labels
-  ctx.fillStyle='rgba(232,244,255,0.35)'; ctx.font='10px DM Sans,sans-serif'; ctx.textAlign='right';
+  ctx.fillStyle='rgba(232,244,255,0.35)'; ctx.font='10px Arial,sans-serif'; ctx.textAlign='right';
   [0,0.5,1].forEach(f=>{
     const v=minV+(maxV-minV)*f;
     ctx.fillText(ismmol?v.toFixed(1):Math.round(v),pad.l-4,pad.t+cH*(1-f)+3);
@@ -1792,7 +1821,7 @@ function drawChartInternal(canvas, ctx, W, H, dpr, pad, filtered, units, ismmol,
   // Y labels
   const lightMode = document.body.classList.contains('light-mode');
   ctx.fillStyle = lightMode ? 'rgba(15,23,42,0.5)' : 'rgba(232,244,255,0.45)';
-  ctx.font='11px DM Sans,sans-serif'; ctx.textAlign='right';
+  ctx.font='11px Arial,sans-serif'; ctx.textAlign='right';
   [0,0.25,0.5,0.75,1].forEach(f=>{
     const v=minV+(maxV-minV)*f;
     ctx.fillText(ismmol?v.toFixed(1):Math.round(v),pad.l-4,pad.t+cH*(1-f)+3);
@@ -1843,7 +1872,7 @@ function drawChartInternal(canvas, ctx, W, H, dpr, pad, filtered, units, ismmol,
 
   // X date labels — deduplicated, spread evenly, no repeats
   ctx.fillStyle = lightMode ? 'rgba(15,23,42,0.5)' : 'rgba(232,244,255,0.55)';
-  ctx.font='10px DM Sans,sans-serif'; ctx.textAlign='center';
+  ctx.font='10px Arial,sans-serif'; ctx.textAlign='center';
   ctx.setLineDash([]);
   // Build unique date labels with their x positions
   const seenDates = new Set();
@@ -2594,15 +2623,17 @@ async function loadAiInsights() {
   const p = patient();
   if (!p) return;
   if (readings.length < 3) {
-    document.getElementById('aiInsightsBody').innerHTML =
+    document.getElementById('aiInsightsBodyFull').innerHTML =
       '<div style="font-size:14px;color:var(--muted)">Need at least 3 readings for AI analysis.</div>';
     return;
   }
 
-  const btn = document.getElementById('aiInsightsBtn');
-  btn.disabled = true; btn.textContent = '⏳';
+  // Disable both Refresh buttons
+  ['aiInsightsBtn','aiInsightsBtnFull'].forEach(id=>{
+    const b=document.getElementById(id); if(b){b.disabled=true;b.textContent='⏳';}
+  });
 
-  const bodyEl = document.getElementById('aiInsightsBody');
+  const bodyEl = document.getElementById('aiInsightsBodyFull');
   bodyEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--accent);font-size:14px"><div style="font-size:32px;margin-bottom:10px">🩺</div><div>Analysing data for ' + p.name + '…</div><div style="margin-top:8px;font-size:12px;color:var(--muted)">May take a few seconds</div></div>';
 
   const units = p.units;
@@ -2658,7 +2689,7 @@ async function loadAiInsights() {
   // Load extended profile data — cap lengths to control prompt size
   const medications     = (localStorage.getItem('glucoMeds_'+p.id) || '').slice(0, 600);
   const generalCond     = (localStorage.getItem('glucoCond_'+p.id) || '').slice(0, 500);
-  const referenceRaw    = (localStorage.getItem('glucoRef_'+p.id)  || '').slice(0, 1200);
+  const referenceRaw    = (localStorage.getItem('glucoGlobalRef') || '').slice(0, 1200);
   const referenceSection = referenceRaw
     ? `\nREFERENCE STYLE EXAMPLE (match this depth and personalisation):\n${referenceRaw}\n`
     : '';
@@ -2748,8 +2779,7 @@ End with exactly this line:
     const { chipHtml, fullHtml } = formatAiInsights(rawText);
 
     // Dashboard chips
-    const chipEl = document.getElementById('aiInsightsBody');
-    if (chipEl) chipEl.innerHTML = chipHtml;
+    // Dashboard AI card removed — chips only shown in Insights tab
 
     // Insights tab full view
     const fullEl = document.getElementById('aiInsightsBodyFull');
@@ -2765,9 +2795,7 @@ End with exactly this line:
     if (snapId !== currentPatientId) return;
     const errHtml = `<div style="font-size:14px;color:var(--high);padding:12px 0">⚠️ ${e.message||'Could not load insights. Try again.'}</div>`;
     const b1 = document.getElementById('aiInsightsBodyFull');
-    const b2 = document.getElementById('aiInsightsBody');
     if(b1) b1.innerHTML = errHtml;
-    if(b2) b2.innerHTML = errHtml;
   } finally {
     if (snapId === currentPatientId) {
       [document.getElementById('aiInsightsBtn'), document.getElementById('aiInsightsBtnFull')]
@@ -2778,8 +2806,10 @@ End with exactly this line:
 
 // Dashboard: compact chip summary
 function loadSavedInsightsChips() {
+  // Dashboard AI card removed — use loadSavedInsightsFull() on Insights tab
+  return;
   if (!currentPatientId) return;
-  const bodyEl = document.getElementById('aiInsightsBody');
+  const bodyEl = document.getElementById('aiInsightsBodyFull');
   const btn    = document.getElementById('aiInsightsBtn');
   if (!bodyEl) return;
 
@@ -2900,7 +2930,7 @@ function formatAiInsights(text) {
 
   chipHtml += `<div style="text-align:center;margin-top:8px">
     <button onclick="switchTab('insights',document.getElementById('tab-insights'))"
-      style="background:none;border:none;color:var(--accent);font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;padding:4px">
+      style="background:none;border:none;color:var(--accent);font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;padding:4px">
       View full analysis →
     </button>
   </div></div>`;
@@ -3045,7 +3075,7 @@ function renderOcrResults(extracted, units, isGlucometer) {
     return `
     <div style="background:var(--bg3);border-radius:12px;padding:12px 14px;margin-bottom:10px;border:1px solid var(--border)">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-        <span style="font-family:'DM Serif Display',serif;font-size:28px;color:${statusColor}">${hasVal?r.val:'?'}</span>
+        <span style="font-family:Arial,sans-serif;font-size:28px;color:${statusColor}">${hasVal?r.val:'?'}</span>
         <span style="font-size:13px;color:var(--muted);font-weight:600">${units}</span>
         <span style="font-size:13px;color:${statusColor};font-weight:700">${statusLabel}</span>
         <span style="margin-left:auto">${sourceBadge}</span>
@@ -3056,24 +3086,24 @@ function renderOcrResults(extracted, units, isGlucometer) {
           <div style="font-size:11px;color:var(--text);font-weight:700;text-transform:uppercase;margin-bottom:4px">Glucose Value</div>
           <input type="number" value="${hasVal?r.val:''}" placeholder="Enter value"
             onchange="ocrPendingReadings[${i}].val=parseFloat(this.value)"
-            style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:15px;font-weight:700;font-family:'DM Serif Display',serif;-webkit-appearance:none;outline:none">
+            style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:15px;font-weight:700;font-family:Arial,sans-serif;-webkit-appearance:none;outline:none">
         </div>
         <div style="flex:1;min-width:120px">
           <div style="font-size:11px;color:var(--text);font-weight:700;text-transform:uppercase;margin-bottom:4px">Date ${isGlucometer?'(now)':''}</div>
           <input type="date" value="${defaultDate}"
             onchange="ocrPendingReadings[${i}].date=this.value"
-            style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;-webkit-appearance:none;outline:none">
+            style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:Arial,sans-serif;-webkit-appearance:none;outline:none">
         </div>
         <div style="flex:1;min-width:100px">
           <div style="font-size:11px;color:var(--text);font-weight:700;text-transform:uppercase;margin-bottom:4px">Time ${isGlucometer?'(now)':''}</div>
           <input type="time" value="${defaultTime}"
             onchange="ocrPendingReadings[${i}].time=this.value"
-            style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;-webkit-appearance:none;outline:none">
+            style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:Arial,sans-serif;-webkit-appearance:none;outline:none">
         </div>
         <div style="flex:1;min-width:140px">
           <div style="font-size:11px;color:var(--text);font-weight:700;text-transform:uppercase;margin-bottom:4px">Meal Type</div>
           <select onchange="ocrPendingReadings[${i}].meal=this.value"
-            style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;-webkit-appearance:none;outline:none">
+            style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:Arial,sans-serif;-webkit-appearance:none;outline:none">
             ${['Fasting','Before meal','After meal (1hr)','After meal (2hr)','Bedtime','Random'].map(m=>`<option ${m===r.meal?'selected':''}>${m}</option>`).join('')}
           </select>
         </div>
@@ -3532,6 +3562,19 @@ function applyTheme() {
   }
 }
 
+
+// ====== SETTINGS (Global) ======
+function saveGlobalSettings() {
+  const ref = document.getElementById('editReferenceAnalysis').value.trim();
+  localStorage.setItem('glucoGlobalRef', ref);
+  showToast('Settings saved ✓');
+}
+
+function loadSettingsScreen() {
+  document.getElementById('editReferenceAnalysis').value = localStorage.getItem('glucoGlobalRef') || '';
+  updateApiKeyStatus();
+}
+
 function showToast(msg, warn=false) {
   const t=document.getElementById('toast');
   t.textContent=msg;
@@ -3573,6 +3616,31 @@ function clearReadings() {
 window.addEventListener('resize',()=>{
   if(document.getElementById('screen-dashboard').classList.contains('active'))drawChart();
 });
+
+// ====== SWIPE BETWEEN TABS ======
+(function(){
+  const TAB_ORDER = ['dashboard','hba1c','insights','add','history','profile','settings'];
+  let tx=0, ty=0;
+  document.addEventListener('touchstart', e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend', e=>{
+    const dx=e.changedTouches[0].clientX-tx;
+    const dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)*1.5) return;
+    const screens=document.querySelectorAll('.screen');
+    let cur='dashboard';
+    screens.forEach(s=>{if(s.classList.contains('active')) cur=s.id.replace('screen-','');});
+    const idx=TAB_ORDER.indexOf(cur);
+    let next=-1;
+    if(dx<0 && idx<TAB_ORDER.length-1) next=idx+1;
+    if(dx>0 && idx>0) next=idx-1;
+    if(next<0) return;
+    const nextId=TAB_ORDER[next];
+    const btn=document.getElementById('tab-'+nextId);
+    if(nextId==='add'){switchTab('add',document.getElementById('tab-add-hidden'));return;}
+    if(btn) switchTab(nextId,btn);
+  },{passive:true});
+})();
+
 
 
 </script>
