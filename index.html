@@ -453,8 +453,9 @@ select option{background:var(--bg2);color:var(--text)}
 <!-- ===== MANUAL HBA1C MODAL ===== -->
 <div class="modal-overlay hidden" id="hba1cModal">
   <div class="modal">
-    <div class="modal-title">Log Lab HbA1c</div>
-    <div class="modal-sub">Enter the result from your blood test</div>
+    <div class="modal-title" id="hba1cModalTitle">Log Lab HbA1c</div>
+    <div class="modal-sub" id="hba1cModalSub">Enter the result from your blood test</div>
+    <input type="hidden" id="mHba1cId" value="">
     <div class="form-group"><label>HbA1c Value (%)</label><input type="number" id="mHba1cVal" class="big-input" placeholder="7.2" min="3" max="20" step="0.1"></div>
     <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:-8px;margin-bottom:14px">% · Normal &lt;5.7 · Pre-diabetes 5.7–6.4 · Diabetes ≥6.5</div>
     <div class="form-group"><label>Test Date</label><input type="date" id="mHba1cDate"></div>
@@ -1114,25 +1115,53 @@ function confirmDeletePatient(pid) {
 
 // ====== MANUAL HBA1C MODAL ======
 function openHba1cModal() {
+  document.getElementById('mHba1cId').value = '';
   document.getElementById('mHba1cVal').value = '';
   document.getElementById('mHba1cDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('mHba1cNotes').value = '';
+  document.getElementById('hba1cModalTitle').textContent = 'Log Lab HbA1c';
+  document.getElementById('hba1cModalSub').textContent = 'Enter the result from your blood test';
   document.getElementById('hba1cModal').classList.remove('hidden');
   setTimeout(()=>document.getElementById('mHba1cVal').focus(),100);
 }
+
+function openEditHba1c(id) {
+  const entry = manualHba1c.find(x=>x.id===id);
+  if (!entry) return;
+  document.getElementById('mHba1cId').value = id;
+  document.getElementById('mHba1cVal').value = entry.val;
+  document.getElementById('mHba1cDate').value = entry.date || new Date(entry.ts).toISOString().split('T')[0];
+  document.getElementById('mHba1cNotes').value = entry.notes || '';
+  document.getElementById('hba1cModalTitle').textContent = 'Edit Lab HbA1c';
+  document.getElementById('hba1cModalSub').textContent = 'Update this lab result';
+  document.getElementById('hba1cModal').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('mHba1cVal').focus(),100);
+}
+
 function closeHba1cModal() { document.getElementById('hba1cModal').classList.add('hidden'); }
+
 function saveManualHba1c() {
   const val = parseFloat(document.getElementById('mHba1cVal').value);
   const date = document.getElementById('mHba1cDate').value;
   const notes = document.getElementById('mHba1cNotes').value.trim();
+  const editId = document.getElementById('mHba1cId').value;
   if (!val || val < 3 || val > 20) { showToast('Enter a valid HbA1c (3–20%)', true); return; }
   if (!date) { showToast('Select a date', true); return; }
-  const entry = { id: Date.now(), val, date, notes, ts: new Date(date+'T12:00:00').getTime() };
-  manualHba1c.push(entry);
+  const ts = new Date(date+'T12:00:00').getTime();
+  if (editId) {
+    // Edit existing
+    const idx = manualHba1c.findIndex(x=>x.id===parseInt(editId));
+    if (idx !== -1) manualHba1c[idx] = { ...manualHba1c[idx], val, date, notes, ts };
+    showToast('Lab result updated ✓');
+  } else {
+    // New entry
+    const entry = { id: Date.now(), val, date, notes, ts };
+    manualHba1c.push(entry);
+    showToast('Lab HbA1c saved ✓');
+  }
   manualHba1c.sort((a,b)=>a.ts-b.ts);
   saveManualHba1cData(currentPatientId, manualHba1c);
   closeHba1cModal();
-  showToast('Lab HbA1c saved ✓');
   refreshDashboard();
   renderHba1c();
 }
@@ -1223,7 +1252,7 @@ function deleteReading(id) {
   readings = readings.filter(r=>r.id!==id);
   saveReadings(currentPatientId, readings);
   refreshDashboard();
-  renderHistory();
+  refreshHba1c();
   showToast('Deleted');
 }
 
@@ -1263,6 +1292,7 @@ function calcHba1cForPeriod(days) {
   return rds.length >= 2 ? calcHba1c(rds, patient().units) : null;
 }
 
+function refreshHba1c() { renderHba1c(); }
 function renderHba1c() {
   const p = patient();
   if (!p) return;
@@ -1319,7 +1349,7 @@ function renderHba1c() {
 
   // Breakdown
   const periods = [{label:'Last 7 days',days:7},{label:'Last 14 days',days:14},{label:'Last 30 days',days:30},{label:'Last 90 days',days:90},{label:'All time',days:0}];
-  document.getElementById('hba1cBreakdown').innerHTML = '<div class="hba1c-breakdown">' +
+  const _hba1cBdEl = document.getElementById('hba1cBreakdown'); if(_hba1cBdEl) _hba1cBdEl.innerHTML = '<div class="hba1c-breakdown">' +
     periods.map(({label,days})=>{
       const h = calcHba1cForPeriod(days);
       if (!h) return `<div class="hba1c-br-row"><span style="color:var(--muted)">${label}</span><span style="color:var(--muted)">—</span></div>`;
@@ -1336,14 +1366,14 @@ function renderHba1c() {
       const d = new Date(m.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
       const estAtTime = getEstimatedHba1cNearDate(m.ts);
       const diffStr = estAtTime ? ` · Est. was ${estAtTime.toFixed(1)}%` : '';
-      return `<div class="hba1c-log-entry">
+      return `<div class="hba1c-log-entry" onclick="openEditHba1c(${m.id})" style="cursor:pointer" title="Tap to edit">
         <div class="hba1c-log-dot" style="background:${ip.color}"></div>
         <div class="hba1c-log-info">
           <div class="hba1c-log-val" style="color:${ip.color}">${m.val.toFixed(1)}<small style="font-size:11px;color:var(--muted);font-family:Arial,sans-serif;font-weight:300"> %</small></div>
           <div class="hba1c-log-meta">${d}${m.notes?' · '+m.notes:''}${diffStr}</div>
         </div>
         <div class="hba1c-log-lab">${ip.label}</div>
-        <button class="log-del" onclick="deleteManualHba1c(${m.id})">✕</button>
+        <button class="log-del" onclick="event.stopPropagation();deleteManualHba1c(${m.id})">✕</button>
       </div>`;
     }).join('');
   }
@@ -1497,12 +1527,10 @@ function refreshDashboard() {
   if (!p) return;
   const units = p.units;
   // Set units on all avg boxes
-  ['avgFastingUnit','avgPreUnit','avgPostUnit'].forEach(id => {
+  ['avgFastingUnit','avgPreUnit','avgPostUnit','latestUnit'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.textContent = units;
   });
-  document.getElementById('latestUnit').textContent = units;
-
   const thirtyAgo = Date.now() - 30*86400000;
   const recent30 = readings.filter(r=>r.ts>=thirtyAgo);
 
@@ -1537,8 +1565,7 @@ function refreshDashboard() {
 
   // Est HbA1c — ALWAYS estimated from glucose, never lab value
   const estHba1c = readings.length >= 3 ? calcHba1c(readings, units) : null;
-  document.getElementById('hba1cQuick').textContent = estHba1c ? estHba1c.toFixed(1) : '—';
-  document.getElementById('hba1cQuick').style.color = estHba1c ? hba1cInterp(estHba1c).color : 'var(--muted)';
+  const _hq = document.getElementById('hba1cQuick'); if(_hq){ _hq.textContent = estHba1c ? estHba1c.toFixed(1) : '—'; _hq.style.color = estHba1c ? hba1cInterp(estHba1c).color : 'var(--muted)'; }
 
   // Draw chart if dashboard is visible
   const dash = document.getElementById('screen-dashboard');
@@ -1550,7 +1577,7 @@ function refreshDashboard() {
 function renderTargetRange() {
   const p = patient(); if (!p) return;
   const mg = p.units==='mg/dL';
-  document.getElementById('targetRangeInfo').innerHTML = `
+  const _trEl = document.getElementById('targetRangeInfo'); if(_trEl) _trEl.innerHTML = `
     <div class="info-row"><div class="info-key">Fasting</div><div class="info-val">${mg?'70–100 mg/dL':'3.9–5.6 mmol/L'}</div></div>
     <div class="info-row"><div class="info-key">Before meal</div><div class="info-val">${mg?'80–130 mg/dL':'4.4–7.2 mmol/L'}</div></div>
     <div class="info-row"><div class="info-key">2hr after meal</div><div class="info-val">${mg?'<180 mg/dL':'<10.0 mmol/L'}</div></div>
@@ -1559,34 +1586,35 @@ function renderTargetRange() {
 
 function updateUnitHint() {
   const p = patient(); if (!p) return;
-  document.getElementById('unitHint').textContent = p.units==='mg/dL' ? 'mg/dL · Target: 70–180' : 'mmol/L · Target: 4.0–10.0';
+  const _uhEl = document.getElementById('unitHint'); if(_uhEl) _uhEl.textContent = p.units==='mg/dL' ? 'mg/dL · Target: 70–180' : 'mmol/L · Target: 4.0–10.0';
 }
 
 function renderHistory() {
+  // History tab removed — readings shown in dashboard chart detail list
   const el = document.getElementById('historyList');
-  const p = patient();
-  if (!p || readings.length===0) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>No readings yet.<br>Tap <strong>+</strong> to add one.</p></div>'; return;
-  }
-  el.innerHTML = [...readings].reverse().map(r => {
-    const s = getStatus(r.val, p.units);
-    const grp = mealGroup(r.meal);
-    const mealColor = MEAL_COLORS[grp] || '#94a3b8';
-    const d = new Date(r.ts);
-    const dateStr = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-    const timeStr = d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-    return `<div class="log-entry" onclick="openEditReading(${r.id})" style="cursor:pointer" title="Tap to edit">
-      <div class="log-indicator" style="background:${s.color}"></div>
-      <div class="log-info">
-        <div class="log-val" style="color:${s.color}">${r.val}<small>${p.units}</small>
-          <span style="font-size:12px;font-weight:700;margin-left:6px;color:${s.color}">${s.label}</span>
+  if (el) {
+    const p = patient();
+    if (!p || readings.length===0) {
+      el.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>No readings yet.</p></div>'; return;
+    }
+    el.innerHTML = [...readings].reverse().map(r => {
+      const s = getStatus(r.val, p.units);
+      const grp = mealGroup(r.meal);
+      const mealColor = MEAL_COLORS[grp] || '#94a3b8';
+      const d = new Date(r.ts);
+      const dateStr = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+      const timeStr = d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+      return `<div class="log-entry" onclick="openEditReading(${r.id})" style="cursor:pointer">
+        <div class="log-indicator" style="background:${s.color}"></div>
+        <div class="log-info">
+          <div class="log-val" style="color:${s.color}">${r.val}<small>${p.units}</small></div>
+          <div class="log-meta">${dateStr} · ${timeStr}${r.notes?' · '+r.notes:''}</div>
         </div>
-        <div class="log-meta">${dateStr} · ${timeStr}${r.notes?' · 📝 '+r.notes:''}</div>
-      </div>
-      <div class="log-meal" style="border-color:${mealColor}44;color:${mealColor}">${mealIcon(r.meal)} ${r.meal||''}</div>
-      <button class="log-del" onclick="event.stopPropagation();deleteReading(${r.id})" title="Delete">✕</button>
-    </div>`;
-  }).join('');
+        <div class="log-meal" style="border-color:${mealColor}44;color:${mealColor}">${mealIcon(r.meal)} ${r.meal||''}</div>
+        <button class="log-del" onclick="event.stopPropagation();deleteReading(${r.id})">✕</button>
+      </div>`;
+    }).join('');
+  }
 }
 
 function populateProfileForm() {
